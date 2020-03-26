@@ -19,6 +19,8 @@ as.aplot <- function(plot) {
 
 
 ##' @method print aplot
+##' @importFrom patchwork plot_layout
+##' @importFrom patchwork plot_spacer
 ##' @export
 print.aplot <- function(x, ...) {
     idx <- as.vector(x$layout)
@@ -36,9 +38,9 @@ print.aplot <- function(x, ...) {
         pp <- pp + plotlist[[i]]
     }
     
-    pp + plot_layout(byrow=F, ncol=ncol(x$layout), 
-                     widths = x$width,
-                     heights= x$height,
-                     guides = 'collect')
-    
+    res <- pp + plot_layout(byrow=F, ncol=ncol(x$layout), 
+                            widths = x$width,
+                            heights= x$height,
+                            guides = 'collect')
+    print(res)
 }
