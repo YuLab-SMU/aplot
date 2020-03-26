@@ -16,7 +16,7 @@ insert_left <- function(.data, plot, width=1) {
     .data$n <- .data$n + 1
     .data$width <- c(width, .data$width)
     new_col <- matrix(nrow=nrow(.data$layout), ncol=1)
-    new_col[.data$layout[, .data$main_col] == 1] = .data$n
+    new_col[.data$main_row] <- .data$n
     .data$layout <- cbind(new_col, .data$layout)
     .data$main_col <- .data$main_col + 1
     
@@ -43,7 +43,7 @@ insert_right <- function(.data, plot, width=1) {
     .data$n <- .data$n + 1
     .data$width <- c(.data$width, width)
     new_col <- matrix(nrow=nrow(.data$layout), ncol=1)
-    new_col[.data$layout[, .data$main_col] == 1] = .data$n
+    new_col[.data$main_row] <- .data$n
     .data$layout <- cbind(.data$layout, new_col)
     
     plot <- plot + ggtree::ylim2(.data$plotlist[[1]])
@@ -69,7 +69,7 @@ insert_top <- function(.data, plot, height=1) {
     .data$n <- .data$n + 1
     .data$height <- c(height, .data$height)
     new_row <- matrix(nrow=1, ncol=ncol(.data$layout))
-    new_row[.data$layout[.data$main_row, ] == 1] = .data$n
+    new_row[.data$main_col] <- .data$n
     .data$layout <- rbind(new_row, .data$layout)
     .data$main_row <- .data$main_row + 1
     
@@ -97,7 +97,7 @@ insert_bottom <- function(.data, plot, height=1) {
     .data$n <- .data$n + 1
     .data$height <- c(.data$height, height)
     new_row <- matrix(nrow=1, ncol=ncol(.data$layout))
-    new_row[.data$layout[.data$main_row, ] == 1] = .data$n
+    new_row[.data$main_col] <- .data$n
     .data$layout <- rbind(.data$layout, new_row)
     
     plot <- plot + ggtree::xlim2(.data$plotlist[[1]])
