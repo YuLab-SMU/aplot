@@ -46,7 +46,10 @@ insert_lr <- function(.data, plot, width,  side) {
     
     if (inherits(plot, "ggtree")) { ## re-order based on the tree
         yvar <- rvcheck::get_aes_var(.data$plotlist[[1]]$mapping, 'y')
-        for (i in 1:length(.data$plotlist)) {
+        selected <- .data$layout[.data$main_row,]
+        selected <- selected[!is.na(selected)]
+        selected <- selected[selected != .data$n]
+        for (i in selected) {
             .data$plotlist[[i]] <- .data$plotlist[[i]] + 
                 aes(y = factor(.data[[yvar]], 
                                levels = rev(ggtree::get_taxa_name(plot)))) +
@@ -96,7 +99,11 @@ insert_tb <- function(.data, plot, height, side) {
     
     if (inherits(plot, "ggtree")) { ## re-order based on the tree
         xvar <- rvcheck::get_aes_var(.data$plotlist[[1]]$mapping, 'x')
-        for (i in 1:length(.data$plotlist)) {
+        selected <- .data$layout[,.data$main_col]
+        selected <- selected[!is.na(selected)]
+        selected <- selected[selected != .data$n]
+
+        for (i in selected) {
             .data$plotlist[[i]] <- .data$plotlist[[i]] + 
                 aes(x = factor(.data[[xvar]], 
                                levels = rev(ggtree::get_taxa_name(plot)))) +
