@@ -68,7 +68,7 @@ dot_plot
 ## the rows of the dot_plot was automatically reorder based on the tree
 p2 <- dot_plot %>% 
   insert_left(ggtree_plot, width=.2) %>%
-  insert_top(labels, height=.1) 
+  insert_top(labels, height=.05) 
 p2
 ```
 
