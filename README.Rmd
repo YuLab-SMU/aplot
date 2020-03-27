@@ -64,22 +64,19 @@ ggtree_plot | dot_plot | (ggtree_plot_col / labels)
 
 ## Align plots with `aplot`
 
-```{r dotplot, fig.width=6, fig.height=6}
-library(aplot)
-dot_plot
-```
 
 ```{r dotTree, fig.width=8, fig.height=8, message=FALSE, warning=FALSE}
+library(aplot)
 ## the rows of the dot_plot was automatically reorder based on the tree
-p2 <- dot_plot %>% 
-  insert_left(ggtree_plot, width=.2) %>%
-  insert_top(labels, height=.05) 
-p2
+dot_plot %>% 
+  insert_left(ggtree_plot, width=.2) 
 ```
 
 ```{r dotTree2, fig.width=8, fig.height=10, message=FALSE, warning=FALSE}
 ## the columns of the dot_plot was automatically reorder based on the tree
-p2 %>%
-  insert_top(ggtree_plot_col, height=.2)
+dot_plot %>% 
+  insert_left(ggtree_plot, width=.2) %>%
+  insert_top(labels, height=.02) %>%
+  insert_top(ggtree_plot_col, height=.1)
 ```
 

@@ -24,7 +24,7 @@ insert_right <- function(.data, plot, width=1) {
               width = width, side = "right")
 }
 
-
+##' @importFrom ggplot2 ylab
 insert_lr <- function(.data, plot, width,  side) {
     side <- match.arg(side, c("left", "right"))
     .data <- as.aplot(.data)
@@ -50,7 +50,7 @@ insert_lr <- function(.data, plot, width,  side) {
         for (i in selected) {
             .data$plotlist[[i]] <- .data$plotlist[[i]] + 
                 aes(y = factor(.data[[yvar]], 
-                               levels = rev(ggtree::get_taxa_name(plot)))) +
+                               levels = rev(get_taxa_order(plot)))) +
                 ylab(NULL)
         }
     }
@@ -75,7 +75,8 @@ insert_bottom <- function(.data, plot, height=1) {
               height = height, side = "bottom")
 }
 
-
+##' @importFrom ggplot2 aes
+##' @importFrom ggplot2 xlab
 insert_tb <- function(.data, plot, height, side) {
     side <- match.arg(side, c("top", "bottom"))
     .data <- as.aplot(.data)
@@ -103,7 +104,7 @@ insert_tb <- function(.data, plot, height, side) {
         for (i in selected) {
             .data$plotlist[[i]] <- .data$plotlist[[i]] + 
                 aes(x = factor(.data[[xvar]], 
-                               levels = rev(ggtree::get_taxa_name(plot)))) +
+                               levels = rev(get_taxa_order(plot)))) +
                 xlab(NULL)
         }
     }

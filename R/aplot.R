@@ -30,11 +30,13 @@ print.aplot <- function(x, ...) {
 
     for (i in x$layout[, x$main_col]) {
         if (is.na(i)) next
-        x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + ggtree::xlim2(mp))
+        if (i == 1) next
+        x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + xlim2(mp))
     }
     for (i in x$layout[x$main_row,]) {
         if(is.na(i)) next
-        x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + ggtree::ylim2(mp))
+        if (i == 1) next
+        x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + ylim2(mp))
     }
 
     idx <- as.vector(x$layout)

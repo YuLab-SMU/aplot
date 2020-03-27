@@ -1,18 +1,16 @@
 Package: aplot
-Title: What the Package Does (One Line, Title Case)
+Title: Decorate a 'ggplot' with Associated Information
 Version: 0.0.1
 Authors@R: 
-    person(given = "First",
-           family = "Last",
-           role = c("aut", "cre"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    	   person("Guangchuang", "Yu", email = "guangchuangyu@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0002-6485-8781"))
+Description: 'aplot' aligns associated subplots to a main plot at different sides (left, right, top and bottom) with axes exactly matched.
 Imports:
+  ggplot2,
   patchwork,
-  ggtree
+  methods
 Suggests:
-  rvcheck
+  rvcheck,
+  ggtree
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true

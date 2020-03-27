@@ -59,25 +59,19 @@ ggtree_plot | dot_plot | (ggtree_plot_col / labels)
 
 ``` r
 library(aplot)
-dot_plot
-```
-
-![](README_files/figure-gfm/dotplot-1.png)<!-- -->
-
-``` r
 ## the rows of the dot_plot was automatically reorder based on the tree
-p2 <- dot_plot %>% 
-  insert_left(ggtree_plot, width=.2) %>%
-  insert_top(labels, height=.05) 
-p2
+dot_plot %>% 
+  insert_left(ggtree_plot, width=.2) 
 ```
 
 ![](README_files/figure-gfm/dotTree-1.png)<!-- -->
 
 ``` r
 ## the columns of the dot_plot was automatically reorder based on the tree
-p2 %>%
-  insert_top(ggtree_plot_col, height=.2)
+dot_plot %>% 
+  insert_left(ggtree_plot, width=.2) %>%
+  insert_top(labels, height=.02) %>%
+  insert_top(ggtree_plot_col, height=.1)
 ```
 
 ![](README_files/figure-gfm/dotTree2-1.png)<!-- -->
