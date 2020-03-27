@@ -7,6 +7,7 @@ Description: 'aplot' aligns associated subplots to a main plot at different side
 Imports:
   ggplot2,
   patchwork,
+  magrittr,
   methods
 Suggests:
   rvcheck,

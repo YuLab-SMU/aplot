@@ -2,3 +2,6 @@
 ##' @export
 ggplot2::ggsave
 
+##' @importFrom magrittr %>%
+##' @export
+magrittr::`%>%`
