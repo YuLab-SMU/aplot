@@ -105,7 +105,7 @@ insert_tb <- function(.data, plot, height, side) {
             .data$plotlist[[i]] <- .data$plotlist[[i]] + 
                 aes(x = factor(.data[[xvar]], 
                                levels = rev(get_taxa_order(plot)))) +
-                xlab(.data$plotlist[[i]]$labels$y)
+                xlab(.data$plotlist[[i]]$labels$x)
         }
     }
     
