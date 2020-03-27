@@ -41,8 +41,6 @@ insert_lr <- function(.data, plot, width,  side) {
         .data$width <- c(.data$width, width)
         .data$layout <- cbind(.data$layout, new_col)
     }
-
-    plot <- plot + ggtree::ylim2(.data$plotlist[[1]])
     
     if (inherits(plot, "ggtree")) { ## re-order based on the tree
         yvar <- rvcheck::get_aes_var(.data$plotlist[[1]]$mapping, 'y')
@@ -95,7 +93,6 @@ insert_tb <- function(.data, plot, height, side) {
         .data$layout <- rbind(.data$layout, new_row)
     }
 
-    plot <- plot + ggtree::xlim2(.data$plotlist[[1]])
     
     if (inherits(plot, "ggtree")) { ## re-order based on the tree
         xvar <- rvcheck::get_aes_var(.data$plotlist[[1]]$mapping, 'x')

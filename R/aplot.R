@@ -23,17 +23,26 @@ as.aplot <- function(plot) {
 ##' @importFrom patchwork plot_spacer
 ##' @export
 print.aplot <- function(x, ...) {
+    mp <- x$plotlist[[1]]
+    if ( length(x$plitlist) == 1) {
+        return(mp)
+    }
+
+    for (i in x$layout[, x$main_col]) {
+        if (is.na(i)) next
+        x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + ggtree::xlim2(mp))
+    }
+    for (i in x$layout[x$main_row,]) {
+        if(is.na(i)) next
+        x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + ggtree::ylim2(mp))
+    }
+
     idx <- as.vector(x$layout)
     idx[is.na(idx)] <- x$n + 1 
     x$plotlist[[x$n+1]] <- plot_spacer()
     plotlist <- x$plotlist[idx]
     
     pp <- plotlist[[1]]
-    np <- length(plotlist)
-    if (np == 1) {
-        return(pp)
-    }
-    
     for (i in 2:length(plotlist)) {
         pp <- pp + plotlist[[i]]
     }
