@@ -51,7 +51,7 @@ insert_lr <- function(.data, plot, width,  side) {
             .data$plotlist[[i]] <- .data$plotlist[[i]] + 
                 aes(y = factor(.data[[yvar]], 
                                levels = rev(get_taxa_order(plot)))) +
-                ylab(NULL)
+                ylab(.data$plotlist[[i]]$labels$y)
         }
     }
     
@@ -105,7 +105,7 @@ insert_tb <- function(.data, plot, height, side) {
             .data$plotlist[[i]] <- .data$plotlist[[i]] + 
                 aes(x = factor(.data[[xvar]], 
                                levels = rev(get_taxa_order(plot)))) +
-                xlab(NULL)
+                xlab(.data$plotlist[[i]]$labels$y)
         }
     }
     
