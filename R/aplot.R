@@ -23,9 +23,15 @@ as.aplot <- function(plot) {
 ##' @importFrom patchwork plot_spacer
 ##' @export
 print.aplot <- function(x, ...) {
+    grid.draw(x)
+}
+
+##' @importFrom ggplot2 ggplotGrob
+##' @importFrom patchwork patchworkGrob
+aplotGrob <- function(x) {
     mp <- x$plotlist[[1]]
     if ( length(x$plitlist) == 1) {
-        return(mp)
+        return(ggplotGrob(mp))
     }
 
     for (i in x$layout[, x$main_col]) {
@@ -53,5 +59,13 @@ print.aplot <- function(x, ...) {
                             widths = x$width,
                             heights= x$height,
                             guides = 'collect')
-    print(res)
+    patchworkGrob(res)
 }
+
+##' @importFrom grid grid.draw
+##' @method grid.draw aplot
+##' @export
+grid.draw.aplot <- function(x, recoding = TRUE) {
+    grid::grid.draw(aplotGrob(x))
+}
+
