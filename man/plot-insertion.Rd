@@ -34,6 +34,22 @@ insert an associated plot to left, right, top and bottom of a main plot
 The first input serve as a main plot, and other plots can be progressively inserted to
 different sides on left, right, top and bottom.
 }
+\examples{
+library(ggplot2)
+library(aplot)
+
+p <- ggplot(mtcars, aes(mpg, disp)) + geom_point()
+p2 <- ggplot(mtcars, aes(mpg)) + 
+    geom_density(fill='steelblue', alpha=.5) + 
+        ggtree::theme_dendrogram()
+p3 <- ggplot(mtcars, aes(x=1, y=disp)) + 
+    geom_boxplot(fill='firebrick', alpha=.5) + 
+    theme_void()
+ap <- p \%>\% 
+    insert_top(p2, height=.3) \%>\% 
+    insert_right(p3, width=.1)
+    
+}
 \author{
 Guangchuang Yu
 }

@@ -10,6 +10,21 @@
 ##' @param height relative height to the main plot
 ##' @return an 'aplot' object
 ##' @export
+##' @examples 
+##' library(ggplot2)
+##' library(aplot)
+##' 
+##' p <- ggplot(mtcars, aes(mpg, disp)) + geom_point()
+##' p2 <- ggplot(mtcars, aes(mpg)) + 
+##'     geom_density(fill='steelblue', alpha=.5) + 
+##'         ggtree::theme_dendrogram()
+##' p3 <- ggplot(mtcars, aes(x=1, y=disp)) + 
+##'     geom_boxplot(fill='firebrick', alpha=.5) + 
+##'     theme_void()
+##' ap <- p %>% 
+##'     insert_top(p2, height=.3) %>% 
+##'     insert_right(p3, width=.1)
+##'     
 ##' @author Guangchuang Yu
 insert_left <- function(.data, plot, width=1) {
     insert_lr(.data = .data, plot = plot,

@@ -7,6 +7,7 @@ Description: For many times, we are not just aligning plots as what 'cowplot' an
 Imports:
   ggplot2,
   patchwork,
+  magrittr,
   methods
 Suggests:
   rvcheck,

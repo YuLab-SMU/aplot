@@ -10,6 +10,12 @@
 ##' @param limits vector of limits. If NULL, determine from `gg`. 
 ##' @return ggplot2 object with new limits
 ##' @export
+##' @examples 
+##' library(ggplot2)
+##' library(aplot)
+##' p1 <- ggplot(mtcars, aes(cyl)) + geom_bar()
+##' p2 <- ggplot(subset(mtcars, cyl != 4), aes(cyl)) + geom_bar()
+##' p2 + xlim2(p1)
 ##' @author Guangchuang Yu
 xlim2 <- function(gg, limits = NULL) {
     axis_align(gg = gg, limits = limits, axis = 'x')
