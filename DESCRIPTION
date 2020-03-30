@@ -1,9 +1,9 @@
 Package: aplot
 Title: Decorate a 'ggplot' with Associated Information
-Version: 0.0.1
+Version: 0.0.2
 Authors@R: 
     	   person("Guangchuang", "Yu", email = "guangchuangyu@gmail.com", role = c("aut", "cre", "cph"), comment = c(ORCID = "0000-0002-6485-8781"))
-Description: 'aplot' aligns associated subplots to a main plot at different sides (left, right, top and bottom) with axes exactly matched.
+Description: For many times, we are not just aligning plots as what 'cowplot' and 'patchwork' did. Users would like to align associated information that requires axes to be exactly matched in subplots, e.g. hierachical clustering with a heatmap. This package provides utilities to aligns associated subplots to a main plot at different sides (left, right, top and bottom) with axes exactly matched. 
 Imports:
   ggplot2,
   patchwork,
@@ -11,6 +11,7 @@ Imports:
 Suggests:
   rvcheck,
   ggtree
+URL: https://github.com/YuLab-SMU/aplot
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
