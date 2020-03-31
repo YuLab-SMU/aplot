@@ -2,76 +2,46 @@
 
 # `aplot` for decorating a plot with associated information
 
-## Example plots
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/aplot?color=green)](https://cran.r-project.org/package=aplot)
+![](http://cranlogs.r-pkg.org/badges/grand-total/aplot?color=green)
+![](http://cranlogs.r-pkg.org/badges/aplot?color=green)
+![](http://cranlogs.r-pkg.org/badges/last-week/aplot?color=green)
 
-Example taken from
-<https://davemcg.github.io/post/lets-plot-scrna-dotplots/>
+For many times, we are not just aligning plots as what ‘cowplot’ and
+‘patchwork’ did. Users would like to align associated information that
+requires axes to be exactly matched in subplots, e.g. hierarchical
+clustering with a heatmap. This package provides utilities to aligns
+associated subplots to a main plot at different sides (left, right, top
+and bottom) with axes exactly matched.
 
-``` r
-library(readr)
-library(tidyr)
-library(dplyr)
-library(ggplot2)
-library(ggtree)
+## :writing\_hand: Authors
 
-file <- system.file("extdata", "scRNA_dotplot_data.tsv.gz", package="aplot")
-gene_cluster <- readr::read_tsv(file)
+Guangchuang YU
 
-dot_plot <- gene_cluster %>% 
-  mutate(`% Expressing` = (cell_exp_ct/cell_ct) * 100) %>% 
-  filter(count > 0, `% Expressing` > 1) %>% 
-  ggplot(aes(x=cluster, y = Gene, color = count, size = `% Expressing`)) + 
-  geom_point() + 
-  cowplot::theme_cowplot() + 
-  theme(axis.line  = element_blank()) +
-  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) +
-  ylab(NULL) +
-  theme(axis.ticks = element_blank()) +
-  scale_color_gradientn(colours = viridis::viridis(20), limits = c(0,4), oob = scales::squish, name = 'log2 (count + 1)') +
-  scale_y_discrete(position = "right")
+School of Basic Medical Sciences, Southern Medical University
 
+<https://guangchuangyu.github.io>
 
-mat <- gene_cluster %>% 
-  select(-cell_ct, -cell_exp_ct, -Group) %>%  # drop unused columns to faciliate widening
-  pivot_wider(names_from = cluster, values_from = count) %>% 
-  data.frame() # make df as tibbles -> matrix annoying
-row.names(mat) <- mat$Gene  # put gene in `row`
-mat <- mat[,-1] #drop gene column as now in rows
-clust <- hclust(dist(mat %>% as.matrix())) # hclust with distance matrix
+[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?hashtags=ggtree&url=http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12628/abstract&screen_name=guangchuangyu)
+[![saythanks](https://img.shields.io/badge/say-thanks-ff69b4.svg)](https://saythanks.io/to/GuangchuangYu)
+[![](https://img.shields.io/badge/follow%20me%20on-WeChat-green.svg)](https://guangchuangyu.github.io/blog_images/biobabble.jpg)
 
-ggtree_plot <- ggtree::ggtree(clust)
+## :arrow\_double\_down: Installation
 
-v_clust <- hclust(dist(mat %>% as.matrix() %>% t()))
-ggtree_plot_col <- ggtree(v_clust) + layout_dendrogram()
-
-
-labels= ggplot(gene_cluster, aes(cluster, y=1, fill=Group)) + geom_tile() +
-  scale_fill_brewer(palette = 'Set1',name="Cell Type") + 
-  theme_void() 
-
-library(patchwork)
-ggtree_plot | dot_plot | (ggtree_plot_col / labels)
-```
-
-![](README_files/figure-gfm/originPlot-1.png)<!-- -->
-
-## Align plots with `aplot`
+Get the released version from CRAN:
 
 ``` r
-library(aplot)
-## the rows of the dot_plot was automatically reorder based on the tree
-dot_plot %>% 
-  insert_left(ggtree_plot, width=.2) 
+install.packages("aplot")
 ```
 
-![](README_files/figure-gfm/dotTree-1.png)<!-- -->
+Or the development version from github:
 
 ``` r
-## the columns of the dot_plot was automatically reorder based on the tree
-dot_plot %>% 
-  insert_left(ggtree_plot, width=.2) %>%
-  insert_top(labels, height=.02) %>%
-  insert_top(ggtree_plot_col, height=.1)
+## install.packages("remotes")
+remotes::install_github("YuLab-SMU/aplot")
 ```
 
-![](README_files/figure-gfm/dotTree2-1.png)<!-- -->
+## :book: Vignette
+
+For more details, please refer to the [online
+vignette](https://guangchuangyu.github.io/pkgdocs/aplot.html).
