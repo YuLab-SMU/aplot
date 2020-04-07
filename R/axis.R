@@ -41,10 +41,21 @@ axis_align <- function(gg, limits = NULL, axis) {
 }
 
 
+##' extract x or y ranges of a ggplot
+##'
+##' 
+##' @title plot range of a ggplot object
+##' @rdname ggrange
+##' @param gg a ggplot object
+##' @return range of selected axis
+##' @export
+##' @author Guangchuang Yu
 yrange <- function(gg) {
     ggrange(gg, "y")
 }
 
+##' @rdname ggrange
+##' @export
 xrange <- function(gg) {
     ggrange(gg, "x")
 }
