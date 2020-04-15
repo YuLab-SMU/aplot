@@ -1,3 +1,7 @@
+# aplot 0.0.4.991
+
++ use `ggplot() + theme_void()` instead of `patchwork::plot_spacer()` for empty plot (2020-04-15, Wed)
+
 # aplot 0.0.4
 
 + export `xrange` and `yrange` (2020-04-07, Tue)
