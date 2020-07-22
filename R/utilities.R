@@ -6,3 +6,9 @@ get_taxa_order <- function(tree_view) {
     })
 }
 
+
+theme_no_margin <- function(...) {
+    theme(plot.margin = ggplot2::margin(), ...)
+}
+
+
