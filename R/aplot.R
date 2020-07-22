@@ -31,7 +31,6 @@ print.aplot <- function(x, ...) {
 ##' @importFrom ggplot2 ggplotGrob
 ##' @importFrom patchwork patchworkGrob
 aplotGrob <- function(x) {
-    x$plotlist[[1]] <- x$plotlist[[1]] + theme_no_margin()
     mp <- x$plotlist[[1]]
     if ( length(x$plitlist) == 1) {
         return(ggplotGrob(mp))
@@ -50,12 +49,12 @@ aplotGrob <- function(x) {
 
     idx <- as.vector(x$layout)
     idx[is.na(idx)] <- x$n + 1 
-    x$plotlist[[x$n+1]] <- ggplot() + theme_void() + theme_no_margin() # plot_spacer()
+    x$plotlist[[x$n+1]] <- ggplot() + theme_void() # plot_spacer()
     plotlist <- x$plotlist[idx]
     
-    pp <- plotlist[[1]]
+    pp <- plotlist[[1]] + theme_no_margin()
     for (i in 2:length(plotlist)) {
-        pp <- pp + plotlist[[i]]
+        pp <- pp + (plotlist[[i]] + theme_no_margin())
     }
     
     res <- pp + plot_layout(byrow=F, ncol=ncol(x$layout), 
