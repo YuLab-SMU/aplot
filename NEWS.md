@@ -1,3 +1,6 @@
+# aplot 0.0.5.991
+
++ fixed typo (2020-07-24, Fri)
 
 # aplot 0.0.5
 

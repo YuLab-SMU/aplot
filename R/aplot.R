@@ -32,7 +32,7 @@ print.aplot <- function(x, ...) {
 ##' @importFrom patchwork patchworkGrob
 aplotGrob <- function(x) {
     mp <- x$plotlist[[1]]
-    if ( length(x$plitlist) == 1) {
+    if ( length(x$plotlist) == 1) {
         return(ggplotGrob(mp))
     }
 
