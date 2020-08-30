@@ -63,10 +63,25 @@ insert_lr <- function(.data, plot, width,  side) {
         selected <- selected[!is.na(selected)]
         selected <- selected[selected != .data$n]
         for (i in selected) {
-            .data$plotlist[[i]] <- .data$plotlist[[i]] + 
-                aes(y = factor(.data[[yvar]], 
-                               levels = rev(get_taxa_order(plot)))) +
-                ylab(.data$plotlist[[i]]$labels$y)
+            if (is.coord_flip(.data$plotlist[[i]])) {
+                xvar <- rvcheck::get_aes_var(.data$plotlist[[1]]$mapping, 'x')
+                lvs <- rev(get_taxa_order(plot))
+
+                axis_trans <- list(
+                    aes(x = factor(.data[[xvar]], 
+                                   levels = lvs)), ## c(.data[[xvar]][!.data[[xvar]] %in% lvs], lvs))),
+                    xlab(.data$plotlist[[i]]$labels$x)
+                )
+            } else {
+                lvs = rev(get_taxa_order(plot))
+
+                axis_trans <- list(
+                    aes(y = factor(.data[[yvar]], 
+                                   levels = lvs)), ## c(.data[[yvar]][!.data[[yvar]] %in% lvs], lvs))),
+                    ylab(.data$plotlist[[i]]$labels$y)
+                )
+            }
+            .data$plotlist[[i]] <- .data$plotlist[[i]] + axis_trans
         }
     }
     

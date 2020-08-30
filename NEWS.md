@@ -1,5 +1,6 @@
-# aplot 0.0.5.991
+# aplot 0.0.6
 
++ compatible to work with `coord_flip` plot (2020-08-30, Sun)
 + fixed typo (2020-07-24, Fri)
 
 # aplot 0.0.5
