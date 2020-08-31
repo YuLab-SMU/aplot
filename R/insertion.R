@@ -57,14 +57,13 @@ insert_lr <- function(.data, plot, width,  side) {
         .data$layout <- cbind(.data$layout, new_col)
     }
     
-    if (inherits(plot, "ggtree")) { ## re-order based on the tree
-        yvar <- rvcheck::get_aes_var(.data$plotlist[[1]]$mapping, 'y')
+    if (is.ggtree(plot)) { ## re-order based on the tree
         selected <- .data$layout[.data$main_row,]
         selected <- selected[!is.na(selected)]
         selected <- selected[selected != .data$n]
         for (i in selected) {
             if (is.coord_flip(.data$plotlist[[i]])) {
-                xvar <- rvcheck::get_aes_var(.data$plotlist[[1]]$mapping, 'x')
+                xvar <- rvcheck::get_aes_var(.data$plotlist[[i]]$mapping, 'x')
                 lvs <- rev(get_taxa_order(plot))
 
                 axis_trans <- list(
@@ -73,6 +72,7 @@ insert_lr <- function(.data, plot, width,  side) {
                     xlab(.data$plotlist[[i]]$labels$x)
                 )
             } else {
+                yvar <- rvcheck::get_aes_var(.data$plotlist[[i]]$mapping, 'y')
                 lvs = rev(get_taxa_order(plot))
 
                 axis_trans <- list(
@@ -125,18 +125,41 @@ insert_tb <- function(.data, plot, height, side) {
     }
 
     
-    if (inherits(plot, "ggtree")) { ## re-order based on the tree
-        xvar <- rvcheck::get_aes_var(.data$plotlist[[1]]$mapping, 'x')
+    if (is.ggtree(plot)) { ## re-order based on the tree
         selected <- .data$layout[,.data$main_col]
         selected <- selected[!is.na(selected)]
         selected <- selected[selected != .data$n]
 
         for (i in selected) {
-            .data$plotlist[[i]] <- .data$plotlist[[i]] + 
-                aes(x = factor(.data[[xvar]], 
-                               levels = rev(get_taxa_order(plot)))) +
-                xlab(.data$plotlist[[i]]$labels$x)
+            if (is.coord_flip(.data$plotlist[[i]])) {
+                yvar <- rvcheck::get_aes_var(.data$plotlist[[i]]$mapping, 'y')
+                lvs = rev(get_taxa_order(plot))
+
+                axis_trans <- list(
+                    aes(y = factor(.data[[yvar]], 
+                                   levels = lvs)), ## c(.data[[yvar]][!.data[[yvar]] %in% lvs], lvs))),
+                    ylab(.data$plotlist[[i]]$labels$y)
+                )
+            } else {
+                xvar <- rvcheck::get_aes_var(.data$plotlist[[i]]$mapping, 'x')
+                lvs <- rev(get_taxa_order(plot))
+
+                axis_trans <- list(
+                    aes(x = factor(.data[[xvar]], 
+                                   levels = lvs)), ## c(.data[[xvar]][!.data[[xvar]] %in% lvs], lvs))),
+                    xlab(.data$plotlist[[i]]$labels$x)
+                )
+            }
+            .data$plotlist[[i]] <- .data$plotlist[[i]] + axis_trans
         }
+
+        ## for (i in selected) {
+        ##     xvar <- rvcheck::get_aes_var(.data$plotlist[[i]]$mapping, 'x')
+        ##     .data$plotlist[[i]] <- .data$plotlist[[i]] + 
+        ##         aes(x = factor(.data[[xvar]], 
+        ##                        levels = rev(get_taxa_order(plot)))) +
+        ##         xlab(.data$plotlist[[i]]$labels$x)
+        ## }
     }
     
     .data$plotlist[[.data$n]] <- plot 
