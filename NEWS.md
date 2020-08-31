@@ -1,5 +1,6 @@
 # aplot 0.0.6
 
++ `is.ggtree` from treeio package (2020-08-31, Mon)
 + compatible to work with `coord_flip` plot (2020-08-30, Sun)
 + fixed typo (2020-07-24, Fri)
 
