@@ -71,6 +71,7 @@ insert_lr <- function(.data, plot, width,  side) {
                                    levels = lvs)), ## c(.data[[xvar]][!.data[[xvar]] %in% lvs], lvs))),
                     xlab(.data$plotlist[[i]]$labels$x)
                 )
+               
             } else {
                 yvar <- rvcheck::get_aes_var(.data$plotlist[[i]]$mapping, 'y')
                 lvs = rev(get_taxa_order(plot))

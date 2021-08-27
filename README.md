@@ -2,7 +2,7 @@
 
 # `aplot` for decorating a plot with associated information
 
-[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/aplot?color=green)](https://cran.r-project.org/package=aplot)
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/aplot?color=green)](https://cran.r-project.org/package=aplot)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/aplot?color=green)
 ![](http://cranlogs.r-pkg.org/badges/aplot?color=green)
 ![](http://cranlogs.r-pkg.org/badges/last-week/aplot?color=green)
@@ -14,19 +14,19 @@ clustering with a heatmap. This package provides utilities to aligns
 associated subplots to a main plot at different sides (left, right, top
 and bottom) with axes exactly matched.
 
-## :writing\_hand: Authors
+## :writing_hand: Authors
 
 Guangchuang YU
 
 School of Basic Medical Sciences, Southern Medical University
 
-<https://guangchuangyu.github.io>
+<https://yulab-smu.top>
 
 [![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?hashtags=ggtree&url=http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12628/abstract&screen_name=guangchuangyu)
 [![saythanks](https://img.shields.io/badge/say-thanks-ff69b4.svg)](https://saythanks.io/to/GuangchuangYu)
 [![](https://img.shields.io/badge/follow%20me%20on-WeChat-green.svg)](https://guangchuangyu.github.io/blog_images/biobabble.jpg)
 
-## :arrow\_double\_down: Installation
+## :arrow_double_down: Installation
 
 Get the released version from CRAN:
 
@@ -44,4 +44,4 @@ remotes::install_github("YuLab-SMU/aplot")
 ## :book: Vignette
 
 For more details, please refer to the [online
-vignette](https://guangchuangyu.github.io/pkgdocs/aplot.html).
+vignette](https://yulab-smu.top/pkgdocs/aplot.html).
