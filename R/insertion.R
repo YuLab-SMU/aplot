@@ -63,7 +63,7 @@ insert_lr <- function(.data, plot, width,  side) {
         selected <- selected[selected != .data$n]
         for (i in selected) {
             if (is.coord_flip(.data$plotlist[[i]])) {
-                xvar <- rvcheck::get_aes_var(.data$plotlist[[i]]$mapping, 'x')
+                xvar <- ggfun::get_aes_var(.data$plotlist[[i]]$mapping, 'x')
                 lvs <- rev(get_taxa_order(plot))
 
                 axis_trans <- list(
@@ -73,7 +73,7 @@ insert_lr <- function(.data, plot, width,  side) {
                 )
                
             } else {
-                yvar <- rvcheck::get_aes_var(.data$plotlist[[i]]$mapping, 'y')
+                yvar <- ggfun::get_aes_var(.data$plotlist[[i]]$mapping, 'y')
                 lvs = rev(get_taxa_order(plot))
 
                 axis_trans <- list(
@@ -133,7 +133,7 @@ insert_tb <- function(.data, plot, height, side) {
 
         for (i in selected) {
             if (is.coord_flip(.data$plotlist[[i]])) {
-                yvar <- rvcheck::get_aes_var(.data$plotlist[[i]]$mapping, 'y')
+                yvar <- ggfun::get_aes_var(.data$plotlist[[i]]$mapping, 'y')
                 lvs = rev(get_taxa_order(plot))
 
                 axis_trans <- list(
@@ -142,7 +142,7 @@ insert_tb <- function(.data, plot, height, side) {
                     ylab(.data$plotlist[[i]]$labels$y)
                 )
             } else {
-                xvar <- rvcheck::get_aes_var(.data$plotlist[[i]]$mapping, 'x')
+                xvar <- ggfun::get_aes_var(.data$plotlist[[i]]$mapping, 'x')
                 lvs <- rev(get_taxa_order(plot))
 
                 axis_trans <- list(

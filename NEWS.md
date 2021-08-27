@@ -1,3 +1,7 @@
+# aplot 0.0.7
+
++ suggest `ggfun` (2021-08-27, Mon)
+
 # aplot 0.0.6
 
 + `is.ggtree` from treeio package (2020-08-31, Mon)
