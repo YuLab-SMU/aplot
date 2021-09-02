@@ -14,6 +14,8 @@
 ##' @importFrom patchwork plot_layout
 ##' @importFrom patchwork plot_annotation
 ##' @importFrom ggplot2 theme
+##' @importFrom ggplotify as.ggplot
+##' @importFrom utils modifyList
 ##' @export
 ##' @author Guangchuang Yu
 plot_list <- function(..., gglist = NULL,
@@ -43,5 +45,4 @@ plot_list <- function(..., gglist = NULL,
     }
     return(p)
 }
-
 
