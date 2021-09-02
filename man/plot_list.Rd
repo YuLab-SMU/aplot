@@ -4,10 +4,21 @@
 \alias{plot_list}
 \title{plot a list of ggplot objects}
 \usage{
-plot_list(gglist, ncol = NULL, nrow = NULL, widths = NULL, heights = NULL, ...)
+plot_list(
+  ...,
+  gglist = NULL,
+  ncol = NULL,
+  nrow = NULL,
+  widths = NULL,
+  heights = NULL,
+  tag_levels = NULL,
+  tag_size = 14
+)
 }
 \arguments{
-\item{gglist}{list of ggplot objects}
+\item{...}{list of plots to be arranged}
+
+\item{gglist}{(optional) list of plots}
 
 \item{ncol}{number of columns}
 
@@ -17,7 +28,9 @@ plot_list(gglist, ncol = NULL, nrow = NULL, widths = NULL, heights = NULL, ...)
 
 \item{heights}{relative heights}
 
-\item{...}{additional parameters that passed to plot_layout}
+\item{tag_levels}{format to label plots}
+
+\item{tag_size}{size of tags}
 }
 \value{
 composite plot

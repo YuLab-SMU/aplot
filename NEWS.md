@@ -1,3 +1,7 @@
+# aplot 0.0.7.991
+
++ update `...`, `tag_levels` and `tag_size` parameters in `plot_list` (2021-09-02, Thu)
+
 # aplot 0.0.7
 
 + suggest `ggfun` (2021-08-27, Mon)
