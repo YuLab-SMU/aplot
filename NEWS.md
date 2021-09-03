@@ -1,4 +1,4 @@
-# aplot 0.0.7.991
+# aplot 0.0.8
 
 + update `...`, `tag_levels` and `tag_size` parameters in `plot_list` (2021-09-02, Thu)
 
