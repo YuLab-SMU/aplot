@@ -1,3 +1,7 @@
+# aplot 0.0.9.991
+
++ mv some internal code to `ggfun::add_facet()` (2021-09-03, Fri)
+
 # aplot 0.0.9
 
 + bug fixed for `plot_list` with `patchwork` object (2021-09-03, Fri)
