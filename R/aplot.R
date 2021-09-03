@@ -28,14 +28,16 @@ print.aplot <- function(x, ...) {
     grid.draw(x)
 }
 
-##' @importFrom ggplot2 ggplotGrob
-##' @importFrom patchwork patchworkGrob
-aplotGrob <- function(x) {
+as.patchwork <- function(x) {
+    if (!inherits(x, 'aplot')) {
+        stop("only aplot object supported")
+    }
+    
     mp <- x$plotlist[[1]]
     if ( length(x$plotlist) == 1) {
         return(ggplotGrob(mp))
     }
-
+    
     for (i in x$layout[, x$main_col]) {
         if (is.na(i)) next
         if (i == 1) next
@@ -46,7 +48,7 @@ aplotGrob <- function(x) {
         if (i == 1) next
         x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + ylim2(mp))
     }
-
+    
     idx <- as.vector(x$layout)
     idx[is.na(idx)] <- x$n + 1 
     x$plotlist[[x$n+1]] <- ggplot() + theme_void() # plot_spacer()
@@ -57,10 +59,15 @@ aplotGrob <- function(x) {
         pp <- pp + (plotlist[[i]] + theme_no_margin())
     }
     
-    res <- pp + plot_layout(byrow=F, ncol=ncol(x$layout), 
+    pp + plot_layout(byrow=F, ncol=ncol(x$layout), 
                             widths = x$width,
                             heights= x$height,
                             guides = 'collect')
+}
+##' @importFrom ggplot2 ggplotGrob
+##' @importFrom patchwork patchworkGrob
+aplotGrob <- function(x) {
+    res <- as.patchwork(x)
     patchworkGrob(res)
 }
 
@@ -68,7 +75,7 @@ aplotGrob <- function(x) {
 ##' @method grid.draw aplot
 ##' @export
 grid.draw.aplot <- function(x, recoding = TRUE) {
-    grid::grid.draw(aplotGrob(x))
+    grid::grid.draw(as.patchwork(x))
 }
 
 

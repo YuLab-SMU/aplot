@@ -2,7 +2,9 @@
 
 + remove `add_facet` and import it from `ggfun`.
 
+# aplot 0.1.0.991
 
++ `print(aplot)` will draw the figure and return a `patchwork` object (2021-09-03, Fri; #6)
 
 # aplot 0.1.0
 
