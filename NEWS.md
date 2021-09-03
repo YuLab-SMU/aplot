@@ -1,6 +1,7 @@
-# aplot 0.0.9.991
+# aplot 0.1.0
 
-+ mv some internal code to `ggfun::add_facet()` (2021-09-03, Fri)
++ add `byrow`, `guides` and `design` parameter in `plot_list`  (2021-09-03, Fri)
++ mv some internal code to `ggfun::add_facet()`
 
 # aplot 0.0.9
 

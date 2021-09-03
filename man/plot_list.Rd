@@ -12,8 +12,10 @@ plot_list(
   byrow = NULL,
   widths = NULL,
   heights = NULL,
+  guides = NULL,
   tag_levels = NULL,
-  tag_size = 14
+  tag_size = 14,
+  design = NULL
 )
 }
 \arguments{
@@ -31,9 +33,13 @@ plot_list(
 
 \item{heights}{relative heights}
 
+\item{guides}{A string specifying how guides should be treated in the layout.}
+
 \item{tag_levels}{format to label plots}
 
 \item{tag_size}{size of tags}
+
+\item{design}{specification of the location of areas in the layout}
 }
 \value{
 composite plot
