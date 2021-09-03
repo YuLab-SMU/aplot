@@ -1,3 +1,9 @@
+# TODO
+
++ remove `add_facet` and import it from `ggfun`.
+
+
+
 # aplot 0.1.0
 
 + add `byrow`, `guides` and `design` parameter in `plot_list`  (2021-09-03, Fri)

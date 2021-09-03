@@ -46,7 +46,9 @@ plot_list <- function(..., gglist = NULL,
                     nrow = nrow,
                     byrow = byrow,
                     widths = widths,
-                    heights = heights
+                    heights = heights,
+                    guides = guides,
+                    design = design
                     )
 
     if (!is.null(tag_levels)) {
