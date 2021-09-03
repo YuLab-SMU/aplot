@@ -6,6 +6,7 @@
 ##' @param gglist (optional) list of plots
 ##' @param ncol number of columns
 ##' @param nrow number of rows
+##' @param byrow If "FALSE" the plots will be filled in in column-major order
 ##' @param widths relative widths
 ##' @param heights relative heights
 ##' @param tag_levels format to label plots
@@ -19,7 +20,7 @@
 ##' @export
 ##' @author Guangchuang Yu
 plot_list <- function(..., gglist = NULL,
-                      ncol = NULL, nrow = NULL,
+                      ncol = NULL, nrow = NULL, byrow = NULL,
                       widths = NULL, heights = NULL,
                       tag_levels = NULL,
                       tag_size = 14) {
@@ -39,6 +40,7 @@ plot_list <- function(..., gglist = NULL,
     p <- Reduce(`+`, gglist) +
         plot_layout(ncol = ncol,
                     nrow = nrow,
+                    byrow = byrow,
                     widths = widths,
                     heights = heights
                     )

@@ -9,6 +9,7 @@ plot_list(
   gglist = NULL,
   ncol = NULL,
   nrow = NULL,
+  byrow = NULL,
   widths = NULL,
   heights = NULL,
   tag_levels = NULL,
@@ -23,6 +24,8 @@ plot_list(
 \item{ncol}{number of columns}
 
 \item{nrow}{number of rows}
+
+\item{byrow}{If "FALSE" the plots will be filled in in column-major order}
 
 \item{widths}{relative widths}
 
