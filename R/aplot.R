@@ -59,10 +59,11 @@ as.patchwork <- function(x) {
         pp <- pp + (plotlist[[i]] + theme_no_margin())
     }
     
-    pp + plot_layout(byrow=F, ncol=ncol(x$layout), 
-                            widths = x$width,
-                            heights= x$height,
-                            guides = 'collect')
+    pp + plot_layout(byrow=F,
+                     ncol=ncol(x$layout),
+                     widths = x$width,
+                     heights= x$height,
+                     guides = 'collect')
 }
 ##' @importFrom ggplot2 ggplotGrob
 ##' @importFrom patchwork patchworkGrob

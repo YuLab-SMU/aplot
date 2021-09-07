@@ -33,7 +33,13 @@ plot_list <- function(..., gglist = NULL,
     name <- names(gglist)
 
     for (i in seq_along(gglist)) {
-        if (!inherits(gglist[[i]], 'gg') || inherits(gglist[[i]], 'patchwork')) {
+        if (!inherits(gglist[[i]], 'gg') ||
+            inherits(gglist[[i]], 'patchwork') ||
+            inherits(gglist[[i]], 'ggbreak')
+            ) {
+            if (inherits(gglist[[i]], 'ggbreak')) {
+                gglist[[i]] <- grid.draw(gglist[[i]], recording = FALSE)
+            }
             gglist[[i]] <- ggplotify::as.ggplot(gglist[[i]])
         }
         if (!is.null(name)) {
