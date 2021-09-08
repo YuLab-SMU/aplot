@@ -32,21 +32,19 @@ plot_list <- function(..., gglist = NULL,
     gglist <- c(list(...), gglist)
     name <- names(gglist)
 
-    for (i in seq_along(gglist)) {
-        if (!inherits(gglist[[i]], 'gg') ||
-            inherits(gglist[[i]], 'patchwork') ||
-            inherits(gglist[[i]], 'ggbreak')
-            ) {
-            if (inherits(gglist[[i]], 'ggbreak')) {
-                gglist[[i]] <- grid.draw(gglist[[i]], recording = FALSE)
+    if (!all_ggplot(gglist)) {
+        for (i in seq_along(gglist)) {
+            if (is.ggbreak(gglist[[i]])) {
+                gglist[[i]] <- ggbreak2ggplot(gglist[[i]])
             }
             gglist[[i]] <- ggplotify::as.ggplot(gglist[[i]])
-        }
-        if (!is.null(name)) {
-            gglist[[i]] <- add_facet(gglist[[i]], name[i])
+
+            if (!is.null(name)) {
+                gglist[[i]] <- add_facet(gglist[[i]], name[i])
+            }
         }
     }
-
+   
     p <- Reduce(`+`, gglist) +
         plot_layout(ncol = ncol,
                     nrow = nrow,
@@ -63,6 +61,33 @@ plot_list <- function(..., gglist = NULL,
             theme(plot.tag = pt)
     }
     return(p)
+}
+
+##' @importFrom ggplot2 is.ggplot
+all_ggplot <- function(gglist) {
+    for (i in seq_along(gglist)) {
+        if (!is.ggplot(gglist[[i]])) {
+            return(FALSE)
+        } else if (inherits(gglist[[i]], 'patchwork')) {
+            return(FALSE)
+        } else if (is.ggbreak(gglist[[i]])) {
+            return(FALSE)
+        }
+    }
+    return(TRUE)
+}
+
+ggbreak2ggplot <- function(p) {
+    ggplotify::as.ggplot(grid.draw(p, recording = FALSE))
+}
+
+is.ggbreak <- function(p) {
+    if (inherits(p, 'ggbreak') ||
+        inherits(p, 'ggwrap') ||
+        inherits(p, 'ggcut')
+        ) return(TRUE)
+
+    return(FALSE)
 }
 
 
