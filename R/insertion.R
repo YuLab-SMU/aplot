@@ -40,6 +40,7 @@ insert_right <- function(.data, plot, width=1) {
 }
 
 ##' @importFrom ggplot2 ylab
+##' @importFrom ggfun is.ggtree
 insert_lr <- function(.data, plot, width,  side) {
     side <- match.arg(side, c("left", "right"))
     .data <- as.aplot(.data)

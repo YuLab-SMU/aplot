@@ -19,6 +19,7 @@
 ##' @importFrom ggplotify as.ggplot
 ##' @importFrom ggplot2 theme
 ##' @importFrom utils modifyList
+##' @importFrom ggfun ggbreak2ggplot
 ##' @export
 ##' @author Guangchuang Yu
 plot_list <- function(..., gglist = NULL,
@@ -40,7 +41,8 @@ plot_list <- function(..., gglist = NULL,
             gglist[[i]] <- ggplotify::as.ggplot(gglist[[i]])
 
             if (!is.null(name)) {
-                gglist[[i]] <- add_facet(gglist[[i]], name[i])
+                ## gglist[[i]] <- add_facet(gglist[[i]], name[i])
+                gglist[[i]] <- gglist[[i]] + ggfun::facet_manual(label = name[i])
             }
         }
     }
@@ -64,6 +66,7 @@ plot_list <- function(..., gglist = NULL,
 }
 
 ##' @importFrom ggplot2 is.ggplot
+##' @importFrom ggfun is.ggbreak
 all_ggplot <- function(gglist) {
     for (i in seq_along(gglist)) {
         if (!is.ggplot(gglist[[i]])) {
@@ -76,46 +79,4 @@ all_ggplot <- function(gglist) {
     }
     return(TRUE)
 }
-
-ggbreak2ggplot <- function(p) {
-    ggplotify::as.ggplot(grid.draw(p, recording = FALSE))
-}
-
-is.ggbreak <- function(p) {
-    if (inherits(p, 'ggbreak') ||
-        inherits(p, 'ggwrap') ||
-        inherits(p, 'ggcut')
-        ) return(TRUE)
-
-    return(FALSE)
-}
-
-
-##' @importFrom ggplot2 theme
-##' @importFrom ggplot2 margin
-##' @importFrom ggplot2 element_rect
-##' @importFrom ggplot2 element_text
-##' @importFrom ggplot2 rel
-##' @importFrom ggplot2 facet_grid
-add_facet <- function(plot, label, side = 't', angle = NULL) {
-    side <- match.arg(side, c('t', 'r'))
-    lb <- paste0("'", eval(label), "'")
-    if (side == 't') {
-        lb <- paste0('~', lb)
-    } else {
-        lb <- paste0(lb, '~.')
-        if (is.null(angle))  angle <- -90
-    }
-
-    plot + facet_grid(eval(parse(text=lb))) +
-        theme(strip.background = element_rect(fill='grey85', colour = NA),
-              strip.text = element_text(colour = 'grey10',
-                                        size = rel(0.8),
-                                        angle = angle,
-                                        margin = margin(4.4, 4.4, 4.4, 4.4))
-              )
-}
-
-
-
 

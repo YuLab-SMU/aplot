@@ -1,16 +1,13 @@
-# TODO
 
-+ remove `add_facet` and import it from `ggfun`.
+# aplot 0.1.0.993
 
-# aplot 0.1.0.992
-
++ mv `ggbreak2ggplot`, `is.ggbreak` and `is.ggtree` to the ggfun package (2021-09-16, Thu)
 + `plot_list` now compatible with `ggbreak` object (2021-09-07, Tue)
 + `print(aplot)` will draw the figure and return a `patchwork` object (2021-09-03, Fri; #6)
 
 # aplot 0.1.0
 
 + add `byrow`, `guides` and `design` parameter in `plot_list`  (2021-09-03, Fri)
-+ mv some internal code to `ggfun::add_facet()`
 
 # aplot 0.0.9
 
