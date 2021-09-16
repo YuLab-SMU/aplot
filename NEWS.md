@@ -1,7 +1,9 @@
 
-# aplot 0.1.0.993
+# aplot 0.1.0.994
 
-+ mv `ggbreak2ggplot`, `is.ggbreak` and `is.ggtree` to the ggfun package (2021-09-16, Thu)
++ `options("aplot_guides" = "kepp")` to set whether collecting guides (2021-09-16, Thu)
+  - <https://github.com/YuLab-SMU/aplot/issues/6#issuecomment-920606540>
++ mv `ggbreak2ggplot`, `is.ggbreak` and `is.ggtree` to the ggfun package
 + `plot_list` now compatible with `ggbreak` object (2021-09-07, Tue)
 + `print(aplot)` will draw the figure and return a `patchwork` object (2021-09-03, Fri; #6)
 

@@ -58,12 +58,14 @@ as.patchwork <- function(x) {
     for (i in 2:length(plotlist)) {
         pp <- pp + (plotlist[[i]] + theme_no_margin())
     }
-    
+
+    guides <- getOption('aplot_guides', default="collect")
+
     pp + plot_layout(byrow=F,
                      ncol=ncol(x$layout),
                      widths = x$width,
                      heights= x$height,
-                     guides = 'collect')
+                     guides = guides)
 }
 ##' @importFrom ggplot2 ggplotGrob
 ##' @importFrom patchwork patchworkGrob
