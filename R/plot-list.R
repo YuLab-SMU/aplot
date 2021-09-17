@@ -42,7 +42,7 @@ plot_list <- function(..., gglist = NULL,
 
             if (!is.null(name)) {
                 ## gglist[[i]] <- add_facet(gglist[[i]], name[i])
-                gglist[[i]] <- gglist[[i]] + ggfun::facet_manual(label = name[i])
+                gglist[[i]] <- gglist[[i]] + ggfun::facet_set(label = name[i])
             }
         }
     }
