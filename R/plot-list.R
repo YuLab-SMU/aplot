@@ -10,7 +10,8 @@
 ##' @param widths relative widths
 ##' @param heights relative heights
 ##' @param guides A string specifying how guides should be treated in the layout.
-##' @param tag_levels format to label plots
+##' @param labels manual specified labels to label plots
+##' @param tag_levels format to label plots, will be disable if 'labels' is not NULL
 ##' @param tag_size size of tags
 ##' @param design specification of the location of areas in the layout
 ##' @return composite plot
@@ -18,14 +19,19 @@
 ##' @importFrom patchwork plot_annotation
 ##' @importFrom ggplotify as.ggplot
 ##' @importFrom ggplot2 theme
+##' @importFrom ggplot2 labs
 ##' @importFrom utils modifyList
 ##' @importFrom ggfun ggbreak2ggplot
 ##' @export
 ##' @author Guangchuang Yu
 plot_list <- function(..., gglist = NULL,
-                      ncol = NULL, nrow = NULL, byrow = NULL,
-                      widths = NULL, heights = NULL,
+                      ncol = NULL, 
+                      nrow = NULL, 
+                      byrow = NULL,
+                      widths = NULL, 
+                      heights = NULL,
                       guides = NULL,
+                      labels = NULL,        
                       tag_levels = NULL,
                       tag_size = 14,
                       design = NULL) {
@@ -37,9 +43,10 @@ plot_list <- function(..., gglist = NULL,
         for (i in seq_along(gglist)) {
             if (is.ggbreak(gglist[[i]])) {
                 gglist[[i]] <- ggbreak2ggplot(gglist[[i]])
+            } else {
+                gglist[[i]] <- ggplotify::as.ggplot(gglist[[i]])
             }
-            gglist[[i]] <- ggplotify::as.ggplot(gglist[[i]])
-
+            
             if (!is.null(name)) {
                 ## gglist[[i]] <- add_facet(gglist[[i]], name[i])
                 gglist[[i]] <- gglist[[i]] + ggfun::facet_set(label = name[i])
@@ -47,6 +54,15 @@ plot_list <- function(..., gglist = NULL,
         }
     }
    
+    if (!is.null(labels)) {
+        tag_levels <- NULL
+        n <- min(length(labels), length(gglist))
+        for (i in seq_len(n)) {
+            if (labels[i] == "") next
+            gglist[[i]] <- gglist[[i]] + labs(tag = labels[i])
+        }
+    }
+    
     p <- Reduce(`+`, gglist) +
         plot_layout(ncol = ncol,
                     nrow = nrow,
@@ -57,8 +73,10 @@ plot_list <- function(..., gglist = NULL,
                     design = design
                     )
 
-    if (!is.null(tag_levels)) {
-        pt <- modifyList(p$theme$plot.tag, list(size = tag_size))
+    if (!is.null(tag_levels) || !is.null(labels)) {
+        pt <- p$theme$plot.tag
+        if (is.null(pt)) pt <- list()
+        pt <- modifyList(pt, list(size = tag_size))
         p <- p + plot_annotation(tag_levels=tag_levels) &
             theme(plot.tag = pt)
     }

@@ -1,6 +1,7 @@
 
-# aplot 0.1.0.995
+# aplot 0.1.0.996
 
++ add `labels` parameter in `plot_list` (2021-09-19, Sun)
 + `plot_list` use `ggfun::facet_set()` to use facet label to label subplots (2021-09-17, Fri)
 + `options(aplot_guides = "keep")` to set whether collecting guides (2021-09-16, Thu)
   - <https://github.com/YuLab-SMU/aplot/issues/6#issuecomment-920606540>

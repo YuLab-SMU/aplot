@@ -13,6 +13,7 @@ plot_list(
   widths = NULL,
   heights = NULL,
   guides = NULL,
+  labels = NULL,
   tag_levels = NULL,
   tag_size = 14,
   design = NULL
@@ -35,7 +36,9 @@ plot_list(
 
 \item{guides}{A string specifying how guides should be treated in the layout.}
 
-\item{tag_levels}{format to label plots}
+\item{labels}{manual specified labels to label plots}
+
+\item{tag_levels}{format to label plots, will be disable if 'labels' is not NULL}
 
 \item{tag_size}{size of tags}
 
