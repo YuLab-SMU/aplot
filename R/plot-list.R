@@ -47,13 +47,17 @@ plot_list <- function(..., gglist = NULL,
                 gglist[[i]] <- ggplotify::as.ggplot(gglist[[i]])
             }
             
-            if (!is.null(name)) {
-                ## gglist[[i]] <- add_facet(gglist[[i]], name[i])
-                gglist[[i]] <- gglist[[i]] + ggfun::facet_set(label = name[i])
-            }
         }
     }
-   
+    
+    if (!is.null(name)) {
+        for (i in seq_along(gglist)) {
+        ## gglist[[i]] <- add_facet(gglist[[i]], name[i])
+            if (inherits(gglist[[i]], 'patchwork')) gglist[[i]] <- ggplotify::as.ggplot(gglist[[i]])
+           gglist[[i]] <- gglist[[i]] + ggfun::facet_set(label = name[i])
+        }
+    }
+    
     if (!is.null(labels)) {
         tag_levels <- NULL
         n <- min(length(labels), length(gglist))
@@ -63,7 +67,7 @@ plot_list <- function(..., gglist = NULL,
         }
     }
     
-    p <- Reduce(`+`, gglist) +
+    p <- Reduce(`+`, gglist, init=patchwork:::plot_filler()) +
         plot_layout(ncol = ncol,
                     nrow = nrow,
                     byrow = byrow,
@@ -89,8 +93,8 @@ all_ggplot <- function(gglist) {
     for (i in seq_along(gglist)) {
         if (!is.ggplot(gglist[[i]])) {
             return(FALSE)
-        } else if (inherits(gglist[[i]], 'patchwork')) {
-            return(FALSE)
+        #} else if (inherits(gglist[[i]], 'patchwork')) {
+        #    return(FALSE)
         } else if (is.ggbreak(gglist[[i]])) {
             return(FALSE)
         }
