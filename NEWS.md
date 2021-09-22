@@ -1,5 +1,5 @@
 
-# aplot 0.1.0.996
+# aplot 0.1.1
 
 + add `labels` parameter in `plot_list` (2021-09-19, Sun)
 + `plot_list` use `ggfun::facet_set()` to use facet label to label subplots (2021-09-17, Fri)

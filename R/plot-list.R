@@ -38,7 +38,7 @@ plot_list <- function(..., gglist = NULL,
 
     gglist <- c(list(...), gglist)
     name <- names(gglist)
-
+    
     if (!all_ggplot(gglist)) {
         for (i in seq_along(gglist)) {
             if (is.ggbreak(gglist[[i]])) {
@@ -52,9 +52,13 @@ plot_list <- function(..., gglist = NULL,
     
     if (!is.null(name)) {
         for (i in seq_along(gglist)) {
-        ## gglist[[i]] <- add_facet(gglist[[i]], name[i])
-            if (inherits(gglist[[i]], 'patchwork')) gglist[[i]] <- ggplotify::as.ggplot(gglist[[i]])
-           gglist[[i]] <- gglist[[i]] + ggfun::facet_set(label = name[i])
+            if (name[i] != "") {
+                if (inherits(gglist[[i]], 'patchwork')) {
+                    gglist[[i]] <- ggplotify::as.ggplot(gglist[[i]])
+                }
+
+                gglist[[i]] <- gglist[[i]] + ggfun::facet_set(label = name[i])                
+            }
         }
     }
     
@@ -67,7 +71,7 @@ plot_list <- function(..., gglist = NULL,
         }
     }
     
-    p <- Reduce(`+`, gglist, init=patchwork:::plot_filler()) +
+    p <- Reduce(`+`, gglist, init=plot_filler()) +
         plot_layout(ncol = ncol,
                     nrow = nrow,
                     byrow = byrow,
@@ -101,4 +105,8 @@ all_ggplot <- function(gglist) {
     }
     return(TRUE)
 }
+
+
+
+plot_filler <- yulab.utils::get_fun_from_pkg("patchwork", "plot_filler")
 
