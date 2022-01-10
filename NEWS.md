@@ -1,4 +1,8 @@
 
+# aplot 0.1.1.991
+
++ bug fixed in setting `plot.tag` theme element in `plot_list` (2021-11-08, Mon) 
+
 # aplot 0.1.1
 
 + add `labels` parameter in `plot_list` (2021-09-19, Sun)

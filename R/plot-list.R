@@ -19,6 +19,7 @@
 ##' @importFrom patchwork plot_annotation
 ##' @importFrom ggplotify as.ggplot
 ##' @importFrom ggplot2 theme
+##' @importFrom ggplot2 element_text
 ##' @importFrom ggplot2 labs
 ##' @importFrom utils modifyList
 ##' @importFrom ggfun ggbreak2ggplot
@@ -83,7 +84,7 @@ plot_list <- function(..., gglist = NULL,
 
     if (!is.null(tag_levels) || !is.null(labels)) {
         pt <- p$theme$plot.tag
-        if (is.null(pt)) pt <- list()
+        if (is.null(pt)) pt <- element_text()
         pt <- modifyList(pt, list(size = tag_size))
         p <- p + plot_annotation(tag_levels=tag_levels) &
             theme(plot.tag = pt)
