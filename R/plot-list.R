@@ -84,7 +84,9 @@ plot_list <- function(..., gglist = NULL,
 
     if (!is.null(tag_levels) || !is.null(labels)) {
         pt <- p$theme$plot.tag
-        if (is.null(pt)) pt <- element_text()
+        if (is.null(pt)){
+            pt <- ggplot2::element_text()
+        }
         pt <- modifyList(pt, list(size = tag_size))
         p <- p + plot_annotation(tag_levels=tag_levels) &
             theme(plot.tag = pt)
