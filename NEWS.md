@@ -1,3 +1,6 @@
+# aplot 0.1.3
+
++ update `ggrange()` to support extracting plot limit and range (newly added) (2022-04-01, Fri)
 
 # aplot 0.1.2
 

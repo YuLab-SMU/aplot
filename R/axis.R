@@ -62,17 +62,30 @@ xrange <- function(gg) {
 
 ##' @importFrom ggplot2 layer_scales
 ##' @importFrom ggplot2 ggplot_build
-ggrange <- function(gg, var) {
-    ## https://github.com/YuLab-SMU/aplot/pull/3
-    ## res <- layer_scales(gg)[[var]]$range$range 
-    res <- layer_scales(gg)[[var]]$limits
-    if (is.null(res)) {
-        res <- layer_scales(gg)[[var]]$range$range 
-    }
-    if (is.character(res)) return(res)
+ggrange <- function(gg, var, type = 'limit') {
+    ## ## https://github.com/YuLab-SMU/aplot/pull/3
+    ## ## res <- layer_scales(gg)[[var]]$range$range 
+    ## res <- layer_scales(gg)[[var]]$limits
+    ## if (is.null(res)) {
+    ##     res <- layer_scales(gg)[[var]]$range$range 
+    ## }
+    ## if (is.character(res)) return(res)
 
-    var <- paste0(var, ".range")
-    ggplot_build(gg)$layout$panel_params[[1]][[var]]
+    ## var <- paste0(var, ".range")
+    ## ggplot_build(gg)$layout$panel_params[[1]][[var]]
+
+    type <- match.arg(type, c("limit", 'range'))
+
+    var <- paste0("panel_scales_", var)
+    x <- ggplot_build(gg)$layout[[var]][[1]]
+    if (type == 'limit') {
+        ## x <- ggplot_build(gg)$layout$panel_params[[1]][[var]]
+        res <- x$get_limits()
+    } else {
+        res <- x$range$range
+    }
+
+    return(res)
 }
 
 ##' @method ggplot_add axisAlign
