@@ -5,6 +5,9 @@
 \alias{reexports}
 \alias{ggsave}
 \alias{\%>\%}
+\alias{ggrange}
+\alias{xrange}
+\alias{yrange}
 \title{Objects exported from other packages}
 \keyword{internal}
 \description{
@@ -12,6 +15,8 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
+  \item{ggfun}{\code{\link[ggfun]{ggrange}}, \code{\link[ggfun:ggrange]{xrange}}, \code{\link[ggfun:ggrange]{yrange}}}
+
   \item{ggplot2}{\code{\link[ggplot2]{ggsave}}}
 
   \item{magrittr}{\code{\link[magrittr:pipe]{\%>\%}}}

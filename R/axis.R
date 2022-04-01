@@ -41,53 +41,6 @@ axis_align <- function(gg, limits = NULL, axis) {
 }
 
 
-##' extract x or y ranges of a ggplot
-##'
-##' 
-##' @title plot range of a ggplot object
-##' @rdname ggrange
-##' @param gg a ggplot object
-##' @return range of selected axis
-##' @export
-##' @author Guangchuang Yu
-yrange <- function(gg) {
-    ggrange(gg, "y")
-}
-
-##' @rdname ggrange
-##' @export
-xrange <- function(gg) {
-    ggrange(gg, "x")
-}
-
-##' @importFrom ggplot2 layer_scales
-##' @importFrom ggplot2 ggplot_build
-ggrange <- function(gg, var, type = 'limit') {
-    ## ## https://github.com/YuLab-SMU/aplot/pull/3
-    ## ## res <- layer_scales(gg)[[var]]$range$range 
-    ## res <- layer_scales(gg)[[var]]$limits
-    ## if (is.null(res)) {
-    ##     res <- layer_scales(gg)[[var]]$range$range 
-    ## }
-    ## if (is.character(res)) return(res)
-
-    ## var <- paste0(var, ".range")
-    ## ggplot_build(gg)$layout$panel_params[[1]][[var]]
-
-    type <- match.arg(type, c("limit", 'range'))
-
-    var <- paste0("panel_scales_", var)
-    x <- ggplot_build(gg)$layout[[var]][[1]]
-    if (type == 'limit') {
-        ## x <- ggplot_build(gg)$layout$panel_params[[1]][[var]]
-        res <- x$get_limits()
-    } else {
-        res <- x$range$range
-    }
-
-    return(res)
-}
-
 ##' @method ggplot_add axisAlign
 ##' @importFrom ggplot2 ggplot_add
 ##' @importFrom ggplot2 scale_x_discrete
