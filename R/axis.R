@@ -31,9 +31,9 @@ ylim2 <- function(gg, limits = NULL) {
 axis_align <- function(gg, limits = NULL, axis) {
     if (is.null(limits)) {
         if (axis == "x") {
-            limits <- xrange(gg)
+            limits <- xrange(gg, region = 'plot')
         } else {
-            limits <- yrange(gg)
+            limits <- yrange(gg, region = 'plot')
         }
     }
     structure(list(limits = limits, axis = axis),

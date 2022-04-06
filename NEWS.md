@@ -1,5 +1,6 @@
-# aplot 0.1.3.900
+# aplot 0.1.3.901
 
++ based on the update of `ggrange()`, now in `xlim2()` and `ylim2()`, we should specify `region = 'plot'` (2022-04-06, Wed)
 + mv `ggrange()`, `xrange()` and `yrange()` to 'ggfun' (2022-04-01, Fri)
 
 # aplot 0.1.3
