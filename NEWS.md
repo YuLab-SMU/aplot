@@ -1,3 +1,7 @@
+# aplot 0.1.4.900
+
++ `plot_list()` calls `gglist()` and return a `gglist` object (2022-05-05, Thu)
+
 # aplot 0.1.4
 
 + `gglist()` function to construct composite plot (2022-05-05, Thu)

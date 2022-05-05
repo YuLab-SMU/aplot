@@ -71,7 +71,33 @@ plot_list <- function(..., gglist = NULL,
             gglist[[i]] <- gglist[[i]] + labs(tag = labels[i])
         }
     }
-    
+
+    gglist(gglist = gglist,
+          ncol = ncol, 
+          nrow = nrow, 
+          byrow = byrow,
+          widths = widths, 
+          heights = heights,
+          guides = guides,
+          labels = labels,        
+          tag_levels = tag_levels,
+          tag_size = tag_size,
+          design = design)        
+}
+
+
+plot_list2 <- function(gglist = NULL,
+                      ncol = NULL, 
+                      nrow = NULL, 
+                      byrow = NULL,
+                      widths = NULL, 
+                      heights = NULL,
+                      guides = NULL,
+                      labels = NULL,        
+                      tag_levels = NULL,
+                      tag_size = 14,
+                      design = NULL) {
+
     p <- Reduce(`+`, gglist, init=plot_filler()) +
         plot_layout(ncol = ncol,
                     nrow = nrow,
@@ -134,11 +160,12 @@ gglist <- function(gglist, ...) {
 ##' @export
 print.gglist <- function(x, ...) {
     y = c(list(gglist=x), attr(x, 'params'))
-    print(do.call(aplot::plot_list, y))
+    print(do.call(plot_list2, y))
 }
 
 ##' @method [[ gglist
 ##' @export
 `[[.gglist` <- function(x, i, j, ...) {
-    x$gglist[[i]]
+    class(x) <- "list"
+    x[[i]]
 }
