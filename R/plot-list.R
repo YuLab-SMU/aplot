@@ -113,3 +113,32 @@ all_ggplot <- function(gglist) {
 
 plot_filler <- yulab.utils::get_fun_from_pkg("patchwork", "plot_filler")
 
+
+##' constructure a `gglist` object that contains a list of plots (`gglist`) and 
+##' parameters (via `...`), the object can be displayed via the `plot_list()` function.
+##' 
+##' @title construct a `gglist` object
+##' @param gglist a list of plots
+##' @param ... parameters for plotting the `gglist`
+##' @return gglist object
+##' @export
+##' @author Guangchuang Yu
+gglist <- function(gglist, ...) {
+    res <- gglist
+    attr(res, 'params') <- list(...)
+    structure(res,
+        class = "gglist")
+}
+
+##' @method print gglist
+##' @export
+print.gglist <- function(x, ...) {
+    y = c(list(gglist=x), attr(x, 'params'))
+    print(do.call(aplot::plot_list, y))
+}
+
+##' @method [[ gglist
+##' @export
+`[[.gglist` <- function(x, i, j, ...) {
+    x$gglist[[i]]
+}
