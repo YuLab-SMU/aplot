@@ -153,7 +153,8 @@ gglist <- function(gglist, ...) {
     res <- gglist
     attr(res, 'params') <- list(...)
     structure(res,
-        class = "gglist")
+        class = c("gglist", "list")
+    )
 }
 
 ##' @method print gglist
@@ -163,9 +164,3 @@ print.gglist <- function(x, ...) {
     print(do.call(plot_list2, y))
 }
 
-##' @method [[ gglist
-##' @export
-`[[.gglist` <- function(x, i, j, ...) {
-    class(x) <- "list"
-    x[[i]]
-}
