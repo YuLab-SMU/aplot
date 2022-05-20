@@ -81,4 +81,15 @@ grid.draw.aplot <- function(x, recoding = TRUE) {
     grid::grid.draw(as.patchwork(x))
 }
 
+##' @method [[ aplot
+##' @export
+`[[.aplot` <- function(x, i){
+    x$plotlist[[i]]
+}
 
+##' @method [[<- aplot
+##' @export
+`[[<-.aplot` <- function(x, i, value){
+    x$plotlist[[i]] <- value
+    x
+}
