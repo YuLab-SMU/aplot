@@ -40,7 +40,7 @@ plot_list <- function(..., gglist = NULL,
                       output = "gglist") {
     
     output <- match.arg(output, c("gglist", "patchwork"))
-    
+
     gglist <- c(list(...), gglist)
     name <- names(gglist)
     
@@ -171,6 +171,6 @@ gglist <- function(gglist, ...) {
 ##' @method print gglist
 ##' @export
 print.gglist <- function(x, ...) {
-    as.patchwork(x)
+    print(as.patchwork(x))
 }
 
