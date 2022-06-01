@@ -1,5 +1,6 @@
-# aplot 0.1.4.900
+# aplot 0.1.5
 
++ `output` parameter in `plot_list()` can specify to return a `gglist` or `patchwork` object (2022-06-01, Wed)
 + `plot_list()` calls `gglist()` and return a `gglist` object (2022-05-05, Thu)
 
 # aplot 0.1.4

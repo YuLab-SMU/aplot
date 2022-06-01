@@ -16,7 +16,8 @@ plot_list(
   labels = NULL,
   tag_levels = NULL,
   tag_size = 14,
-  design = NULL
+  design = NULL,
+  output = "gglist"
 )
 }
 \arguments{
@@ -43,6 +44,8 @@ plot_list(
 \item{tag_size}{size of tags}
 
 \item{design}{specification of the location of areas in the layout}
+
+\item{output}{one of 'gglist' or 'patchwork'}
 }
 \value{
 composite plot
