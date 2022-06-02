@@ -17,7 +17,7 @@ plot_list(
   tag_levels = NULL,
   tag_size = 14,
   design = NULL,
-  output = "gglist"
+  output = "patchwork"
 )
 }
 \arguments{
