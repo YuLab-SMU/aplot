@@ -1,3 +1,7 @@
+# aplot 0.1.6
+
++ bug fixed 
+
 # aplot 0.1.5
 
 + `output` parameter in `plot_list()` can specify to return a `gglist` or `patchwork` object (2022-06-01, Wed)
