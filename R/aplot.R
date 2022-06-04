@@ -29,8 +29,13 @@ print.aplot <- function(x, ...) {
 }
 
 as.patchwork <- function(x) {
-    if (!inherits(x, 'aplot')) {
-        stop("only aplot object supported")
+    if (!inherits(x, 'aplot') && !inherits(x, "gglist")) {
+        stop("only aplot or gglist object supported")
+    }
+    if (inherits(x, "gglist")) {
+        y <- c(list(gglist=x), attr(x, 'params'))
+        res <- do.call(plot_list2, y)
+        return(res)
     }
     
     mp <- x$plotlist[[1]]
