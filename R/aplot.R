@@ -28,8 +28,13 @@ print.aplot <- function(x, ...) {
     grid.draw(x)
 }
 
+##' as.patchwork
+##' 
+##' @param x object
 ##' @param modify_xlim use xlim2() to modify xlim or not
 ##' @param modify_ylim use ylim2() to modify ylim or not
+##' @importFrom patchwork plot_layout
+##' @importFrom ggplot2 ggplotGrob
 ##' @export
 as.patchwork <- function(x,
                          modify_xlim = TRUE,
@@ -82,6 +87,8 @@ as.patchwork <- function(x,
                      heights= x$height,
                      guides = guides)
 }
+
+
 ##' @importFrom ggplot2 ggplotGrob
 ##' @importFrom patchwork patchworkGrob
 aplotGrob <- function(x) {
