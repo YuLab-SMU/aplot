@@ -30,6 +30,7 @@ print.aplot <- function(x, ...) {
 
 ##' @param modify_xlim use xlim2() to modify xlim or not
 ##' @param modify_ylim use ylim2() to modify ylim or not
+##' @export
 as.patchwork <- function(x,
                          modify_xlim = TRUE,
                          modify_ylim = TRUE) {
