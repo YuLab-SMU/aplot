@@ -28,7 +28,11 @@ print.aplot <- function(x, ...) {
     grid.draw(x)
 }
 
-as.patchwork <- function(x) {
+##' @param modify_xlim use xlim2() to modify xlim or not
+##' @param modify_ylim use ylim2() to modify ylim or not
+as.patchwork <- function(x,
+                         modify_xlim = TRUE,
+                         modify_ylim = TRUE) {
     if (!inherits(x, 'aplot') && !inherits(x, "gglist")) {
         stop("only aplot or gglist object supported")
     }
@@ -43,15 +47,20 @@ as.patchwork <- function(x) {
         return(ggplotGrob(mp))
     }
     
-    for (i in x$layout[, x$main_col]) {
-        if (is.na(i)) next
-        if (i == 1) next
-        x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + xlim2(mp))
+    if(modify_xlim){
+        for (i in x$layout[, x$main_col]) {
+            if (is.na(i)) next
+            if (i == 1) next
+            x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + xlim2(mp))
+        }
     }
-    for (i in x$layout[x$main_row,]) {
-        if(is.na(i)) next
-        if (i == 1) next
-        x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + ylim2(mp))
+    
+    if(modify_ylim){
+        for (i in x$layout[x$main_row,]) {
+            if(is.na(i)) next
+            if (i == 1) next
+            x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + ylim2(mp))
+        }
     }
     
     idx <- as.vector(x$layout)
