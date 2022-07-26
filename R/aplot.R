@@ -31,14 +31,15 @@ print.aplot <- function(x, ...) {
 ##' as.patchwork
 ##' 
 ##' @param x object
-##' @param modify_xlim use xlim2() to modify xlim or not
-##' @param modify_ylim use ylim2() to modify ylim or not
+##' @param align "x","y","xy","none", align the axis of x/y or not.
 ##' @importFrom patchwork plot_layout
 ##' @importFrom ggplot2 ggplotGrob
 ##' @export
 as.patchwork <- function(x,
-                         modify_xlim = TRUE,
-                         modify_ylim = TRUE) {
+                         align = "xy") {
+    
+    align <- match.arg(align, c("x","y","xy","none"))
+    
     if (!inherits(x, 'aplot') && !inherits(x, "gglist")) {
         stop("only aplot or gglist object supported")
     }
@@ -53,7 +54,7 @@ as.patchwork <- function(x,
         return(ggplotGrob(mp))
     }
     
-    if(modify_xlim){
+    if(align == "x" || align == "xy"){
         for (i in x$layout[, x$main_col]) {
             if (is.na(i)) next
             if (i == 1) next
@@ -61,7 +62,7 @@ as.patchwork <- function(x,
         }
     }
     
-    if(modify_ylim){
+    if(align == "y" || align == "xy"){
         for (i in x$layout[x$main_row,]) {
             if(is.na(i)) next
             if (i == 1) next
