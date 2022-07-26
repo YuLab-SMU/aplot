@@ -4,14 +4,12 @@
 \alias{as.patchwork}
 \title{as.patchwork}
 \usage{
-as.patchwork(x, modify_xlim = TRUE, modify_ylim = TRUE)
+as.patchwork(x, align = "xy")
 }
 \arguments{
 \item{x}{object}
 
-\item{modify_xlim}{use xlim2() to modify xlim or not}
-
-\item{modify_ylim}{use ylim2() to modify ylim or not}
+\item{align}{"x","y","xy","none", align the axis of x/y or not.}
 }
 \description{
 as.patchwork
