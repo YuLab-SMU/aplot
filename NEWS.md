@@ -1,3 +1,7 @@
+# aplot 0.1.6.001
+
++ introduce `align` parameter in `as.patchwork()` (2022-07-27, Wed, #19)
+
 # aplot 0.1.6
 
 + bug fixed 
