@@ -28,7 +28,18 @@ print.aplot <- function(x, ...) {
     grid.draw(x)
 }
 
-as.patchwork <- function(x) {
+##' as.patchwork
+##' 
+##' @param x object
+##' @param align "x","y","xy","none", align the axis of x/y or not.
+##' @importFrom patchwork plot_layout
+##' @importFrom ggplot2 ggplotGrob
+##' @export
+as.patchwork <- function(x,
+                         align = "xy") {
+    
+    align <- match.arg(align, c("x","y","xy","none"))
+    
     if (!inherits(x, 'aplot') && !inherits(x, "gglist")) {
         stop("only aplot or gglist object supported")
     }
@@ -43,15 +54,20 @@ as.patchwork <- function(x) {
         return(ggplotGrob(mp))
     }
     
-    for (i in x$layout[, x$main_col]) {
-        if (is.na(i)) next
-        if (i == 1) next
-        x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + xlim2(mp))
+    if(align == "x" || align == "xy"){
+        for (i in x$layout[, x$main_col]) {
+            if (is.na(i)) next
+            if (i == 1) next
+            x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + xlim2(mp))
+        }
     }
-    for (i in x$layout[x$main_row,]) {
-        if(is.na(i)) next
-        if (i == 1) next
-        x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + ylim2(mp))
+    
+    if(align == "y" || align == "xy"){
+        for (i in x$layout[x$main_row,]) {
+            if(is.na(i)) next
+            if (i == 1) next
+            x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + ylim2(mp))
+        }
     }
     
     idx <- as.vector(x$layout)
@@ -72,6 +88,8 @@ as.patchwork <- function(x) {
                      heights= x$height,
                      guides = guides)
 }
+
+
 ##' @importFrom ggplot2 ggplotGrob
 ##' @importFrom patchwork patchworkGrob
 aplotGrob <- function(x) {
