@@ -48,7 +48,14 @@ p3 <- ggplot(mtcars, aes(x=1, y=disp)) +
 ap <- p \%>\% 
     insert_top(p2, height=.3) \%>\% 
     insert_right(p3, width=.1)
-    
+
+ap
+ap[2, 1] <- ap[2, 1] + theme_bw()
+ap[2, 1] <- ap[2, 1] + 
+            aes(color = as.factor(am)) + 
+            scale_color_manual(values = c('steelblue', 'darkgreen'))
+ap[1, 1] <- ap[1, 1] + theme(axis.line.x.bottom=element_line())
+ap
 }
 \author{
 Guangchuang Yu
