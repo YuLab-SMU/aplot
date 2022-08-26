@@ -104,4 +104,3 @@ grid.draw.aplot <- function(x, recoding = TRUE) {
     grid::grid.draw(as.patchwork(x))
 }
 
-
