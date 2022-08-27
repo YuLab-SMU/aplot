@@ -1,5 +1,6 @@
-# aplot 0.1.6.001
+# aplot 0.1.7
 
++ `[`, `[<-`, `[[` and `[[<-` methods for the 'aplot' class (2022-08-27, Sat, #22)
 + introduce `align` parameter in `as.patchwork()` (2022-07-27, Wed, #19)
 
 # aplot 0.1.6
