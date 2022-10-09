@@ -4,7 +4,7 @@
 \alias{as.patchwork}
 \title{as.patchwork}
 \usage{
-as.patchwork(x, align = "xy")
+as.patchwork(x, align = getOption("aplot_align", default = "xy"))
 }
 \arguments{
 \item{x}{object}

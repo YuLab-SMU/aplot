@@ -1,3 +1,8 @@
+# aplot 0.1.8
+
++ user can use `options(aplot_align = "y")` to pass the value to `as.patchwork(align="y")` (2022-10-09, Sun)
+    - <https://github.com/YuLab-SMU/ChIPseeker/pull/199#pullrequestreview-1135289398>
+
 # aplot 0.1.7
 
 + `[`, `[<-`, `[[` and `[[<-` methods for the 'aplot' class (2022-08-27, Sat, #22)

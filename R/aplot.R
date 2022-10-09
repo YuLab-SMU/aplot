@@ -36,7 +36,8 @@ print.aplot <- function(x, ...) {
 ##' @importFrom ggplot2 ggplotGrob
 ##' @export
 as.patchwork <- function(x,
-                         align = "xy") {
+                         align = getOption("aplot_align", default = "xy")
+                        ) {
     
     align <- match.arg(align, c("x","y","xy","none"))
     
