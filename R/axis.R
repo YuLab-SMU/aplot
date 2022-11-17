@@ -55,13 +55,23 @@ ggplot_add.axisAlign <- function(object, plot, object_name) {
     ## expand_limits <- object$expand_limits
     ## limits[1] <- limits[1] + (limits[1] * expand_limits[1]) - expand_limits[2]
     ## limits[2] <- limits[2] + (limits[2] * expand_limits[3]) + expand_limits[4]
-
+    gb <- ggplot2::ggplot_build(plot)
     if (is.numeric(limits)) {
-        lim_x <- scale_x_continuous(limits=limits, expand=c(0,0))
-        lim_y <- scale_y_continuous(limits = limits, expand = c(0, 0))
+        if (inherits(plot, 'ggtree')){
+            lim_x <- scale_x_continuous(limits=limits, expand=c(0, 0))
+            lim_y <- scale_y_continuous(limits = limits, expand = c(0, 0))
+        }else{
+            lim_x <- set_scale_limits(gb$layout$panel_scales_x[[1]], limits=limits, expand=c(0, 0))
+            lim_y <- set_scale_limits(gb$layout$panel_scales_y[[1]], limits=limits, expand=c(0, 0))
+        }
     } else {
-        lim_x <- scale_x_discrete(limits=limits, expand = c(0, 0.6))
-        lim_y <- scale_y_discrete(limits = limits, expand = c(0, 0.6))
+        if (inherits(plot, 'ggtree')){
+            lim_x <- scale_x_discrete(limits=limits, expand = c(0, 0.6))
+            lim_y <- scale_y_discrete(limits = limits, expand = c(0, 0.6))
+        }else{
+            lim_x <- set_scale_limits(gb$layout$panel_scales_x[[1]], limits=limits, expand = c(0, .6))
+            lim_y <- set_scale_limits(gb$layout$panel_scales_y[[1]], limits=limits, expand = c(0, .6))
+        }
     }
 
     if (object$axis == 'x') {
@@ -69,6 +79,9 @@ ggplot_add.axisAlign <- function(object, plot, object_name) {
         if (is(plot$coordinates, "CoordFlip")) {
             message("the plot was flipped and the x limits will be applied to y-axis")
             scale_lim <- lim_y
+            if (!inherits(plot, 'ggtree')){
+                scale_lim <- switch_position(scale_lim)
+            }
         } else {
             scale_lim <- lim_x
         }
@@ -92,10 +105,28 @@ ggplot_add.axisAlign <- function(object, plot, object_name) {
         if (is(plot$coordinates, "CoordFlip")) {
             message("the plot was flipped and the y limits will be applied to x-axis")
             scale_lim <- lim_x
+            if (!inherits(plot, 'ggtree')){
+                scale_lim <- switch_position(scale_lim)
+            }
         } else {
             scale_lim <- lim_y
         }
         ## }
     }
     ggplot_add(scale_lim, plot, object_name)
+}
+
+set_scale_limits <- function(scales, limits, expand){
+    scales$limits <- limits
+    scales$expand <- expand
+    return(scales)
+}
+
+switch_position <- function(scales){
+    scales$position <- switch(scales$position, 
+                              bottom='left', 
+                              top='right', 
+                              left='bottom', 
+                              right='top')
+    return(scales)
 }
