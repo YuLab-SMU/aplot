@@ -1,5 +1,6 @@
 # aplot 0.1.9
 
++ use `ggfun::theme_noxaxis()` instead of `ggtree::theme_dendrogram()` (2022-11-21, Mon)
 + use original scale when sub plot is not a 'ggtree' object (2022-11-18, Fri, #23)
 
 # aplot 0.1.8

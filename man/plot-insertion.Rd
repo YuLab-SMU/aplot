@@ -41,7 +41,7 @@ library(aplot)
 p <- ggplot(mtcars, aes(mpg, disp)) + geom_point()
 p2 <- ggplot(mtcars, aes(mpg)) + 
     geom_density(fill='steelblue', alpha=.5) + 
-        ggtree::theme_dendrogram()
+        ggfun::theme_noxaxis()
 p3 <- ggplot(mtcars, aes(x=1, y=disp)) + 
     geom_boxplot(fill='firebrick', alpha=.5) + 
     theme_void()
