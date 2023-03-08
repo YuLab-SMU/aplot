@@ -101,7 +101,7 @@ aplotGrob <- function(x) {
 ##' @importFrom grid grid.draw
 ##' @method grid.draw aplot
 ##' @export
-grid.draw.aplot <- function(x, recoding = TRUE) {
+grid.draw.aplot <- function(x, recording = TRUE) {
     grid::grid.draw(as.patchwork(x))
 }
 

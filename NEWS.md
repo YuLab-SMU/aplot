@@ -1,3 +1,7 @@
+# aplot 0.1.10
+
++ fixed R check for a typo in `grid.draw.aplot()` method (2023-03-08, Wed)
+
 # aplot 0.1.9
 
 + use `ggfun::theme_noxaxis()` instead of `ggtree::theme_dendrogram()` (2022-11-21, Mon)
