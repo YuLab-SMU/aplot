@@ -171,3 +171,9 @@ print.gglist <- function(x, ...) {
     print(as.patchwork(x))
 }
 
+
+##' @method grid.draw gglist
+##' @export
+grid.draw.gglist <- function(x, recording = TRUE){
+    grid::grid.draw(as.patchwork(x))
+}
