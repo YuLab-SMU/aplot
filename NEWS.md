@@ -1,3 +1,7 @@
+# aplot 0.1.10.001
+
++ extend `ggsave()` to support `gglist` object (2023-06-05, Mon, #26)
+
 # aplot 0.1.10
 
 + fixed R check for a typo in `grid.draw.aplot()` method (2023-03-08, Wed)
