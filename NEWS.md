@@ -1,5 +1,9 @@
-# aplot 0.1.10.001
+# aplot 0.1.10.002
 
++ `funky_heatmap()` and relative functions (2023-06-18, Mon)
+  + `funky_text()`
+  + `funky_point()`
+  + `funky_bar()`
 + extend `ggsave()` to support `gglist` object (2023-06-05, Mon, #26)
 
 # aplot 0.1.10
