@@ -7,6 +7,18 @@ funky_setting <- function(gglist, options) {
   return(gglist)
 }
 
+
+funky_fill_label <- function(data, cols) {
+  fill_label <- NULL
+
+  if (length(cols) == 1) {
+    label <- names(data)[cols]
+    fill_label <- labs(fill = label)
+  } 
+
+  return(fill_label)
+}
+
 ##' @importFrom ggplot2 element_text
 ##' @importFrom ggplot2 margin
 ##' @importFrom grid unit
@@ -46,6 +58,7 @@ funky_data <- function(data, cols) {
 ##' 
 ##' @title funky_text
 ##' @param data data frame
+##' @param cols selected column
 ##' @param hjust text alignment adjustment
 ##' @return ggplot object
 ##' @importFrom ggplot2 xlim
@@ -54,8 +67,9 @@ funky_data <- function(data, cols) {
 ##' @importFrom rlang .data
 ##' @export
 ##' @author Guangchuang Yu
-funky_text <- function(data, hjust=0) {  
-  ggplot(funky_id(data), aes(x=1, y=.data$id, label=.data$id)) + 
+funky_text <- function(data, cols = 1, hjust=0) {
+  d <- funky_data(data, cols)  
+  ggplot(d, aes(x=1, y=.data$id, label=.data$id)) + 
     xlim(1,2) +
     geom_text(hjust=hjust) + 
     funky_theme() +
@@ -76,11 +90,17 @@ funky_text <- function(data, hjust=0) {
 funky_point <- function(data, cols) {
   d2 <- funky_data(data, cols)
 
-  ggplot(d2, aes(.data$name, .data$id)) + 
+
+  p <- ggplot(d2, aes(.data$name, .data$id)) + 
     geom_point(aes(size=.data$value, fill=.data$value), 
               stroke=0.3, shape=21) + 
     funky_theme()
+
+  # p <- p + funky_fill_label(data, cols)
+  return(p)
 }
+
+
 
 ##' create bar plot for funkyheatmap
 ##'
@@ -102,14 +122,23 @@ funky_bar <- function(data, cols) {
     label = ""
   }
 
-  ggplot(d2, aes(.data$value, .data$id)) + 
+  p <- ggplot(d2, aes(.data$value, .data$id)) + 
     geom_col(aes(fill=.data$value), color='black', linewidth=0.3) + 
     funky_theme() +
     #geom_vline(xintercept = 0, linetype="dashed", linewidth=0.8) +
-    geom_vline(xintercept = 1, linetype="dashed", linewidth=0.8) +
+    geom_vline(xintercept = 1, linetype="dashed", linewidth=0.8) 
     #scale_fill_gradient(low = "#CC4C02", high = "#FFFFE5") +
-    scale_x_continuous(breaks = 0.5, labels=label, expand=c(0,0)) 
+
+  if (label == "") {
+    p <- p + scale_x_continuous(expand=c(0,0)) 
+  } else {
+    p <- p + scale_x_continuous(breaks = 0.5, labels=label, expand=c(0,0)) 
+  }
+
+  # p <- p + funky_fill_label(data, cols)
+  return(p)
 }
+
 
 ##' create a funkyheatmap
 ##'

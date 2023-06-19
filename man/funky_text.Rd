@@ -4,10 +4,12 @@
 \alias{funky_text}
 \title{funky_text}
 \usage{
-funky_text(data, hjust = 0)
+funky_text(data, cols = 1, hjust = 0)
 }
 \arguments{
 \item{data}{data frame}
+
+\item{cols}{selected column}
 
 \item{hjust}{text alignment adjustment}
 }
