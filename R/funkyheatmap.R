@@ -1,5 +1,6 @@
+##' @importFrom ggfun theme_blinds
 funky_setting <- function(gglist, options) {
-#  gglist <- lapply(gglist, function(p) p + ggfun::theme_stamp())
+  gglist <- lapply(gglist, function(p) p + ggfun::theme_blinds())
   if (!is.null(options)) {
       gglist <- lapply(gglist, function(p) p + options)
   }
@@ -164,6 +165,10 @@ funky_heatmap <- function(..., data=NULL, widths = NULL, options=NULL) {
         if (is.null(widths)) widths <- c(1,3)
     } else {
       pg <- list(...)
+    }
+    
+    if (!is.null(names(pg))) {
+      options <- list(theme(plot.margin = margin(r=2)), options)
     }
     
     pg <- funky_setting(pg, options)

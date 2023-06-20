@@ -1,6 +1,7 @@
-# aplot 0.1.10.002
+# aplot 0.1.10.003
 
-+ `funky_heatmap()` and relative functions (2023-06-18, Mon)
++ use `ggfun::theme_blinds()` for funky plots (2023-06-20, Tue)
++ `funky_heatmap()` and relative functions (2023-06-18, Sun)
   + `funky_text()`
   + `funky_point()`
   + `funky_bar()`
