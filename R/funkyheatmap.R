@@ -1,6 +1,6 @@
 ##' @importFrom ggfun theme_blinds
 funky_setting <- function(gglist, options) {
-  gglist <- lapply(gglist, function(p) p + ggfun::theme_blinds())
+  gglist <- lapply(gglist, function(p) p + ggfun::theme_blinds(colour = c('grey90', 'white')))
   if (!is.null(options)) {
       gglist <- lapply(gglist, function(p) p + options)
   }
@@ -46,11 +46,13 @@ funky_id <- function(data) {
 
 ##' @importFrom dplyr mutate
 ##' @importFrom tidyr pivot_longer
-funky_data <- function(data, cols) {
+funky_data <- function(data, cols, cols2 = NULL) {
     data <- funky_id(data)
-    data[, c(1, cols)] |>
-      funky_id() |>
-      tidyr::pivot_longer(-1) |>
+    data <- data[, c(1, cols, cols2)] |>
+      funky_id() 
+    cols2 <- setdiff(seq_len(ncol(data)), seq_len(length(cols))+1)
+    data |>
+      tidyr::pivot_longer(-c(1, cols2)) |>
       dplyr::mutate(id=factor(.data$id, levels = rev(data$id)))
 }
 
@@ -84,19 +86,46 @@ funky_text <- function(data, cols = 1, hjust=0) {
 ##' @title funky_point
 ##' @param data data frame
 ##' @param cols selected columns
+##' @param cols2 selected columns to keep names 
+##' @param ... additional parameters, passing to \code{\link[ggstar]{geom_star}}
 ##' @return ggplot object
 ##' @importFrom ggplot2 geom_point
+##' @importFrom ggstar geom_star
 ##' @export
 ##' @author Guangchuang Yu
-funky_point <- function(data, cols) {
-  d2 <- funky_data(data, cols)
+funky_point <- function(data, cols, cols2 = NULL, ...) {
+  d2 <- funky_data(data, cols, cols2)
 
+  ggstar <- "ggstar"
+  require(ggstar, character.only=TRUE, quietly=TRUE) 
 
-  p <- ggplot(d2, aes(.data$name, .data$id)) + 
-    geom_point(aes(size=.data$value, fill=.data$value), 
-              stroke=0.3, shape=21) + 
-    funky_theme()
+  p <- ggplot(d2, aes(.data$name, .data$id)) #+ 
+  mapping <- aes(size = .data$value, fill = .data$value)
+  dots <- list(...)
+  if (length(dots) >= 1){
+    for (i in seq_len(length(dots))){
+      if (inherits(dots[[i]], "uneval")){
+        mapping <- modifyList(mapping, dots[[i]]) 
+        dots[[i]] <- NULL
+      }
+    }
+  }
 
+  if ('stroke' %in% names(dots)){
+    names(dots)[names(dots) == "stroke"] <- 'starstroke'
+  }else if (!any(names(dots) %in% c('stroke', 'starstroke'))){
+    dots[["starstroke"]] <- .3
+  }
+  if ('shape' %in% names(dots)){
+    names(dots)[names(dots) == 'shape'] <- 'starshape'
+  }else if ('shape' %in% names(mapping)){
+    names(mapping)[names(mapping) == 'shape'] <- 'starshape'
+  }else if (!any(names(dots) %in% c('shape', 'starshape')) && !any(names(dots) %in% names(mapping))){
+    dots[['starshape']] <- 15
+  }
+  dots$mapping <- mapping
+  point_layers <- do.call('geom_star', dots)
+  p <- p + point_layers + funky_theme()
   # p <- p + funky_fill_label(data, cols)
   return(p)
 }
@@ -119,12 +148,20 @@ funky_bar <- function(data, cols) {
   d2 <- funky_data(data, cols)
   if (length(cols) == 1) {
     label = names(data)[cols]
+    mapping <- aes(fill = .data$value)
+    position <- 'stack'
   } else {
-    label = ""
+    label = "name"
+    mapping <- aes(fill = .data$name)
+    name.levels <- names(data)[cols]
+    d2 <- d2 |> dplyr::mutate(name = factor(.data$name, levels = name.levels))
+    position <- 'fill'
   }
 
+
   p <- ggplot(d2, aes(.data$value, .data$id)) + 
-    geom_col(aes(fill=.data$value), color='black', linewidth=0.3) + 
+    #geom_col(aes(fill=.data$value), color='black', linewidth=0.3) + 
+    geom_col(mapping=mapping, position=position, color='black', linewidth=0.3) +
     funky_theme() +
     #geom_vline(xintercept = 0, linetype="dashed", linewidth=0.8) +
     geom_vline(xintercept = 1, linetype="dashed", linewidth=0.8) 

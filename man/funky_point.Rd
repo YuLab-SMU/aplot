@@ -4,12 +4,16 @@
 \alias{funky_point}
 \title{funky_point}
 \usage{
-funky_point(data, cols)
+funky_point(data, cols, cols2 = NULL, ...)
 }
 \arguments{
 \item{data}{data frame}
 
 \item{cols}{selected columns}
+
+\item{cols2}{selected columns to keep names}
+
+\item{...}{additional parameters, passing to \code{\link[ggstar]{geom_star}}}
 }
 \value{
 ggplot object
