@@ -1,5 +1,6 @@
-# aplot 0.1.10.004
+# aplot 0.1.10.005
 
++ extend `funky_point()` to support different shapes defined in the 'ggstar' package and extend `funky_bar()` to support grouped bar plot (2023-06-24, Sat, #29)
 + mv `theme_no_margin()` to the 'ggfun' package (2023-06-24, Sat)
 + use `ggfun::theme_blinds()` for funky plots (2023-06-20, Tue)
 + `funky_heatmap()` and relative functions (2023-06-18, Sun)
