@@ -181,9 +181,20 @@ print.gglist <- function(x, ...) {
 }
 
 
+
 ##' @method grid.draw gglist
 ##' @export
 grid.draw.gglist <- function(x, recording = TRUE){
     grid::grid.draw(as.patchwork(x))
 }
 
+##' This function converts 'gglist' object to grob (i.e. gtable object)
+##'
+##'
+##' title gglistGrob
+##' @param x A 'gglist' object
+##' @return A 'gtable' object
+##' @export
+gglistGrob <- function(x) {
+    patchwork::patchworkGrob(as.patchwork(x))
+}
