@@ -174,12 +174,26 @@ print.gglist <- function(x, ...) {
 ##' @method <= gglist
 ##' @export
 "<=.gglist" <- function(e1, e2) {
-    structure(
-        lapply(e1, function(x) x + e2),
-        class = c("gglist", "list")
-    )
+    ggadd(e1, e2)
 }
 
+
+ggadd <- function(gg, ...) {
+    if (!inherits(gg, c("gglist", "gg", "ggproto"))) {
+        stop("'gg' should be an object of 'gglist', 'gg' or 'ggproto'.")
+    }
+    
+    opts <- list(...)
+
+    if (is(gg, 'ggproto')) return(c(list(gg), opts))
+
+    if (is(gg, 'gg')) return(gg + opts)
+
+    structure(
+        lapply(gg, function(x) x + opts),
+        class = class(gg)
+    )
+}
 
 
 ##' @method grid.draw gglist
