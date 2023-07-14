@@ -75,8 +75,12 @@ as.patchwork <- function(x,
     idx[is.na(idx)] <- x$n + 1 
     x$plotlist[[x$n+1]] <- ggplot() + theme_void() # plot_spacer()
     plotlist <- x$plotlist[idx]
-    
-    pp <- plotlist[[1]] + theme_no_margin()
+    space <- getOption(x="space.between.plots", default=0)
+    theme.first <- theme_no_margin()
+    if (!space==0){
+        theme.first$plot.margin <- do.call(ggplot2::margin, c(rep(list(space), 4), unit='mm'))
+    }
+    pp <- plotlist[[1]] + theme.first
     for (i in 2:length(plotlist)) {
         pp <- pp + (plotlist[[i]] + theme_no_margin())
     }
