@@ -121,3 +121,11 @@ grid.draw.aplot <- function(x, recording = TRUE) {
     grid::grid.draw(as.patchwork(x))
 }
 
+##' @method grid.draw oncoplot
+##' @export
+grid.draw.oncoplot <- function(x, recording = TRUE) {
+    guides <- getOption('aplot_guides', default="collect")
+    on.exit(options(aplot_guides = guides))
+    options(aplot_guides = "keep")
+    grid.draw.aplot(x)
+}
