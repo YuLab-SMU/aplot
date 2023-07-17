@@ -114,6 +114,13 @@ aplotGrob <- function(x) {
     patchworkGrob(res)
 }
 
+oncoplotGrob <- function(x) {
+    guides <- getOption('aplot_guides', default="collect")
+    on.exit(options(aplot_guides = guides))
+    options(aplot_guides = "keep")
+    aplotGrob(x)
+}
+
 ##' @importFrom grid grid.draw
 ##' @method grid.draw aplot
 ##' @export

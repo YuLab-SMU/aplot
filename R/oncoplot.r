@@ -1,7 +1,7 @@
 oncoplot <- function(maf, genes) {
     p_main <- oncoplot_main(maf, genes)
-    p_top <- oncoplot_top(maf, genes)
-    p_right <- oncoplot_right(maf, genes)
+    p_top <- oncoplot_sample(maf, genes)
+    p_right <- oncoplot_gene(maf, genes, ylab = 'percentage')
 
     pp <- insert_top(p_main, p_top, height=.2) |>
         insert_right(p_right, width=.2)
@@ -20,7 +20,7 @@ oncoplot_main <- function(maf, genes = 20) {
 }
 
 
-oncoplot_top <- function(maf, genes = 20, sort = FALSE) {    
+oncoplot_sample <- function(maf, genes = 20, sort = FALSE) {    
     numMat <- get_oncoplot_numericMatrix(maf, genes)
     samp_sum = getSampleSummary(x = maf) %>%
         as.data.frame() %>%
@@ -41,22 +41,28 @@ oncoplot_top <- function(maf, genes = 20, sort = FALSE) {
         ylab("TMB") 
 }
 
-oncoplot_right <- function(maf, genes = 20) {
+oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
+    ylab <- match.arg(ylab, c("gene", "percentage"))
+
     d <- oncoplot_tidy_onco_matrix(maf, genes)
     d = d[!is.na(d$Type), ]
 
-    numMat <- get_oncoplot_numericMatrix(maf, genes)
-    totSamps = as.numeric(maf@summary[3, 'summary'])
-    percent <- apply(numMat, 1, function(x) sum(x >0))/totSamps
-    percent_alt <- paste0(round(percent * 100), '%')
-
-
-    ggplot(d, aes(Gene, fill = Type)) + 
+    p <- ggplot(d, aes(Gene, fill = Type)) + 
         geom_bar(position='stack') + 
         coord_flip() + 
         oncoplot_setting(noxaxis = FALSE) +
-        ylab("No. of samples") + 
-        guides(y= guide_axis_label_trans(~str_pad(rev(percent_alt), 5)))
+        ylab("No. of samples") #+ 
+        # guides(y= guide_axis_label_trans(~str_pad(rev(percent_alt), 5)))
+
+    if (ylab == 'percentage') {
+        numMat <- get_oncoplot_numericMatrix(maf, genes)
+        totSamps = as.numeric(maf@summary[3, 'summary'])
+        percent <- apply(numMat, 1, function(x) sum(x >0))/totSamps
+        percent_alt <- paste0(round(percent * 100), '%')
+        p <- p + scale_x_discrete(breaks = rownames(numMat),
+                                labels = percent_alt)
+    }
+    return(p)
 }
 
 
@@ -137,15 +143,16 @@ oncoplot_tidy_onco_matrix <- function(maf, genes = 20) {
 
 
 # To add annotation on right y axis: https://github.com/tidyverse/ggplot2/issues/3171
-guide_axis_label_trans <- function(label_trans = identity, ...) {
-  axis_guide <- guide_axis(...)
-  axis_guide$label_trans <- rlang::as_function(label_trans)
-  class(axis_guide) <- c("guide_axis_trans", class(axis_guide))
-  axis_guide
-}
-guide_train.guide_axis_trans <- function(x, ...) {
-  trained <- NextMethod()
-  trained$key$.label <- x$label_trans(trained$key$.label)
-  trained
-}
+# guide_axis_label_trans <- function(label_trans = identity, ...) {
+#   axis_guide <- guide_axis(...)
+#   axis_guide$label_trans <- rlang::as_function(label_trans)
+#   class(axis_guide) <- c("guide_axis_trans", class(axis_guide))
+#   axis_guide
+# }
+
+# guide_train.guide_axis_trans <- function(x, ...) {
+#   trained <- NextMethod()
+#   trained$key$.label <- x$label_trans(trained$key$.label)
+#   trained
+# }
 
