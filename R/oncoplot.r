@@ -22,16 +22,20 @@ oncoplot_main <- function(maf, genes = 20) {
 
 oncoplot_sample <- function(maf, genes = 20, sort = FALSE) {    
     numMat <- get_oncoplot_numericMatrix(maf, genes)
-    samp_sum = getSampleSummary(x = maf) %>%
+    samp_sum <- getSampleSummary(x = maf) %>%
         as.data.frame() %>%
         dplyr::select(!total) 
 
-    samp_sum = samp_sum[match(colnames(numMat), samp_sum$Tumor_Sample_Barcode),, drop=FALSE]
+    i <- match(colnames(numMat), samp_sum$Tumor_Sample_Barcode)
+    samp_sum <- samp_sum[i, , drop=FALSE]
     d <- tidyr::pivot_longer(samp_sum, -1) |>
         dplyr::rename(Sample=Tumor_Sample_Barcode, Type=name, Freq=value)
     d$Sample <- factor(d$Sample, levels = unique(colnames(numMat)))
     if (sort) {
-        td <- group_by(d, Type) |> summarize(total = sum(Freq)) |> arrange(total) |> pull(Type)
+        td <- group_by(d, Type) |> 
+            summarize(total = sum(Freq)) |> 
+            arrange(total) |> 
+            pull(Type)
         d$Type <- factor(d$Type, levels = td)
     }
 
@@ -45,7 +49,7 @@ oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
     ylab <- match.arg(ylab, c("gene", "percentage"))
 
     d <- oncoplot_tidy_onco_matrix(maf, genes)
-    d = d[!is.na(d$Type), ]
+    d <- d[!is.na(d$Type), ]
 
     p <- ggplot(d, aes(Gene, fill = Type)) + 
         geom_bar(position='stack') + 
@@ -68,7 +72,7 @@ oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
 
 oncoplot_setting <- function(noxaxis = TRUE, continuous = TRUE) {  
     if (continuous) {
-        scale_setting <- scale_y_continuous(expand=c(0,0))
+        scale_setting <- scale_y_continuous(expand = c(0, 0))
     } else {
         scale_setting <- scale_y_discrete(expand = c(0, 0))
     }
@@ -117,7 +121,7 @@ get_oncoplot_genes <- function(maf, genes = 20) {
 
 get_oncoplot_numericMatrix <- function(maf, genes = 20) {
     genes <- get_oncoplot_genes(maf, genes = )
-    om = maftools:::createOncoMatrix(m = maf, g = genes)
+    om <- maftools:::createOncoMatrix(m = maf, g = genes)
     numMat = om$numericMatrix  # gene/sample ~ frequency
     return(numMat)
 }
@@ -125,7 +129,7 @@ get_oncoplot_numericMatrix <- function(maf, genes = 20) {
 
 oncoplot_tidy_onco_matrix <- function(maf, genes = 20) {
     genes <- get_oncoplot_genes(maf, genes)
-    om = maftools:::createOncoMatrix(m = maf, g = genes)
+    om <- maftools:::createOncoMatrix(m = maf, g = genes)
     mat_origin = om$oncoMatrix # gene/sample ~ variant type
 
     d = mat_origin[rev(rownames(mat_origin)),] |>
