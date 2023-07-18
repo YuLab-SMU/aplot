@@ -19,6 +19,3 @@ is.coord_flip <- function(p) {
     inherits(p, "gg") && inherits(p$coordinates, "CoordFlip")
 }
 
-
-
-
