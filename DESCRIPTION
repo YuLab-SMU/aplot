@@ -22,9 +22,14 @@ Imports:
   tibble,
   tidyr,
   utils,
-  ggstar
+  ggstar,
+  yulab.utils,
+  survival
 Suggests:
-  ggtree
+  ggtree,
+  maftools,
+  data.table,
+  RColorBrewer  
 URL: https://github.com/YuLab-SMU/aplot
 License: Artistic-2.0
 Encoding: UTF-8
