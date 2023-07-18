@@ -28,7 +28,7 @@ oncoplot_main <- function(maf, genes = 20) {
     ggplot(d, aes(x=.data$Sample, y=.data$Gene, fill=.data$Type)) +
         geom_tile(colour="white", linewidth=.05) + 
         oncoplot_setting(continuous = FALSE) +
-        theme(legend.position = "bottom") 
+        theme(legend.position = "bottom", axis.text.y.left=element_text(face='italic')) 
 }
 
 
@@ -65,9 +65,8 @@ oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
     d <- oncoplot_tidy_onco_matrix(maf, genes)
     d <- d[!is.na(d$Type), ]
 
-    p <- ggplot(d, aes(.data$Gene, fill = .data$Type)) + 
-        geom_bar(position='stack') + 
-        #coord_flip() + 
+    p <- ggplot(d, aes(y = .data$Gene, fill = .data$Type)) + 
+        geom_bar(position='stack', orientation = 'y') + 
         oncoplot_setting(noxaxis = FALSE, scale='none') +
         xlab("No. of samples") #+ 
         # guides(y= guide_axis_label_trans(~str_pad(rev(percent_alt), 5)))
