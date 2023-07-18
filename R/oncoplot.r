@@ -67,9 +67,9 @@ oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
 
     p <- ggplot(d, aes(.data$Gene, fill = .data$Type)) + 
         geom_bar(position='stack') + 
-        coord_flip() + 
-        oncoplot_setting(noxaxis = FALSE) +
-        ylab("No. of samples") #+ 
+        #coord_flip() + 
+        oncoplot_setting(noxaxis = FALSE, scale='none') +
+        xlab("No. of samples") #+ 
         # guides(y= guide_axis_label_trans(~str_pad(rev(percent_alt), 5)))
 
     if (ylab == 'percentage') {
@@ -77,25 +77,44 @@ oncoplot_gene <- function(maf, genes = 20, ylab = 'gene') {
         totSamps = as.numeric(maf@summary[3, 'summary'])
         percent <- apply(numMat, 1, function(x) sum(x >0))/totSamps
         percent_alt <- paste0(round(percent * 100), '%')
-        p <- p + scale_x_discrete(breaks = rownames(numMat),
-                                labels = percent_alt)
+        p <- p + scale_y_discrete(breaks = rownames(numMat),
+                                labels = percent_alt,
+                                expand = c(0, 0))
     }
     return(p)
 }
 
 #' @importFrom ggplot2 theme_minimal
-oncoplot_setting <- function(noxaxis = TRUE, continuous = TRUE) {  
-    if (continuous) {
-        scale_setting <- scale_y_continuous(expand = c(0, 0))
+oncoplot_scale <- function(continuous = TRUE, scale = 'y') {
+    scale <- match.arg(scale, c('x', 'y', 'none'))
+    if (scale == 'none') {
+        return(NULL)
+    } 
+    
+    if (scale == 'x') {
+        if (continuous) {
+            scale_fun <- ggplot2::scale_x_continuous
+        } else {
+            scale_fun <- ggplot2::scale_x_discrete
+        }
     } else {
-        scale_setting <- scale_y_discrete(expand = c(0, 0))
+        if (continuous) {
+            scale_fun <- ggplot2::scale_y_continuous
+        } else{
+            scale_fun <- ggplot2::scale_y_discrete
+        }
     }
+    
+    scale_fun(expand = c(0, 0))
 
+}
+
+oncoplot_setting <- function(noxaxis = TRUE, continuous = TRUE, scale='y') {  
     list(
         theme_minimal(),
         if (noxaxis) ggfun::theme_noxaxis(),
         theme(legend.position = "none", panel.grid.major = element_blank()),
-        scale_setting,
+        oncoplot_scale(continuous = continuous, scale = scale),
         oncoplot_fill(),
         xlab(NULL),
         ylab(NULL)
@@ -135,7 +154,7 @@ get_oncoplot_genes <- function(maf, genes = 20) {
 }
 
 get_oncoplot_numericMatrix <- function(maf, genes = 20) {
-    genes <- get_oncoplot_genes(maf, genes)
+    genes <- get_oncoplot_genes(maf, genes = genes)
     om <- createOncoMatrix(m = maf, g = genes)
     numMat = om$numericMatrix  # gene/sample ~ frequency
     return(numMat)
@@ -154,7 +173,6 @@ oncoplot_tidy_onco_matrix <- function(maf, genes = 20) {
         dplyr::rename(Sample = "name", Type = "value")
 
     d$Type[d$Type == ""] <- NA #"Non_Mut"
-    #d$Type = factor(d$Type, levels = type_levels_2)
     d$Gene <- factor(d$Gene, levels = rev(rownames(mat_origin)))
     d$Sample <- factor(d$Sample, levels = colnames(mat_origin))
     return(d)
