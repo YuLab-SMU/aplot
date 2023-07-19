@@ -1,5 +1,6 @@
-# aplot 0.1.10.010
+# aplot 0.1.10.011
 
++ export `oncoplot()` (2023-07-19, Wed)
 + prototype of `oncoplot()` (2023-07-18, Tue)
   - with helper functions, `oncoplot_main()`, `oncoplot_sample()` and `oncoplot_gene()`
   - `print()` method for `oncoplot` object

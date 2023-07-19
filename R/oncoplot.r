@@ -4,11 +4,12 @@
 #' @return \code{oncoplot} object, which is also a \code{aplot} object
 #' @export
 #' @examples
+#' \dontrun{
 #' laml.maf <- system.file("extdata", "tcga_laml.maf.gz", package = "maftools")
 #' laml.clin <- system.file('extdata', 'tcga_laml_annot.tsv', package = 'maftools')
 #' laml <- maftools::read.maf(maf = laml.maf, clinicalData = laml.clin)
-#' p <- oncoplot(maf = laml, genes = 20)
-#' p
+#' oncoplot(maf = laml, genes = 20)
+#' }
 oncoplot <- function(maf, genes = 20) {
     p_main <- oncoplot_main(maf, genes)
     p_top <- oncoplot_sample(maf, genes)
@@ -202,7 +203,7 @@ obtain.gene.summary.MAF <- function(x){
 #' @importFrom yulab.utils get_fun_from_pkg
 get_vcColors <- yulab.utils::get_fun_from_pkg('maftools', 'get_vcColors')
 
-#' @import survival
+
 createOncoMatrix <- yulab.utils::get_fun_from_pkg('maftools', 'createOncoMatrix')
 
 if(getRversion() >= "2.15.1")  {
