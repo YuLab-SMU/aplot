@@ -1,5 +1,20 @@
-## (PART) Plot
+## Aims
+#
+# 1. Reproduce upsetplot
+# 2. Expand the function of upsetplot
+#   2.1 Allow non-unique intersections
+#   2.2 More applicable subplot types (boxplot, points), useful to show subsets properties
 
+
+## Structures
+#
+# 1. plot and subplots
+# 2. themes
+# 3. data processing
+
+
+
+## (PART) Plot
 
 #' Plot upsetplot
 #'
@@ -31,24 +46,59 @@ upsetplot_main = function(data){
   ggplot2::ggplot(data, aes(id, set)) +
     ggplot2::geom_point(size = 4, color = "grey30") +
     ggplot2::geom_path(aes(group = id), size = 1.5, color = "grey30") +
-    theme_upsetplot()
+    ggplot2::labs(x = "Set Intersection", y = "") +
+    theme_upset_main()
 }
 
 upsetplot_top = function(data){
   ggplot2::ggplot(data, aes(id, item_count)) +
     ggplot2::geom_col() +
-    theme_upsetplot()
+    ggplot2::labs(x = "", y = "Intersection Size") +
+    theme_upset_top()
 }
 
 upsetplot_left = function(data){
   ggplot2::ggplot(data, aes(y = set, x = item_count)) +
     ggplot2::geom_col(orientation = "y") +
     ggplot2::scale_y_discrete(position = "right") +
-    theme_upsetplot()
+    ggplot2::scale_x_reverse() +
+    ggplot2::labs(x = "Set Size") +
+    theme_upset_left()
 }
 
-theme_upsetplot = function(){
-  ggplot2::theme_bw()
+## Theme
+
+theme_upset_main = function(){
+  ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.title.y = element_blank(),
+      axis.ticks.x.bottom = element_blank(),
+      axis.text.x.bottom = element_blank(),
+      # panel.border = element_blank(),
+      plot.margin = margin(t = -20)
+    )
+}
+
+theme_upset_top = function(){
+  ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.ticks.x.bottom = element_blank(),
+      axis.text.x.bottom = element_blank(),
+      # panel.border = element_blank(),
+      plot.margin = margin(b = -20, unit = "pt")
+    )
+}
+
+theme_upset_left = function(){
+   ggplot2::theme_bw() +
+    ggplot2::theme(
+      axis.ticks.y = ggplot2::element_blank(),
+      axis.title.y = ggplot2::element_blank(),
+      axis.text.y = ggplot2::element_blank(),
+      panel.border = ggplot2::element_blank(),
+      panel.grid.major = ggplot2::element_blank(),
+      plot.margin = margin(r = -20)
+    )
 }
 
 ## (PART) debug
