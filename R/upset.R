@@ -19,18 +19,26 @@
 #' Plot upsetplot
 #'
 #' @param data
-#' @param nsets
+#' @param order.intersect.by
+#' @param order.set.by
 #' @param nintersects
 #'
 #' @return
 #' @export
 #'
 #' @examples
-upsetplot = function(list, nsets = 5, nintersects = 40){
-  primary_data = get_all_subsets(list)
-  main_data = tidy_main_subsets(primary_data)
+upsetplot = function(list,
+                     nintersects = 40,
+                     order.intersect.by = c("size", "name"),
+                     order.set.by = c("size", "name")){
+  order.intersect.by = match.arg(order.intersect.by)
+  order.set.by = match.arg(order.set.by)
+  main_data = tidy_main_subsets(list,
+                                nintersects = nintersects,
+                                order.intersect.by = order.intersect.by,
+                                order.set.by = order.set.by)
   p_main = upsetplot_main(main_data)
-  top_data = tidy_top_subsets(primary_data)
+  top_data = tidy_top_subsets(list)
   p_top = upsetplot_top(top_data)
   left_data = tidy_left_subsets(list)
   p_left = upsetplot_left(left_data)
@@ -112,15 +120,36 @@ ggVennDiagram::ggVennDiagram(list)
 
 ## (PART) retrieve tidy data from primary subset datasets
 
-tidy_main_subsets = function(all_subsets, name_separator = "/"){
-  all_subsets %>%
-    dplyr::select(id, name) %>%
-    dplyr::rename(set = "name") %>%
-    tidyr::separate_longer_delim(set, delim = name_separator)
+tidy_main_subsets = function(list,
+                             nintersects,
+                             order.intersect.by,
+                             order.set.by,
+                             name_separator = "/"){
+  data = get_all_subsets(list, name_separator = name_separator) %>%
+    dplyr::select(id, name, item)
+  if (order.intersect.by == "size"){
+    data = data %>%
+      dplyr::rowwise() %>%
+      dplyr::mutate(item_count = length(item)) %>%
+      dplyr::arrange(desc(item_count), id) %>%
+      head(n = nintersects) %>%
+      dplyr::mutate(id = forcats::as_factor(id)) %>%
+      dplyr::select(-item, -item_count)
+  }
+  # recover set name from subset name ()
+  data = data %>%
+    tidyr::separate_longer_delim(name, delim = name_separator) %>%
+    dplyr::rename(set = "name")
+  if (order.set.by == "size"){
+    data = data %>%
+      dplyr::mutate(set = factor(set,
+                                 levels = names(sort(sapply(list, length), decreasing = TRUE))))
+  }
+  return(data)
 }
 
-tidy_top_subsets = function(all_subsets, name_separator = "/"){
-  all_subsets %>%
+tidy_top_subsets = function(list, name_separator = "/"){
+  get_all_subsets(list = list, name_separator = name_separator) %>%
     dplyr::select(id, item) %>%
     dplyr::rowwise() %>%
     dplyr::mutate(item_count = length(item))
@@ -174,7 +203,7 @@ get_all_subsets_names <- function(list, sep = "/"){
   sapply(c, function(i) paste0(set_name[i], collapse = sep))
 }
 
-get_all_subsets_ids <- function(list, sep){
+get_all_subsets_ids <- function(list, sep = "/"){
   n = length(list)
   c = combinations(n)
   sapply(c, function(i) paste0(i, collapse = sep))
