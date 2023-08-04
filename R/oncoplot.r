@@ -2,6 +2,7 @@
 #' @param maf MAF object. 
 #' @param genes the gene names or the number, default is 20.
 #' @return \code{oncoplot} object, which is also a \code{aplot} object
+#' @import maftools
 #' @export
 #' @examples
 #' \dontrun{
@@ -11,6 +12,8 @@
 #' oncoplot(maf = laml, genes = 20)
 #' }
 oncoplot <- function(maf, genes = 20) {
+    #yulab.utils::check_pkg("maftools")
+
     p_main <- oncoplot_main(maf, genes)
     p_top <- oncoplot_sample(maf, genes)
     p_right <- oncoplot_gene(maf, genes, ylab = 'percentage')
@@ -202,7 +205,6 @@ obtain.gene.summary.MAF <- function(x){
 
 #' @importFrom yulab.utils get_fun_from_pkg
 get_vcColors <- yulab.utils::get_fun_from_pkg('maftools', 'get_vcColors')
-
 
 createOncoMatrix <- yulab.utils::get_fun_from_pkg('maftools', 'createOncoMatrix')
 

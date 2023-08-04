@@ -17,16 +17,16 @@
 ## (PART) Plot
 
 #' Plot upsetplot
-#'
-#' @param data
-#' @param order.intersect.by
-#' @param order.set.by
-#' @param nintersects
-#'
-#' @return
+#' 
+#' This function generate upsetplot by creating a composite plot which contains subplots genreated by ggplot2
+#' @title upsetplot 
+#' @param list a list of sets
+#' @param nintersects number of intersects
+#' @param order.intersect.by one of 'size' or 'name'
+#' @param order.set.by one of 'size' or 'name'
+#' @return an upset plot
 #' @export
 #'
-#' @examples
 upsetplot = function(list,
                      nintersects = 40,
                      order.intersect.by = c("size", "name"),
@@ -111,11 +111,11 @@ theme_upset_left = function(){
 
 ## (PART) debug
 
-list = list(A = sample(LETTERS, 20),
-            B = sample(LETTERS, 22),
-            C = sample(LETTERS, 24),
-            D = sample(LETTERS, 30, replace = TRUE))
-ggVennDiagram::ggVennDiagram(list)
+#list = list(A = sample(LETTERS, 20),
+#            B = sample(LETTERS, 22),
+#            C = sample(LETTERS, 24),
+#            D = sample(LETTERS, 30, replace = TRUE))
+#ggVennDiagram::ggVennDiagram(list)
 
 
 ## (PART) retrieve tidy data from primary subset datasets
@@ -171,7 +171,7 @@ tidy_left_subsets = function(list, set_name = names(list)){
 #' @param list a named list
 #' @param name_separator default is /
 #'
-#' @return
+#' @return a tibble
 #' @export
 #'
 #' @examples
@@ -179,9 +179,7 @@ tidy_left_subsets = function(list, set_name = names(list)){
 #'             B = sample(LETTERS, 22),
 #'             C = sample(LETTERS, 24),
 #'             D = sample(LETTERS, 30, replace = TRUE))
-#' get_intersect_names(list)
-#' get_intersect_ids(list)
-#' get_intersect_items(list)
+#' get_all_subsets(list)
 get_all_subsets = function(list, name_separator = "/"){
   dplyr::tibble(
     id = get_all_subsets_ids(list, sep = name_separator),
