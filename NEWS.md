@@ -1,6 +1,5 @@
 # aplot 0.1.10.012
 
-+ mv `oncoplot()`, `upsetplot()` and `funkyheatmap()` to 'aplotExtra' (2023-08-05, Sat)
 + control space between subplots (2023-07-15, Sat, #31)
 + `gglistGrob()` to convert a 'gglist' object to a 'gtable' object (2023-06-26, Mon)
 + `<=` to add ggplot component to each of the plots stored in a "gglist" object (2023-06-26, Mon)
