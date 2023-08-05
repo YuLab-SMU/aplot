@@ -1,5 +1,6 @@
-# aplot 0.1.10.011
+# aplot 0.1.10.012
 
++ mv `oncoplot()`, `upsetplot()` and `funkyheatmap()` to 'aplotExtra' (2023-08-05, Sat)
 + export `oncoplot()` (2023-07-19, Wed)
 + prototype of `oncoplot()` (2023-07-18, Tue)
   - with helper functions, `oncoplot_main()`, `oncoplot_sample()` and `oncoplot_gene()`
