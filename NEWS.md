@@ -1,4 +1,4 @@
-# aplot 0.1.10.012
+# aplot 0.2.0
 
 + control space between subplots (2023-07-15, Sat, #31)
 + `gglistGrob()` to convert a 'gglist' object to a 'gtable' object (2023-06-26, Mon)
