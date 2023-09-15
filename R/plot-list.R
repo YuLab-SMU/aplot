@@ -158,11 +158,21 @@ plot_filler <- yulab.utils::get_fun_from_pkg("patchwork", "plot_filler")
 ##' @export
 ##' @author Guangchuang Yu
 gglist <- function(gglist, ...) {
-    res <- gglist
+    res <- .process_plotlist(gglist)
     attr(res, 'params') <- list(...)
-    structure(res,
+    res <- structure(res,
         class = c("gglist", "list")
     )
+
+    return(res)
+}
+
+.process_plotlist <- function(plotlist) {
+    idx <- vapply(plotlist, function(p) inherits(p, 'enrichplotDot'), FUN.VALUE=logical(1))
+    if (any(idx)) {
+        plotlist[idx] <- lapply(plotlist[idx], ggfun::set_point_legend_shape)
+    }
+    return(plotlist)
 }
 
 ##' @method print gglist

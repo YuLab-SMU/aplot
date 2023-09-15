@@ -1,6 +1,6 @@
 Package: aplot
 Title: Decorate a 'ggplot' with Associated Information
-Version: 0.2.0
+Version: 0.2.1.001
 Authors@R: c(
     person(given = "Guangchuang", family = "Yu", email = "guangchuangyu@gmail.com",   role  = c("aut", "cre"), comment = c(ORCID = "0000-0002-6485-8781")),
     person("Shuangbin", "Xu",       email = "xshuangbin@163.com",      role = "ctb", 
@@ -11,7 +11,7 @@ Description: For many times, we are not just aligning plots as what 'cowplot' an
 Depends:
     R (>= 4.1.0)
 Imports:
-  ggfun (>= 0.1.1),
+  ggfun (>= 0.1.3),
   ggplot2,
   ggplotify,
   patchwork,

@@ -92,6 +92,9 @@ as.patchwork <- function(x,
             theme_margin$plot.margin <- do.call(ggplot2::margin, c(rep(list(space), 4), unit='mm'))
         } 
     }
+
+    plotlist <- .process_plotlist(plotlist)
+
     pp <- plotlist[[1]] + theme_margin
     for (i in 2:length(plotlist)) {
         pp <- pp + (plotlist[[i]] + theme_no_margin())
