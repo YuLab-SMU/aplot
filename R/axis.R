@@ -61,16 +61,20 @@ ggplot_add.axisAlign <- function(object, plot, object_name) {
             lim_x <- scale_x_continuous(limits=limits, expand=c(0, 0))
             lim_y <- scale_y_continuous(limits = limits, expand = c(0, 0))
         }else{
-            lim_x <- set_scale_limits(gb$layout$panel_scales_x[[1]], limits=limits, expand=c(0, 0))
-            lim_y <- set_scale_limits(gb$layout$panel_scales_y[[1]], limits=limits, expand=c(0, 0))
+            lim_x <- set_scale_limits(gb$layout$panel_scales_x[[1]], limits=limits, 
+                                      expand = gb$layout$panel_scales_x[[1]]$expand)
+            lim_y <- set_scale_limits(gb$layout$panel_scales_y[[1]], limits=limits, 
+                                      expand = gb$layout$panel_scales_y[[1]]$expand)
         }
     } else {
         if (inherits(plot, 'ggtree')){
             lim_x <- scale_x_discrete(limits=limits, expand = c(0, 0.6))
             lim_y <- scale_y_discrete(limits = limits, expand = c(0, 0.6))
         }else{
-            lim_x <- set_scale_limits(gb$layout$panel_scales_x[[1]], limits=limits, expand = c(0, .6))
-            lim_y <- set_scale_limits(gb$layout$panel_scales_y[[1]], limits=limits, expand = c(0, .6))
+            lim_x <- set_scale_limits(gb$layout$panel_scales_x[[1]], limits=limits, 
+                                      expand = gb$layout$panel_scales_x[[1]]$expand)
+            lim_y <- set_scale_limits(gb$layout$panel_scales_y[[1]], limits=limits, 
+                                      expand = gb$layout$panel_scales_y[[1]]$expand)
         }
     }
 
