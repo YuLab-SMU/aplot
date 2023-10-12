@@ -2,10 +2,20 @@
 
 # `aplot` for decorating a plot with associated information
 
+[![License:
+Artistic-2.0](https://img.shields.io/badge/license-Artistic--2.0-blue.svg)](https://cran.r-project.org/web/licenses/Artistic-2.0)
+[![](https://img.shields.io/badge/devel%20version-0.2.2-black.svg)](https://github.com/YuLab-SMU/aplot)
+[![](https://img.shields.io/github/languages/code-size/YuLab-SMU/aplot.svg)](https://github.com/YuLab-SMU/aplot)
+[![](https://img.shields.io/github/last-commit/YuLab-SMU/aplot.svg)](https://github.com/YuLab-SMU/aplot/commits/master)
+<br> [![R build
+status](https://github.com/YuLab-SMU/aplot/workflows/rworkflows/badge.svg)](https://github.com/YuLab-SMU/aplot/actions)
+[![](https://codecov.io/gh/YuLab-SMU/aplot/branch/master/graph/badge.svg)](https://app.codecov.io/gh/YuLab-SMU/aplot)
+<br>
 [![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/aplot?color=green)](https://cran.r-project.org/package=aplot)
 ![](http://cranlogs.r-pkg.org/badges/grand-total/aplot?color=green)
 ![](http://cranlogs.r-pkg.org/badges/aplot?color=green)
-![](http://cranlogs.r-pkg.org/badges/last-week/aplot?color=green)
+![](http://cranlogs.r-pkg.org/badges/last-week/aplot?color=green) <br>
+<a href="https://app.codecov.io/gh/YuLab-SMU/aplot/tree/master" target='_blank'><img src="https://codecov.io/gh/YuLab-SMU/aplot/branch/master/graphs/icicle.svg" title="Codecov icicle graph" width="200" height="50" style="vertical-align: top;"></a>
 
 For many times, we are not just aligning plots as what ‘cowplot’ and
 ‘patchwork’ did. Users would like to align associated information that
@@ -21,10 +31,6 @@ Guangchuang YU
 School of Basic Medical Sciences, Southern Medical University
 
 <https://yulab-smu.top>
-
-[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=social&logo=twitter)](https://twitter.com/intent/tweet?hashtags=ggtree&url=http://onlinelibrary.wiley.com/doi/10.1111/2041-210X.12628/abstract&screen_name=guangchuangyu)
-[![saythanks](https://img.shields.io/badge/say-thanks-ff69b4.svg)](https://saythanks.io/to/GuangchuangYu)
-[![](https://img.shields.io/badge/follow%20me%20on-WeChat-green.svg)](https://guangchuangyu.github.io/blog_images/biobabble.jpg)
 
 ## :arrow_double_down: Installation
 
