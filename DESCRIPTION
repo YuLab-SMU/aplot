@@ -20,7 +20,7 @@ Imports:
   utils
 Suggests:
   ggtree  
-URL: https://github.com/YuLab-SMU/aplot
+URL: https://github.com/YuLab-SMU/aplot, https://yulab-smu.top/aplot/
 License: Artistic-2.0
 Encoding: UTF-8
 RoxygenNote: 7.2.3
