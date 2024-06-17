@@ -44,15 +44,6 @@ ggplot_add.alab <- function(object, plot, object_name) {
     object$axis <- NULL
     gp <- do.call(grid::gpar, object)
 
-    if (axis == 'x') {
-        r <- yrange(plot)
-    } else {
-        r <- xrange(plot)
-    }
-
-    min <- (r[1] - diff(r)/10) * 1.25
-    max <- (r[1] - diff(r)/10) * .75
-    
     th <- plot$theme
 
     if (axis == 'x') {    
