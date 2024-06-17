@@ -1,3 +1,76 @@
+##' display x or y axis label as an ordinary text, so that the label will not be aligned with axis label of another plot
+##'
+##'
+##' @rdname aplot_label
+##' @param label axis label
+##' @param fontsize fontsize of the label
+##' @param ... additional parameter passed to `gpar` 
+##' @return gg object with new label
+##' @export
+##' @author Guangchuang Yu
+xlab2 <- function(label, fontsize = 11, ...) {
+    alab_(label = label, axis = 'x', 
+        fontsize = fontsize, ...)
+}
+
+##' @rdname aplot_label
+##' @export
+ylab2 <- function(label, fontsize = 11, ...) {
+    alab_(label = label, axis = 'y', 
+        fontsize = fontsize, ...)
+}
+
+alab_ <- function(label, axis, fontsize=11, ...) {
+    structure(
+            list(label = label,
+                axis = axis,
+                fontsize = fontsize,
+                ...),
+            class = "alab"
+    )
+}
+
+##' @method ggplot_add alab
+##' @importFrom grid textGrob
+##' @importFrom ggplot2 annotation_custom
+##' @importFrom ggplot2 coord_cartesian
+##' @importFrom ggplot2 element_blank
+##' @importFrom ggplot2 margin
+##' @export
+ggplot_add.alab <- function(object, plot, object_name) {
+    label <- object$label
+    object$label <- NULL
+    axis <- object$axis
+    object$axis <- NULL
+    gp <- do.call(grid::gpar, object)
+
+    if (axis == 'x') {
+        r <- yrange(plot)
+    } else {
+        r <- xrange(plot)
+    }
+
+    min <- (r[1] - diff(r)/10) * 1.25
+    max <- (r[1] - diff(r)/10) * .75
+    
+    th <- plot$theme
+
+    if (axis == 'x') {    
+        grob <- textGrob(label = label, gp = gp, y=-30, default.units = 'pt')
+        th <- theme(axis.title.x = element_blank(),
+                plot.margin = margin(b=40))
+    } else {
+        grob <- textGrob(label = label, gp = gp, rot = 90, x=-30, default.units = 'pt')
+        th <- theme(axis.title.y = element_blank(),
+                plot.margin = margin(l=40))            
+    }
+
+    layer <- annotation_custom(grob = grob)
+
+    plot + layer + coord_cartesian(clip="off") + th
+}
+
+
 
 ##' set axis limits (x or y) of a `ggplot` object (left hand side of `+`)
 ##' based on the x (`xlim2`) or y (`ylim2`) limits of another `ggplot` object (right hand side of `+`).

@@ -1,3 +1,7 @@
+# aplot 0.2.3
+
++ `xlab2()` and `ylab2()` to prevent axis label aignment (2024-06-17, Mon)
+
 # aplot 0.2.2
 
 + bug fixed in plot expand adjustment (2023-10-06, Fri, #36)
