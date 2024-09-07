@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2 Align associated subplots | aplot: simplifying the creation of complex graph to visualize associations across diverse data types</title>
+  <meta name="description" content="2 Align associated subplots | aplot: simplifying the creation of complex graph to visualize associations across diverse data types" />
+  <meta name="generator" content="bookdown 0.40 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2 Align associated subplots | aplot: simplifying the creation of complex graph to visualize associations across diverse data types" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2 Align associated subplots | aplot: simplifying the creation of complex graph to visualize associations across diverse data types" />
+  
+  
+  
+
+
+
+<meta name="date" content="2024-09-07" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="axis_align.html"/>
+<link rel="next" href="cases.html"/>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="axis_align.html"><a href="axis_align.html"><i class="fa fa-check"></i><b>1</b> Reconcile axis limits</a></li>
+<li class="chapter" data-level="2" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html"><i class="fa fa-check"></i><b>2</b> Align associated subplots</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html#a-first-glance"><i class="fa fa-check"></i><b>2.1</b> A first glance</a></li>
+<li class="chapter" data-level="2.2" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html#aligning-plots-with-a-tree"><i class="fa fa-check"></i><b>2.2</b> Aligning plots with a tree</a></li>
+<li class="chapter" data-level="2.3" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html#annoHeatmap"><i class="fa fa-check"></i><b>2.3</b> Creating annotated heatmap</a></li>
+<li class="chapter" data-level="2.4" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html#a-single-cell-example"><i class="fa fa-check"></i><b>2.4</b> A single cell example</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="cases.html"><a href="cases.html"><i class="fa fa-check"></i><b>3</b> Cases</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="cases.html"><a href="cases.html#pbmc-example"><i class="fa fa-check"></i><b>3.1</b> PBMC example</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="cases.html"><a href="cases.html#marker-gene-heatmap"><i class="fa fa-check"></i><b>3.1.1</b> Marker gene heatmap</a></li>
+<li class="chapter" data-level="3.1.2" data-path="cases.html"><a href="cases.html#degree-of-genes-in-the-ppi-network"><i class="fa fa-check"></i><b>3.1.2</b> Degree of genes in the PPI network</a></li>
+<li class="chapter" data-level="3.1.3" data-path="cases.html"><a href="cases.html#genes-in-pathways"><i class="fa fa-check"></i><b>3.1.3</b> Genes in pathways</a></li>
+<li class="chapter" data-level="3.1.4" data-path="cases.html"><a href="cases.html#all-in-one"><i class="fa fa-check"></i><b>3.1.4</b> All in one</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="cases.html"><a href="cases.html#oncoplot-example"><i class="fa fa-check"></i><b>3.2</b> Oncoplot example</a></li>
+<li class="chapter" data-level="3.3" data-path="cases.html"><a href="cases.html#funky-heatmap"><i class="fa fa-check"></i><b>3.3</b> funky heatmap</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">aplot: simplifying the creation of complex graph to visualize associations across diverse data types</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="align-associated-subplots" class="section level1 hasAnchor" number="2">
+<h1><span class="header-section-number">2</span> Align associated subplots<a href="align-associated-subplots.html#align-associated-subplots" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>With <code>xlim2()</code> and <code>ylim2()</code>, it is easy to align associated subplots to annotate a main figure. The <code>aplot</code> package provides <code>insert_left()</code>, <code>insert_right()</code>, <code>insert_top()</code> and <code>insert_bottom()</code> as shortcut to help users aligning subplots.</p>
+<div id="a-first-glance" class="section level2 hasAnchor" number="2.1">
+<h2><span class="header-section-number">2.1</span> A first glance<a href="align-associated-subplots.html#a-first-glance" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="align-associated-subplots.html#cb5-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb5-2"><a href="align-associated-subplots.html#cb5-2" tabindex="-1"></a><span class="fu">library</span>(aplot)</span>
+<span id="cb5-3"><a href="align-associated-subplots.html#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="align-associated-subplots.html#cb5-4" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(mpg, disp)) <span class="sc">+</span> <span class="fu">geom_point</span>()</span>
+<span id="cb5-5"><a href="align-associated-subplots.html#cb5-5" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(mpg)) <span class="sc">+</span> </span>
+<span id="cb5-6"><a href="align-associated-subplots.html#cb5-6" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">fill=</span><span class="st">&#39;steelblue&#39;</span>, <span class="at">alpha=</span>.<span class="dv">5</span>) <span class="sc">+</span> </span>
+<span id="cb5-7"><a href="align-associated-subplots.html#cb5-7" tabindex="-1"></a>  ggtree<span class="sc">::</span><span class="fu">theme_dendrogram</span>()</span>
+<span id="cb5-8"><a href="align-associated-subplots.html#cb5-8" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(mtcars, <span class="fu">aes</span>(<span class="at">x=</span><span class="dv">1</span>, <span class="at">y=</span>disp)) <span class="sc">+</span> </span>
+<span id="cb5-9"><a href="align-associated-subplots.html#cb5-9" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill=</span><span class="st">&#39;firebrick&#39;</span>, <span class="at">alpha=</span>.<span class="dv">5</span>) <span class="sc">+</span> </span>
+<span id="cb5-10"><a href="align-associated-subplots.html#cb5-10" tabindex="-1"></a>  <span class="fu">theme_void</span>()</span>
+<span id="cb5-11"><a href="align-associated-subplots.html#cb5-11" tabindex="-1"></a>ap <span class="ot">&lt;-</span> p <span class="sc">%&gt;%</span> </span>
+<span id="cb5-12"><a href="align-associated-subplots.html#cb5-12" tabindex="-1"></a>  <span class="fu">insert_top</span>(p2, <span class="at">height=</span>.<span class="dv">3</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-13"><a href="align-associated-subplots.html#cb5-13" tabindex="-1"></a>  <span class="fu">insert_right</span>(p3, <span class="at">width=</span>.<span class="dv">1</span>)</span>
+<span id="cb5-14"><a href="align-associated-subplots.html#cb5-14" tabindex="-1"></a><span class="do">## you can use `ggsave(filename=&quot;aplot.png&quot;, plot=ap)` to export the plot to image file</span></span>
+<span id="cb5-15"><a href="align-associated-subplots.html#cb5-15" tabindex="-1"></a><span class="fu">print</span>(ap) <span class="co"># or just type ap will print the figure</span></span></code></pre></div>
+<p><img src="aplot_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="aligning-plots-with-a-tree" class="section level2 hasAnchor" number="2.2">
+<h2><span class="header-section-number">2.2</span> Aligning plots with a tree<a href="align-associated-subplots.html#aligning-plots-with-a-tree" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Aligning a plot with a tree is difficult, as it requres expertise to extract the order of taxa on the tree.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="align-associated-subplots.html#cb6-1" tabindex="-1"></a><span class="fu">library</span>(ggtree)</span>
+<span id="cb6-2"><a href="align-associated-subplots.html#cb6-2" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2020-03-27</span>)</span>
+<span id="cb6-3"><a href="align-associated-subplots.html#cb6-3" tabindex="-1"></a>x <span class="ot">&lt;-</span> <span class="fu">rtree</span>(<span class="dv">10</span>)</span>
+<span id="cb6-4"><a href="align-associated-subplots.html#cb6-4" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">taxa=</span>x<span class="sc">$</span>tip.label, <span class="at">value =</span> <span class="fu">abs</span>(<span class="fu">rnorm</span>(<span class="dv">10</span>)))</span>
+<span id="cb6-5"><a href="align-associated-subplots.html#cb6-5" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggtree</span>(x) <span class="sc">+</span> <span class="fu">geom_tiplab</span>(<span class="at">align =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> <span class="fu">xlim</span>(<span class="cn">NA</span>, <span class="dv">3</span>)</span>
+<span id="cb6-6"><a href="align-associated-subplots.html#cb6-6" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="align-associated-subplots.html#cb6-7" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(d, <span class="fu">aes</span>(value, taxa)) <span class="sc">+</span> <span class="fu">geom_col</span>() <span class="sc">+</span> </span>
+<span id="cb6-8"><a href="align-associated-subplots.html#cb6-8" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">expand=</span><span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">0</span>)) </span>
+<span id="cb6-9"><a href="align-associated-subplots.html#cb6-9" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="align-associated-subplots.html#cb6-10" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb6-11"><a href="align-associated-subplots.html#cb6-11" tabindex="-1"></a>p <span class="sc">|</span> p2</span></code></pre></div>
+<p><img src="aplot_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Althought <code>patchwork</code> did a good job at aligning y-axes among the two plots, the output is not what we want if the bar heights are associated with external nodes on the tree. It is not so obvious for an ordinary user to extract the order of tip label from the tree to re-draw the barplot.</p>
+<p>If we insert a <code>ggtree</code> object in <code>aplot</code>, it will transform other plots in the same row (<code>insert_left</code> and <code>insert_right</code>) or same column (<code>insert_top</code> and <code>insert_bottom</code>) based on the tree structure.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="align-associated-subplots.html#cb7-1" tabindex="-1"></a>p2 <span class="sc">%&gt;%</span> <span class="fu">insert_left</span>(p)</span></code></pre></div>
+<p><img src="aplot_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Example from <a href="https://github.com/YuLab-SMU/ggtree/issues/339" class="uri">https://github.com/YuLab-SMU/ggtree/issues/339</a>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="align-associated-subplots.html#cb8-1" tabindex="-1"></a><span class="fu">require</span>(ggtree)</span>
+<span id="cb8-2"><a href="align-associated-subplots.html#cb8-2" tabindex="-1"></a><span class="fu">require</span>(ggplot2)</span>
+<span id="cb8-3"><a href="align-associated-subplots.html#cb8-3" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
+<span id="cb8-4"><a href="align-associated-subplots.html#cb8-4" tabindex="-1"></a><span class="fu">require</span>(gggenes)</span>
+<span id="cb8-5"><a href="align-associated-subplots.html#cb8-5" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="align-associated-subplots.html#cb8-6" tabindex="-1"></a>tree <span class="ot">&lt;-</span> <span class="fu">read.tree</span>(<span class="st">&quot;data/nbh.nwk&quot;</span>)</span>
+<span id="cb8-7"><a href="align-associated-subplots.html#cb8-7" tabindex="-1"></a>nbh <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">&quot;data/nbh.csv&quot;</span>)</span>
+<span id="cb8-8"><a href="align-associated-subplots.html#cb8-8" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="align-associated-subplots.html#cb8-9" tabindex="-1"></a>tree_plot <span class="ot">&lt;-</span> <span class="fu">ggtree</span>(tree) <span class="sc">+</span></span>
+<span id="cb8-10"><a href="align-associated-subplots.html#cb8-10" tabindex="-1"></a>  <span class="fu">geom_tiplab</span>(<span class="fu">aes</span>(<span class="at">label=</span>label))  </span>
+<span id="cb8-11"><a href="align-associated-subplots.html#cb8-11" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="align-associated-subplots.html#cb8-12" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="align-associated-subplots.html#cb8-13" tabindex="-1"></a>nbh_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(</span>
+<span id="cb8-14"><a href="align-associated-subplots.html#cb8-14" tabindex="-1"></a>  (nbh <span class="sc">%&gt;%</span> <span class="fu">select</span>(label, block_id,pid,start,end,strand) <span class="sc">%&gt;%</span> <span class="fu">distinct</span>()),</span>
+<span id="cb8-15"><a href="align-associated-subplots.html#cb8-15" tabindex="-1"></a>  <span class="fu">aes</span>(<span class="at">xmin =</span> start, <span class="at">xmax =</span> end, <span class="at">y =</span> block_id, <span class="at">forward =</span> strand) <span class="co"># as_factor(block_id)</span></span>
+<span id="cb8-16"><a href="align-associated-subplots.html#cb8-16" tabindex="-1"></a>) <span class="sc">+</span></span>
+<span id="cb8-17"><a href="align-associated-subplots.html#cb8-17" tabindex="-1"></a>  <span class="fu">geom_gene_arrow</span>() <span class="sc">+</span> </span>
+<span id="cb8-18"><a href="align-associated-subplots.html#cb8-18" tabindex="-1"></a>  <span class="co">#scale_fill_brewer(palette = &quot;Set3&quot;) +</span></span>
+<span id="cb8-19"><a href="align-associated-subplots.html#cb8-19" tabindex="-1"></a>  <span class="fu">theme_genes</span>() <span class="sc">%+replace%</span> </span>
+<span id="cb8-20"><a href="align-associated-subplots.html#cb8-20" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="cn">NULL</span>)) <span class="sc">+</span> <span class="co"># , linetype = &quot;dotted&quot;)) +</span></span>
+<span id="cb8-21"><a href="align-associated-subplots.html#cb8-21" tabindex="-1"></a>  <span class="co">#theme_classic() +</span></span>
+<span id="cb8-22"><a href="align-associated-subplots.html#cb8-22" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb8-23"><a href="align-associated-subplots.html#cb8-23" tabindex="-1"></a>    <span class="at">axis.title.x=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb8-24"><a href="align-associated-subplots.html#cb8-24" tabindex="-1"></a>    <span class="co">#axis.text.x=element_blank(),</span></span>
+<span id="cb8-25"><a href="align-associated-subplots.html#cb8-25" tabindex="-1"></a>    <span class="at">axis.ticks.x=</span><span class="fu">element_blank</span>(), </span>
+<span id="cb8-26"><a href="align-associated-subplots.html#cb8-26" tabindex="-1"></a>    <span class="co">#axis.line.x = element_blank(),</span></span>
+<span id="cb8-27"><a href="align-associated-subplots.html#cb8-27" tabindex="-1"></a>    <span class="at">axis.title.y=</span><span class="fu">element_blank</span>(),</span>
+<span id="cb8-28"><a href="align-associated-subplots.html#cb8-28" tabindex="-1"></a>    <span class="co">#axis.text.y=element_blank(),</span></span>
+<span id="cb8-29"><a href="align-associated-subplots.html#cb8-29" tabindex="-1"></a>    <span class="at">axis.ticks.y=</span><span class="fu">element_blank</span>(), </span>
+<span id="cb8-30"><a href="align-associated-subplots.html#cb8-30" tabindex="-1"></a>    <span class="at">axis.line.y =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb8-31"><a href="align-associated-subplots.html#cb8-31" tabindex="-1"></a>  ) </span>
+<span id="cb8-32"><a href="align-associated-subplots.html#cb8-32" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="align-associated-subplots.html#cb8-33" tabindex="-1"></a></span>
+<span id="cb8-34"><a href="align-associated-subplots.html#cb8-34" tabindex="-1"></a><span class="fu">require</span>(aplot)</span>
+<span id="cb8-35"><a href="align-associated-subplots.html#cb8-35" tabindex="-1"></a></span>
+<span id="cb8-36"><a href="align-associated-subplots.html#cb8-36" tabindex="-1"></a><span class="fu">insert_left</span>(nbh_plot, tree_plot)</span></code></pre></div>
+<p><img src="aplot_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Example from <a href="https://github.com/YuLab-SMU/ggtree/issues/313" class="uri">https://github.com/YuLab-SMU/ggtree/issues/313</a>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="align-associated-subplots.html#cb9-1" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">20200618</span>)</span>
+<span id="cb9-2"><a href="align-associated-subplots.html#cb9-2" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="align-associated-subplots.html#cb9-3" tabindex="-1"></a><span class="do">## Create a random tree</span></span>
+<span id="cb9-4"><a href="align-associated-subplots.html#cb9-4" tabindex="-1"></a>tre <span class="ot">&lt;-</span> <span class="fu">rtree</span>(<span class="dv">10</span>)</span>
+<span id="cb9-5"><a href="align-associated-subplots.html#cb9-5" tabindex="-1"></a>tre<span class="sc">$</span>tip.label <span class="ot">&lt;-</span> letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>]</span>
+<span id="cb9-6"><a href="align-associated-subplots.html#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="align-associated-subplots.html#cb9-7" tabindex="-1"></a><span class="do">## Build matrix with some random numbers in long format so can be plotted as &quot;heatmap&quot; using geom_tile</span></span>
+<span id="cb9-8"><a href="align-associated-subplots.html#cb9-8" tabindex="-1"></a>gmat <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">x =</span> letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], <span class="at">y =</span> letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>])</span>
+<span id="cb9-9"><a href="align-associated-subplots.html#cb9-9" tabindex="-1"></a>gmat<span class="sc">$</span>v <span class="ot">&lt;-</span> <span class="fu">rexp</span>(<span class="dv">100</span>, <span class="at">rate=</span>.<span class="dv">1</span>)</span>
+<span id="cb9-10"><a href="align-associated-subplots.html#cb9-10" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="align-associated-subplots.html#cb9-11" tabindex="-1"></a><span class="do">## Generate some reandom numbres for a line plot</span></span>
+<span id="cb9-12"><a href="align-associated-subplots.html#cb9-12" tabindex="-1"></a>gline <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x =</span> letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], <span class="at">y =</span> <span class="fu">rnorm</span>(<span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">2</span>))</span>
+<span id="cb9-13"><a href="align-associated-subplots.html#cb9-13" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="align-associated-subplots.html#cb9-14" tabindex="-1"></a><span class="do">## Generate some random percentages for a bar plot</span></span>
+<span id="cb9-15"><a href="align-associated-subplots.html#cb9-15" tabindex="-1"></a>gbar <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">x =</span> letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>], <span class="at">y =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">10</span>) <span class="sc">*</span> <span class="dv">100</span>,<span class="dv">1</span>))</span>
+<span id="cb9-16"><a href="align-associated-subplots.html#cb9-16" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="align-associated-subplots.html#cb9-17" tabindex="-1"></a><span class="do">## Construct ggtree</span></span>
+<span id="cb9-18"><a href="align-associated-subplots.html#cb9-18" tabindex="-1"></a>ptre <span class="ot">&lt;-</span> <span class="fu">ggtree</span>(tre) <span class="sc">+</span> <span class="fu">geom_tiplab</span>() <span class="sc">+</span> </span>
+<span id="cb9-19"><a href="align-associated-subplots.html#cb9-19" tabindex="-1"></a>    <span class="fu">geom_nodepoint</span>(<span class="at">colour =</span> <span class="st">&#39;firebrick&#39;</span>, <span class="at">size=</span><span class="dv">3</span>) </span>
+<span id="cb9-20"><a href="align-associated-subplots.html#cb9-20" tabindex="-1"></a></span>
+<span id="cb9-21"><a href="align-associated-subplots.html#cb9-21" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="align-associated-subplots.html#cb9-22" tabindex="-1"></a><span class="do">## Constuct companion plots</span></span>
+<span id="cb9-23"><a href="align-associated-subplots.html#cb9-23" tabindex="-1"></a>pmat <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gmat, <span class="fu">aes</span>(x,y, <span class="at">fill=</span>v)) <span class="sc">+</span> <span class="fu">geom_tile</span>()</span>
+<span id="cb9-24"><a href="align-associated-subplots.html#cb9-24" tabindex="-1"></a>pbar <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gbar, <span class="fu">aes</span>(x,y)) <span class="sc">+</span> <span class="fu">geom_col</span>() <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span> <span class="fu">ylab</span>(<span class="cn">NULL</span>)</span>
+<span id="cb9-25"><a href="align-associated-subplots.html#cb9-25" tabindex="-1"></a>pline <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gline, <span class="fu">aes</span>(x,y)) <span class="sc">+</span> </span>
+<span id="cb9-26"><a href="align-associated-subplots.html#cb9-26" tabindex="-1"></a>    <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">group =</span> <span class="dv">1</span>)) <span class="sc">+</span> <span class="fu">geom_point</span>() <span class="sc">+</span> <span class="fu">coord_flip</span>()</span>
+<span id="cb9-27"><a href="align-associated-subplots.html#cb9-27" tabindex="-1"></a></span>
+<span id="cb9-28"><a href="align-associated-subplots.html#cb9-28" tabindex="-1"></a>cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(ptre, pmat, pbar, pline, <span class="at">ncol=</span><span class="dv">4</span>)</span></code></pre></div>
+<p><img src="aplot_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="align-associated-subplots.html#cb10-1" tabindex="-1"></a><span class="fu">library</span>(aplot)</span>
+<span id="cb10-2"><a href="align-associated-subplots.html#cb10-2" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="align-associated-subplots.html#cb10-3" tabindex="-1"></a>pmat <span class="sc">%&gt;%</span> <span class="fu">insert_left</span>(ptre) <span class="sc">%&gt;%</span> <span class="fu">insert_right</span>(pbar) <span class="sc">%&gt;%</span> <span class="fu">insert_right</span>(pline)</span></code></pre></div>
+<p><img src="aplot_files/figure-html/unnamed-chunk-7-2.png" width="672" /></p>
+</div>
+<div id="annoHeatmap" class="section level2 hasAnchor" number="2.3">
+<h2><span class="header-section-number">2.3</span> Creating annotated heatmap<a href="align-associated-subplots.html#annoHeatmap" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>The <code>xlim2()</code> and <code>ylim2()</code> functions create many possibilities to align figures. For instance, we can add column and row annotations around a heatmap in all sides (top, bottom, left and right). They can be aligned properly with the aids of <code>xlim2()</code> and <code>ylim2()</code> even with missing values presented as demonstrated in Figure <a href="align-associated-subplots.html#fig:ggComplexHeatmap">2.1</a>.</p>
+
+
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="align-associated-subplots.html#cb11-1" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb11-2"><a href="align-associated-subplots.html#cb11-2" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb11-3"><a href="align-associated-subplots.html#cb11-3" tabindex="-1"></a><span class="fu">library</span>(ggtree)</span>
+<span id="cb11-4"><a href="align-associated-subplots.html#cb11-4" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="align-associated-subplots.html#cb11-5" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2019-11-07</span>)</span>
+<span id="cb11-6"><a href="align-associated-subplots.html#cb11-6" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">rnorm</span>(<span class="dv">25</span>), <span class="at">ncol=</span><span class="dv">5</span>)</span>
+<span id="cb11-7"><a href="align-associated-subplots.html#cb11-7" tabindex="-1"></a><span class="fu">rownames</span>(d) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&#39;g&#39;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb11-8"><a href="align-associated-subplots.html#cb11-8" tabindex="-1"></a><span class="fu">colnames</span>(d) <span class="ot">&lt;-</span> <span class="fu">paste0</span>(<span class="st">&#39;t&#39;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
+<span id="cb11-9"><a href="align-associated-subplots.html#cb11-9" tabindex="-1"></a>hc <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(d))</span>
+<span id="cb11-10"><a href="align-associated-subplots.html#cb11-10" tabindex="-1"></a>hcc <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(<span class="fu">t</span>(d)))</span>
+<span id="cb11-11"><a href="align-associated-subplots.html#cb11-11" tabindex="-1"></a>phr <span class="ot">&lt;-</span> <span class="fu">ggtree</span>(hc)</span>
+<span id="cb11-12"><a href="align-associated-subplots.html#cb11-12" tabindex="-1"></a>phc <span class="ot">&lt;-</span> <span class="fu">ggtree</span>(hcc) <span class="sc">+</span> <span class="fu">layout_dendrogram</span>()</span>
+<span id="cb11-13"><a href="align-associated-subplots.html#cb11-13" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="align-associated-subplots.html#cb11-14" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(d)</span>
+<span id="cb11-15"><a href="align-associated-subplots.html#cb11-15" tabindex="-1"></a>d<span class="sc">$</span>gene <span class="ot">&lt;-</span> <span class="fu">rownames</span>(d)</span>
+<span id="cb11-16"><a href="align-associated-subplots.html#cb11-16" tabindex="-1"></a>dd <span class="ot">&lt;-</span> <span class="fu">gather</span>(d, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">key=</span><span class="st">&quot;condition&quot;</span>, <span class="at">value=</span><span class="st">&#39;expr&#39;</span>)</span>
+<span id="cb11-17"><a href="align-associated-subplots.html#cb11-17" tabindex="-1"></a></span>
+<span id="cb11-18"><a href="align-associated-subplots.html#cb11-18" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dd, <span class="fu">aes</span>(condition,gene, <span class="at">fill=</span>expr)) <span class="sc">+</span> <span class="fu">geom_tile</span>() <span class="sc">+</span> </span>
+<span id="cb11-19"><a href="align-associated-subplots.html#cb11-19" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span></span>
+<span id="cb11-20"><a href="align-associated-subplots.html#cb11-20" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">position=</span><span class="st">&quot;right&quot;</span>) <span class="sc">+</span></span>
+<span id="cb11-21"><a href="align-associated-subplots.html#cb11-21" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb11-22"><a href="align-associated-subplots.html#cb11-22" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="cn">NULL</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="cn">NULL</span>) </span>
+<span id="cb11-23"><a href="align-associated-subplots.html#cb11-23" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="align-associated-subplots.html#cb11-24" tabindex="-1"></a>g <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dplyr<span class="sc">::</span><span class="fu">filter</span>(dd, gene <span class="sc">!=</span> <span class="st">&#39;g2&#39;</span>), <span class="fu">aes</span>(gene, expr, <span class="at">fill=</span>gene)) <span class="sc">+</span> </span>
+<span id="cb11-25"><a href="align-associated-subplots.html#cb11-25" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span> <span class="fu">coord_flip</span>() <span class="sc">+</span></span>
+<span id="cb11-26"><a href="align-associated-subplots.html#cb11-26" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&#39;Set1&#39;</span>) <span class="sc">+</span></span>
+<span id="cb11-27"><a href="align-associated-subplots.html#cb11-27" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb11-28"><a href="align-associated-subplots.html#cb11-28" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb11-29"><a href="align-associated-subplots.html#cb11-29" tabindex="-1"></a>        <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-30"><a href="align-associated-subplots.html#cb11-30" tabindex="-1"></a>        <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb11-31"><a href="align-associated-subplots.html#cb11-31" tabindex="-1"></a>        <span class="at">panel.grid.major.y =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb11-32"><a href="align-associated-subplots.html#cb11-32" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="cn">NULL</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="cn">NULL</span>) </span>
+<span id="cb11-33"><a href="align-associated-subplots.html#cb11-33" tabindex="-1"></a></span>
+<span id="cb11-34"><a href="align-associated-subplots.html#cb11-34" tabindex="-1"></a>ca <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">condition =</span> <span class="fu">paste0</span>(<span class="st">&#39;t&#39;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), </span>
+<span id="cb11-35"><a href="align-associated-subplots.html#cb11-35" tabindex="-1"></a>                 <span class="at">A1 =</span> <span class="fu">rep</span>(LETTERS[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>], <span class="at">times=</span><span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">2</span>)),</span>
+<span id="cb11-36"><a href="align-associated-subplots.html#cb11-36" tabindex="-1"></a>                 <span class="at">A2 =</span> <span class="fu">rep</span>(letters[<span class="dv">3</span><span class="sc">:</span><span class="dv">5</span>], <span class="at">times=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">3</span>, <span class="dv">1</span>))</span>
+<span id="cb11-37"><a href="align-associated-subplots.html#cb11-37" tabindex="-1"></a>)</span>
+<span id="cb11-38"><a href="align-associated-subplots.html#cb11-38" tabindex="-1"></a>cad <span class="ot">&lt;-</span> <span class="fu">gather</span>(ca, A1, A2, <span class="at">key=</span><span class="st">&#39;anno&#39;</span>, <span class="at">value=</span><span class="st">&#39;type&#39;</span>)</span>
+<span id="cb11-39"><a href="align-associated-subplots.html#cb11-39" tabindex="-1"></a></span>
+<span id="cb11-40"><a href="align-associated-subplots.html#cb11-40" tabindex="-1"></a>pc <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(cad, <span class="fu">aes</span>(condition, <span class="at">y=</span>anno, <span class="at">fill=</span>type)) <span class="sc">+</span> <span class="fu">geom_tile</span>() <span class="sc">+</span> </span>
+<span id="cb11-41"><a href="align-associated-subplots.html#cb11-41" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">position=</span><span class="st">&quot;right&quot;</span>) <span class="sc">+</span></span>
+<span id="cb11-42"><a href="align-associated-subplots.html#cb11-42" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb11-43"><a href="align-associated-subplots.html#cb11-43" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb11-44"><a href="align-associated-subplots.html#cb11-44" tabindex="-1"></a>        <span class="at">axis.ticks.x =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb11-45"><a href="align-associated-subplots.html#cb11-45" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="cn">NULL</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="cn">NULL</span>) </span>
+<span id="cb11-46"><a href="align-associated-subplots.html#cb11-46" tabindex="-1"></a></span>
+<span id="cb11-47"><a href="align-associated-subplots.html#cb11-47" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb11-48"><a href="align-associated-subplots.html#cb11-48" tabindex="-1"></a>dp <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">gene=</span><span class="fu">factor</span>(<span class="fu">rep</span>(<span class="fu">paste0</span>(<span class="st">&#39;g&#39;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), <span class="dv">2</span>)), </span>
+<span id="cb11-49"><a href="align-associated-subplots.html#cb11-49" tabindex="-1"></a>                 <span class="at">pathway =</span> <span class="fu">sample</span>(<span class="fu">paste0</span>(<span class="st">&#39;pathway&#39;</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), <span class="dv">10</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb11-50"><a href="align-associated-subplots.html#cb11-50" tabindex="-1"></a></span>
+<span id="cb11-51"><a href="align-associated-subplots.html#cb11-51" tabindex="-1"></a>pp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(dp, <span class="fu">aes</span>(pathway, gene)) <span class="sc">+</span> </span>
+<span id="cb11-52"><a href="align-associated-subplots.html#cb11-52" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">5</span>, <span class="at">color=</span><span class="st">&#39;steelblue&#39;</span>) <span class="sc">+</span></span>
+<span id="cb11-53"><a href="align-associated-subplots.html#cb11-53" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb11-54"><a href="align-associated-subplots.html#cb11-54" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x=</span><span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">90</span>, <span class="at">hjust=</span><span class="dv">0</span>),</span>
+<span id="cb11-55"><a href="align-associated-subplots.html#cb11-55" tabindex="-1"></a>        <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb11-56"><a href="align-associated-subplots.html#cb11-56" tabindex="-1"></a>        <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb11-57"><a href="align-associated-subplots.html#cb11-57" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="cn">NULL</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="cn">NULL</span>) </span>
+<span id="cb11-58"><a href="align-associated-subplots.html#cb11-58" tabindex="-1"></a></span>
+<span id="cb11-59"><a href="align-associated-subplots.html#cb11-59" tabindex="-1"></a></span>
+<span id="cb11-60"><a href="align-associated-subplots.html#cb11-60" tabindex="-1"></a>p <span class="sc">%&gt;%</span> <span class="fu">insert_left</span>(phr, <span class="at">width=</span>.<span class="dv">3</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-61"><a href="align-associated-subplots.html#cb11-61" tabindex="-1"></a>  <span class="fu">insert_right</span>(pp, <span class="at">width=</span>.<span class="dv">4</span>)  <span class="sc">%&gt;%</span> </span>
+<span id="cb11-62"><a href="align-associated-subplots.html#cb11-62" tabindex="-1"></a>  <span class="fu">insert_right</span>(g, <span class="at">width=</span>.<span class="dv">4</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-63"><a href="align-associated-subplots.html#cb11-63" tabindex="-1"></a>  <span class="fu">insert_top</span>(pc, <span class="at">height=</span>.<span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-64"><a href="align-associated-subplots.html#cb11-64" tabindex="-1"></a>  <span class="fu">insert_top</span>(phc, <span class="at">height=</span>.<span class="dv">2</span>)</span></code></pre></div>
+<div class="figure"><span style="display:block;" id="fig:ggComplexHeatmap"></span>
+<img src="aplot_files/figure-html/ggComplexHeatmap-1.png" alt="Create complex heatmap. With the helps of xlim2() and ylim2(), it is easy to align row or column annotations around a figure (e.g. a heatmap)." width="912" />
+<p class="caption">
+Figure 2.1: <strong>Create complex heatmap.</strong> With the helps of <code>xlim2()</code> and <code>ylim2()</code>, it is easy to align row or column annotations around a figure (e.g. a heatmap).
+</p>
+</div>
+<!--
+
+cowplot::axis_canvas has it's limitation as it only support continuous scale.
+However, we may get some ideas from this function to improve xlim2 and ylim2.
+
+https://github.com/wilkelab/cowplot/issues/40
+
+## gtable is the key to reduce space.
+
+(p + scale_x_discrete(position="bottom") + scale_y_discrete(position="right")) %>% 
+  insert_xaxis_grob(phc, unit(.3, "null"), position="top") %>% 
+  insert_yaxis_grob(g + ylim2(p), unit(.3, 'null'), position='right') %>% 
+  insert_yaxis_grob(phr, unit(.2, 'null'), position='left') %>% 
+  insert_xaxis_grob(pc,unit(.2, 'null'), position='top') %>% 
+  insert_yaxis_grob(pp, unit(.3, 'null'), position='right') %>% ggdraw()
+
+
+Another solution is to tweak xlim2 and ylim2, without affect of the plot expansion.
+
+-->
+</div>
+<div id="a-single-cell-example" class="section level2 hasAnchor" number="2.4">
+<h2><span class="header-section-number">2.4</span> A single cell example<a href="align-associated-subplots.html#a-single-cell-example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<p>Example taken from <a href="https://davemcg.github.io/post/lets-plot-scrna-dotplots/" class="uri">https://davemcg.github.io/post/lets-plot-scrna-dotplots/</a></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="align-associated-subplots.html#cb12-1" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb12-2"><a href="align-associated-subplots.html#cb12-2" tabindex="-1"></a><span class="fu">library</span>(tidyr)</span>
+<span id="cb12-3"><a href="align-associated-subplots.html#cb12-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb12-4"><a href="align-associated-subplots.html#cb12-4" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb12-5"><a href="align-associated-subplots.html#cb12-5" tabindex="-1"></a><span class="fu">library</span>(ggtree)</span>
+<span id="cb12-6"><a href="align-associated-subplots.html#cb12-6" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="align-associated-subplots.html#cb12-7" tabindex="-1"></a>file <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;scRNA_dotplot_data.tsv.gz&quot;</span>, <span class="at">package=</span><span class="st">&quot;aplot&quot;</span>)</span>
+<span id="cb12-8"><a href="align-associated-subplots.html#cb12-8" tabindex="-1"></a>gene_cluster <span class="ot">&lt;-</span> readr<span class="sc">::</span><span class="fu">read_tsv</span>(file)</span>
+<span id="cb12-9"><a href="align-associated-subplots.html#cb12-9" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="align-associated-subplots.html#cb12-10" tabindex="-1"></a>dot_plot <span class="ot">&lt;-</span> gene_cluster <span class="sc">%&gt;%</span> </span>
+<span id="cb12-11"><a href="align-associated-subplots.html#cb12-11" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="st">`</span><span class="at">% Expressing</span><span class="st">`</span> <span class="ot">=</span> (cell_exp_ct<span class="sc">/</span>cell_ct) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-12"><a href="align-associated-subplots.html#cb12-12" tabindex="-1"></a>  <span class="fu">filter</span>(count <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="st">`</span><span class="at">% Expressing</span><span class="st">`</span> <span class="sc">&gt;</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-13"><a href="align-associated-subplots.html#cb12-13" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>cluster, <span class="at">y =</span> Gene, <span class="at">color =</span> count, <span class="at">size =</span> <span class="st">`</span><span class="at">% Expressing</span><span class="st">`</span>)) <span class="sc">+</span> </span>
+<span id="cb12-14"><a href="align-associated-subplots.html#cb12-14" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb12-15"><a href="align-associated-subplots.html#cb12-15" tabindex="-1"></a>  cowplot<span class="sc">::</span><span class="fu">theme_cowplot</span>() <span class="sc">+</span> </span>
+<span id="cb12-16"><a href="align-associated-subplots.html#cb12-16" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.line  =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb12-17"><a href="align-associated-subplots.html#cb12-17" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span></span>
+<span id="cb12-18"><a href="align-associated-subplots.html#cb12-18" tabindex="-1"></a>  <span class="fu">ylab</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb12-19"><a href="align-associated-subplots.html#cb12-19" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.ticks =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb12-20"><a href="align-associated-subplots.html#cb12-20" tabindex="-1"></a>  <span class="fu">scale_color_gradientn</span>(<span class="at">colours =</span> viridis<span class="sc">::</span><span class="fu">viridis</span>(<span class="dv">20</span>), <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">4</span>), <span class="at">oob =</span> scales<span class="sc">::</span>squish, <span class="at">name =</span> <span class="st">&#39;log2 (count + 1)&#39;</span>) <span class="sc">+</span></span>
+<span id="cb12-21"><a href="align-associated-subplots.html#cb12-21" tabindex="-1"></a>  <span class="fu">scale_y_discrete</span>(<span class="at">position =</span> <span class="st">&quot;right&quot;</span>)</span>
+<span id="cb12-22"><a href="align-associated-subplots.html#cb12-22" tabindex="-1"></a></span>
+<span id="cb12-23"><a href="align-associated-subplots.html#cb12-23" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="align-associated-subplots.html#cb12-24" tabindex="-1"></a>mat <span class="ot">&lt;-</span> gene_cluster <span class="sc">%&gt;%</span> </span>
+<span id="cb12-25"><a href="align-associated-subplots.html#cb12-25" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>cell_ct, <span class="sc">-</span>cell_exp_ct, <span class="sc">-</span>Group) <span class="sc">%&gt;%</span>  <span class="co"># drop unused columns to faciliate widening</span></span>
+<span id="cb12-26"><a href="align-associated-subplots.html#cb12-26" tabindex="-1"></a>  <span class="fu">pivot_wider</span>(<span class="at">names_from =</span> cluster, <span class="at">values_from =</span> count) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-27"><a href="align-associated-subplots.html#cb12-27" tabindex="-1"></a>  <span class="fu">data.frame</span>() <span class="co"># make df as tibbles -&gt; matrix annoying</span></span>
+<span id="cb12-28"><a href="align-associated-subplots.html#cb12-28" tabindex="-1"></a><span class="fu">row.names</span>(mat) <span class="ot">&lt;-</span> mat<span class="sc">$</span>Gene  <span class="co"># put gene in `row`</span></span>
+<span id="cb12-29"><a href="align-associated-subplots.html#cb12-29" tabindex="-1"></a>mat <span class="ot">&lt;-</span> mat[,<span class="sc">-</span><span class="dv">1</span>] <span class="co">#drop gene column as now in rows</span></span>
+<span id="cb12-30"><a href="align-associated-subplots.html#cb12-30" tabindex="-1"></a>clust <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(mat <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>())) <span class="co"># hclust with distance matrix</span></span>
+<span id="cb12-31"><a href="align-associated-subplots.html#cb12-31" tabindex="-1"></a></span>
+<span id="cb12-32"><a href="align-associated-subplots.html#cb12-32" tabindex="-1"></a>ggtree_plot <span class="ot">&lt;-</span> ggtree<span class="sc">::</span><span class="fu">ggtree</span>(clust)</span>
+<span id="cb12-33"><a href="align-associated-subplots.html#cb12-33" tabindex="-1"></a></span>
+<span id="cb12-34"><a href="align-associated-subplots.html#cb12-34" tabindex="-1"></a>v_clust <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(mat <span class="sc">%&gt;%</span> <span class="fu">as.matrix</span>() <span class="sc">%&gt;%</span> <span class="fu">t</span>()))</span>
+<span id="cb12-35"><a href="align-associated-subplots.html#cb12-35" tabindex="-1"></a>ggtree_plot_col <span class="ot">&lt;-</span> <span class="fu">ggtree</span>(v_clust) <span class="sc">+</span> <span class="fu">layout_dendrogram</span>()</span>
+<span id="cb12-36"><a href="align-associated-subplots.html#cb12-36" tabindex="-1"></a></span>
+<span id="cb12-37"><a href="align-associated-subplots.html#cb12-37" tabindex="-1"></a></span>
+<span id="cb12-38"><a href="align-associated-subplots.html#cb12-38" tabindex="-1"></a>labels<span class="ot">=</span> <span class="fu">ggplot</span>(gene_cluster, <span class="fu">aes</span>(cluster, <span class="at">y=</span><span class="dv">1</span>, <span class="at">fill=</span>Group)) <span class="sc">+</span> <span class="fu">geom_tile</span>() <span class="sc">+</span></span>
+<span id="cb12-39"><a href="align-associated-subplots.html#cb12-39" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&#39;Set1&#39;</span>,<span class="at">name=</span><span class="st">&quot;Cell Type&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb12-40"><a href="align-associated-subplots.html#cb12-40" tabindex="-1"></a>  <span class="fu">theme_void</span>() </span>
+<span id="cb12-41"><a href="align-associated-subplots.html#cb12-41" tabindex="-1"></a></span>
+<span id="cb12-42"><a href="align-associated-subplots.html#cb12-42" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb12-43"><a href="align-associated-subplots.html#cb12-43" tabindex="-1"></a>ggtree_plot <span class="sc">|</span> dot_plot <span class="sc">|</span> (ggtree_plot_col <span class="sc">/</span> labels)</span></code></pre></div>
+<p><img src="aplot_files/figure-html/originPlot-1.png" width="1152" /></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="align-associated-subplots.html#cb13-1" tabindex="-1"></a><span class="fu">library</span>(aplot)</span>
+<span id="cb13-2"><a href="align-associated-subplots.html#cb13-2" tabindex="-1"></a><span class="do">## the rows of the dot_plot was automatically reorder based on the tree</span></span>
+<span id="cb13-3"><a href="align-associated-subplots.html#cb13-3" tabindex="-1"></a>dot_plot <span class="sc">%&gt;%</span> </span>
+<span id="cb13-4"><a href="align-associated-subplots.html#cb13-4" tabindex="-1"></a>  <span class="fu">insert_left</span>(ggtree_plot, <span class="at">width=</span>.<span class="dv">2</span>) </span></code></pre></div>
+<p><img src="aplot_files/figure-html/dotTree-1.png" width="768" /></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="align-associated-subplots.html#cb14-1" tabindex="-1"></a><span class="do">## the columns of the dot_plot was automatically reorder based on the tree</span></span>
+<span id="cb14-2"><a href="align-associated-subplots.html#cb14-2" tabindex="-1"></a>dot_plot <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="align-associated-subplots.html#cb14-3" tabindex="-1"></a>  <span class="fu">insert_left</span>(ggtree_plot, <span class="at">width=</span>.<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="align-associated-subplots.html#cb14-4" tabindex="-1"></a>  <span class="fu">insert_top</span>(labels, <span class="at">height=</span>.<span class="dv">02</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb14-5"><a href="align-associated-subplots.html#cb14-5" tabindex="-1"></a>  <span class="fu">insert_top</span>(ggtree_plot_col, <span class="at">height=</span>.<span class="dv">1</span>)</span></code></pre></div>
+<p><img src="aplot_files/figure-html/dotTree2-1.png" width="768" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="axis_align.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="cases.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": null,
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
