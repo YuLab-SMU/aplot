@@ -1,0 +1,194 @@
+# Cases
+
+## PBMC example
+
+### Marker gene heatmap
+
+```{r marker-gene-heatmap, fig.width=10, fig.height=7}
+library(yulab.utils)
+pload(dplyr)
+pload(ggplot2)
+pload(ggfun)
+pload(ggtree)
+pload(aplot)
+pload(Seurat)
+
+
+# celltype <- c("Naive CD4 T", "B", "NK")
+# id <- pbmc@active.ident
+# md = data.frame(cell=names(id), group=id)
+# md <- md[md$group %in% celltype, ]
+# md$group <- as.character(md$group)
+# md <- lapply(split(md, md$group), function(x) x[1:30,]) |> rbindlist()
+#
+# pbmc <- pbmc[, md$cell]
+
+pbmc <- qs::qread("data/pbmc-subset.qs")
+
+m <- FindAllMarkers(pbmc, only.pos=TRUE)
+
+top10 <- m %>%
+    group_by(cluster) %>%
+    dplyr::filter(avg_log2FC > 2) %>%
+    slice_head(n = 10) 
+
+pbmc <- ScaleData(pbmc, features = rownames(pbmc))
+x  <- pbmc[['RNA']]$scale.data[top10$gene,]
+
+y <- mat2df(x) -> y
+y$gene <- rownames(x)[y$row]
+y$cell <- colnames(x)[y$col]
+
+p <- ggplot(y, aes(cell, gene, fill = value)) + 
+    geom_tile()+ scale_fill_viridis_c(name = "Gene Expression") +
+    theme_noxaxis() +
+    scale_y_discrete(position = "right") +
+    xlab(NULL) +
+    ylab(NULL)
+
+gene_cls <- hclust(dist((x)))
+cell_cls <- hclust(dist(t((x)))) 
+gene_tree <- ggtree(gene_cls, branch.length = 'none')
+cell_tree = ggtree(cell_cls, branch.length = 'none') + layout_dendrogram()
+
+
+id <- pbmc@active.ident
+md = data.frame(cell=names(id), group=id)
+p_cell_type <- ggplot(md, aes(cell, y=1, fill = group)) + 
+    geom_tile() + 
+    scale_fill_brewer(palette="Set1", name = 'Cell Type') +
+    theme_nothing()
+
+g <- p |> insert_left(gene_tree, width = .2) |> 
+    insert_top(p_cell_type, height = .02) |> 
+    insert_top(cell_tree, height = .1)
+
+g
+```
+
+### Degree of genes in the PPI network
+
+```{r ppi}
+pload(igraph)
+pload(clusterProfiler)
+
+ppi <- getPPI(top10$gene, output='igraph', taxID='9606') 
+deg <- stack(degree(ppi, v = V(ppi))) |> setNames(c("degree", "gene"))
+
+p_ppi <- ggplot(deg, aes(1, gene, fill=degree, size=degree)) + geom_point(shape=21) + 
+    scale_fill_gradientn(colors = hcl.colors(20, "RdYlGn")) + theme_nothing()
+```
+
+### Genes in pathways
+
+```{r pcp, fig.width=16, fig.height=7}
+pload(tidytree)
+pload(msigdbr)
+
+node <- c(35, 34, 32)
+genes <- lapply(node, function(n) offspring(gene_tree, n, tiponly=T)$label) |>
+    setNames(c("CD4", "NK", "B"))
+
+pload(clusterProfiler)
+gene_set <- msigdbr(species="human", category="C2")
+names(gene_set)
+cc <- compareCluster(genes, enricher, TERM2GENE=gene_set[, c("gs_name", "gene_symbol")])
+res <- cc@compareClusterResult |>
+    group_by(Cluster) |> 
+    slice_head(n = 5) |> 
+    as.data.frame()
+
+gene2path <- lapply(res$geneID, function(x) unlist(strsplit(x, split="/"))) |>
+    setNames(res$Description) |>
+    stack() |>
+    setNames(c("gene", "pathway"))
+
+pcp <- ggplot(gene2path, aes(pathway, gene))  +
+    geom_point(size=5, shape=21, fill = "steelblue") +
+    theme_minimal() + 
+    theme_noyaxis() +
+    theme(axis.text.x = element_text(angle=30, hjust=1)) + 
+    xlab(NULL) +
+    ylab(NULL)
+
+gg <- g |> insert_right(p_ppi, width=.05) |>
+    insert_right(pcp, width=.5) 
+gg
+```
+
+
+
+### All in one
+
+```{r all, fig.width=16, fig.height=14}
+pp <- plot_list(cell_tree, p_cell_type, heights=c(1, .5))
+pp <- plot_list(gene_tree, pp, widths=c(.3, 1))
+pp <- plot_list(p, pp, p_ppi, pcp, widths=c(1, .8, .05, .6))
+pp <- pp + patchwork::plot_annotation(tag_levels='a')
+
+final_plot <- plot_list(pp, gg, ncol=1, tag_levels='A', heights=c(1, 1.2))
+final_plot
+```
+
+## Oncoplot example
+
+
+```{r onco, fig.width=16, fig.height=7}
+pload(aplotExtra)
+pload(RTCGA.mRNA)
+pload(RTCGA)
+
+laml.maf <- system.file("extdata", "tcga_laml.maf.gz", package = "maftools")
+laml.clin <- system.file('extdata', 'tcga_laml_annot.tsv', package = 'maftools')
+laml <- maftools::read.maf(maf = laml.maf, clinicalData = laml.clin)
+onco <- oncoplot(maf = laml, genes = 20)
+
+plot_tcga_expr <- function(mRNA, genes, name = "Gene Expression") {
+    d = expressionsTCGA(mRNA, extract.cols = genes)
+
+    dd = gather(d, gene, expression, -c(1,2))
+    
+    ggplot(dd, aes(expression, gene, fill=stat(x))) + 
+        ggridges::geom_density_ridges_gradient() +
+        scale_fill_viridis_c(option="C", name = name) +
+        theme_minimal() +
+        theme_noyaxis() + 
+        xlab(NULL) +
+        ylab(NULL) +
+        theme(legend.position='bottom')
+}
+
+onco_genes <- aplotExtra:::get_oncoplot_genes(laml)
+brca <- plot_tcga_expr(BRCA.mRNA, onco_genes, "Gene Expression in TCGA\nbreast cancer patients")
+ov <- plot_tcga_expr(OV.mRNA, onco_genes, "Gene Expression in TCGA\novarian cancer patients")
+
+op <- insert_right(onco, brca, width = .6) |>
+    insert_right(ov, width=.6)
+op
+```
+
+## funky heatmap
+
+
+```{r funky, fig.width=8, fig.height=8}
+library(aplotExtra)
+library(tidyverse)
+data("mtcars")
+
+
+d <- yulab.utils::scale_range(mtcars) |>
+    rownames_to_column("id") |>
+    arrange(desc(mpg))
+
+
+g1 <- funky_text(d)
+g2 <- funky_bar(d, 2) + scale_fill_gradient(low = "#CC4C02", high = "#FFFFE5")
+g3 <- funky_bar(d, 3) + scale_fill_gradient(low = "steelblue", high = "firebrick") 
+g4 <- funky_point(d, 4:7) + scale_fill_gradient(low = "#CC4C02", high = "#FFFFE5")
+g5 <- funky_point(d, 8:12) + scale_fill_gradient(low = "#08519C", high = "#F7FBFF") 
+
+
+#funky_heatmap(data=mtcars)
+fp <- funky_heatmap(g1, g2, g4, g5, options=theme_stamp())
+fp
+```

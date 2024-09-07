@@ -1,0 +1,7 @@
+book_filename: "aplot"
+chapter_name: ""
+output_dir: docs
+delete_merged_file: true
+rmd_files: ["index.Rmd",
+  "01-aplot.Rmd",
+  "02-aplot-cases.Rmd"]

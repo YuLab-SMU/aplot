@@ -1,0 +1,16 @@
+bookdown::pdf_book:
+  fig_caption: yes
+  fig_height: 3.8
+  fig_width: 6.3
+  keep_tex: yes
+  dev: "cairo_pdf"
+  latex_engine: xelatex
+  number_sections: yes
+  toc_unnumbered: yes
+  toc_appendix: yes
+  pandoc_args: [
+    "--top-level-division=chapter"
+  ]
+  citation_package: natbib
+bookdown::gitbook:
+  split_by: none

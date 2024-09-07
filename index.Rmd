@@ -1,0 +1,69 @@
+---
+title: 'aplot: simplifying the creation of complex graph to visualize associations across diverse data types'
+author: 
+- name: Guangchuang Yu
+  email: guangchuangyu@gmail.com
+  affiliation: Department of Bioinformatics, School of Basic Medical Sciences, Southern Medical University
+date: "`r Sys.Date()`"
+knit: "bookdown::render_book"
+site: bookdown::bookdown_site
+output:
+  bookdown::gitbook:
+  bookdown::pdf_book:
+    dev: "cairo_pdf"
+    latex_engine: xelatex
+bibliography: references.bib
+biblio-style: apalike
+always_allow_html: yes
+toc_appendix: yes
+fontsize: "12pt"
+mainfont: Times New Roman
+sansfont: Arial
+monofontoptions: "Scale=0.7"
+linestretch: 1.5
+toc-depth: 2
+link-citations: yes
+documentclass: book
+papersize: A4
+classoption: twoside
+highlight_bw: yes
+geometry: "left=35mm,right=35mm,top=25mm,bottom=25mm"
+---
+
+
+```{r include=FALSE}
+library(conflicted)
+library(dplyr)
+
+options(width=60)
+
+conflict_prefer("filter", "dplyr")
+conflict_prefer("as.data.frame", "BiocGenerics")
+
+
+CRANpkg <- function (pkg) {
+    cran <- "https://CRAN.R-project.org/package"
+    fmt <- "[%s](%s=%s)"
+    sprintf(fmt, pkg, cran, pkg)
+}
+
+Biocpkg <- function (pkg) {
+    sprintf("[%s](http://bioconductor.org/packages/%s)", pkg, pkg)
+}
+
+Githubpkg <- function (user, pkg) {
+    gh <- "https://github.com"
+    fmt <- "[%s](%s/%s/%s)"
+    sprintf(fmt, pkg, gh, user, pkg)
+}
+
+library(knitr)
+opts_chunk$set(message=FALSE, warning=FALSE, eval=TRUE, echo=TRUE, cache=TRUE)
+```
+
+
+
+
+# Preface {-}
+
+For many times, we are not just aligning plots as what `cowplot` and `patchwork` did. We would like to align associated information that requires axes to be exactly matched in subplots. 
