@@ -315,54 +315,61 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb21-4"><a href="cases.html#cb21-4" tabindex="-1"></a></span>
 <span id="cb21-5"><a href="cases.html#cb21-5" tabindex="-1"></a>laml.maf <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;tcga_laml.maf.gz&quot;</span>, <span class="at">package =</span> <span class="st">&quot;maftools&quot;</span>)</span>
 <span id="cb21-6"><a href="cases.html#cb21-6" tabindex="-1"></a>laml.clin <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&#39;extdata&#39;</span>, <span class="st">&#39;tcga_laml_annot.tsv&#39;</span>, <span class="at">package =</span> <span class="st">&#39;maftools&#39;</span>)</span>
-<span id="cb21-7"><a href="cases.html#cb21-7" tabindex="-1"></a>laml <span class="ot">&lt;-</span> maftools<span class="sc">::</span><span class="fu">read.maf</span>(<span class="at">maf =</span> laml.maf, <span class="at">clinicalData =</span> laml.clin)</span>
-<span id="cb21-8"><a href="cases.html#cb21-8" tabindex="-1"></a>onco <span class="ot">&lt;-</span> <span class="fu">oncoplot</span>(<span class="at">maf =</span> laml, <span class="at">genes =</span> <span class="dv">20</span>)</span>
-<span id="cb21-9"><a href="cases.html#cb21-9" tabindex="-1"></a></span>
-<span id="cb21-10"><a href="cases.html#cb21-10" tabindex="-1"></a>plot_tcga_expr <span class="ot">&lt;-</span> <span class="cf">function</span>(mRNA, genes, <span class="at">name =</span> <span class="st">&quot;Gene Expression&quot;</span>) {</span>
-<span id="cb21-11"><a href="cases.html#cb21-11" tabindex="-1"></a>    d <span class="ot">=</span> <span class="fu">expressionsTCGA</span>(mRNA, <span class="at">extract.cols =</span> genes)</span>
-<span id="cb21-12"><a href="cases.html#cb21-12" tabindex="-1"></a></span>
-<span id="cb21-13"><a href="cases.html#cb21-13" tabindex="-1"></a>    dd <span class="ot">=</span> <span class="fu">gather</span>(d, gene, expression, <span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
-<span id="cb21-14"><a href="cases.html#cb21-14" tabindex="-1"></a>    </span>
-<span id="cb21-15"><a href="cases.html#cb21-15" tabindex="-1"></a>    <span class="fu">ggplot</span>(dd, <span class="fu">aes</span>(expression, gene, <span class="at">fill=</span><span class="fu">stat</span>(x))) <span class="sc">+</span> </span>
-<span id="cb21-16"><a href="cases.html#cb21-16" tabindex="-1"></a>        ggridges<span class="sc">::</span><span class="fu">geom_density_ridges_gradient</span>() <span class="sc">+</span></span>
-<span id="cb21-17"><a href="cases.html#cb21-17" tabindex="-1"></a>        <span class="fu">scale_fill_viridis_c</span>(<span class="at">option=</span><span class="st">&quot;C&quot;</span>, <span class="at">name =</span> name) <span class="sc">+</span></span>
-<span id="cb21-18"><a href="cases.html#cb21-18" tabindex="-1"></a>        <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb21-19"><a href="cases.html#cb21-19" tabindex="-1"></a>        <span class="fu">theme_noyaxis</span>() <span class="sc">+</span> </span>
-<span id="cb21-20"><a href="cases.html#cb21-20" tabindex="-1"></a>        <span class="fu">xlab</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb21-21"><a href="cases.html#cb21-21" tabindex="-1"></a>        <span class="fu">ylab</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb21-22"><a href="cases.html#cb21-22" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">&#39;bottom&#39;</span>)</span>
-<span id="cb21-23"><a href="cases.html#cb21-23" tabindex="-1"></a>}</span>
-<span id="cb21-24"><a href="cases.html#cb21-24" tabindex="-1"></a></span>
-<span id="cb21-25"><a href="cases.html#cb21-25" tabindex="-1"></a>onco_genes <span class="ot">&lt;-</span> aplotExtra<span class="sc">:::</span><span class="fu">get_oncoplot_genes</span>(laml)</span>
-<span id="cb21-26"><a href="cases.html#cb21-26" tabindex="-1"></a>brca <span class="ot">&lt;-</span> <span class="fu">plot_tcga_expr</span>(BRCA.mRNA, onco_genes, <span class="st">&quot;Gene Expression in TCGA</span><span class="sc">\n</span><span class="st">breast cancer patients&quot;</span>)</span>
-<span id="cb21-27"><a href="cases.html#cb21-27" tabindex="-1"></a>ov <span class="ot">&lt;-</span> <span class="fu">plot_tcga_expr</span>(OV.mRNA, onco_genes, <span class="st">&quot;Gene Expression in TCGA</span><span class="sc">\n</span><span class="st">ovarian cancer patients&quot;</span>)</span>
-<span id="cb21-28"><a href="cases.html#cb21-28" tabindex="-1"></a></span>
-<span id="cb21-29"><a href="cases.html#cb21-29" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">insert_right</span>(onco, brca, <span class="at">width =</span> .<span class="dv">6</span>) <span class="sc">|&gt;</span></span>
-<span id="cb21-30"><a href="cases.html#cb21-30" tabindex="-1"></a>    <span class="fu">insert_right</span>(ov, <span class="at">width=</span>.<span class="dv">6</span>)</span>
-<span id="cb21-31"><a href="cases.html#cb21-31" tabindex="-1"></a>op</span></code></pre></div>
+<span id="cb21-7"><a href="cases.html#cb21-7" tabindex="-1"></a>laml <span class="ot">&lt;-</span> maftools<span class="sc">::</span><span class="fu">read.maf</span>(<span class="at">maf =</span> laml.maf, <span class="at">clinicalData =</span> laml.clin)</span></code></pre></div>
+<pre><code>## -Reading
+## -Validating
+## -Silent variants: 475 
+## -Summarizing
+## -Processing clinical data
+## -Finished in 0.260s elapsed (0.000s cpu)</code></pre>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="cases.html#cb23-1" tabindex="-1"></a>onco <span class="ot">&lt;-</span> <span class="fu">oncoplot</span>(<span class="at">maf =</span> laml, <span class="at">genes =</span> <span class="dv">20</span>)</span>
+<span id="cb23-2"><a href="cases.html#cb23-2" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="cases.html#cb23-3" tabindex="-1"></a>plot_tcga_expr <span class="ot">&lt;-</span> <span class="cf">function</span>(mRNA, genes, <span class="at">name =</span> <span class="st">&quot;Gene Expression&quot;</span>) {</span>
+<span id="cb23-4"><a href="cases.html#cb23-4" tabindex="-1"></a>    d <span class="ot">=</span> <span class="fu">expressionsTCGA</span>(mRNA, <span class="at">extract.cols =</span> genes)</span>
+<span id="cb23-5"><a href="cases.html#cb23-5" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="cases.html#cb23-6" tabindex="-1"></a>    dd <span class="ot">=</span> <span class="fu">gather</span>(d, gene, expression, <span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb23-7"><a href="cases.html#cb23-7" tabindex="-1"></a>    </span>
+<span id="cb23-8"><a href="cases.html#cb23-8" tabindex="-1"></a>    <span class="fu">ggplot</span>(dd, <span class="fu">aes</span>(expression, gene, <span class="at">fill=</span><span class="fu">stat</span>(x))) <span class="sc">+</span> </span>
+<span id="cb23-9"><a href="cases.html#cb23-9" tabindex="-1"></a>        ggridges<span class="sc">::</span><span class="fu">geom_density_ridges_gradient</span>() <span class="sc">+</span></span>
+<span id="cb23-10"><a href="cases.html#cb23-10" tabindex="-1"></a>        <span class="fu">scale_fill_viridis_c</span>(<span class="at">option=</span><span class="st">&quot;C&quot;</span>, <span class="at">name =</span> name) <span class="sc">+</span></span>
+<span id="cb23-11"><a href="cases.html#cb23-11" tabindex="-1"></a>        <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb23-12"><a href="cases.html#cb23-12" tabindex="-1"></a>        <span class="fu">theme_noyaxis</span>() <span class="sc">+</span> </span>
+<span id="cb23-13"><a href="cases.html#cb23-13" tabindex="-1"></a>        <span class="fu">xlab</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb23-14"><a href="cases.html#cb23-14" tabindex="-1"></a>        <span class="fu">ylab</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb23-15"><a href="cases.html#cb23-15" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">&#39;bottom&#39;</span>)</span>
+<span id="cb23-16"><a href="cases.html#cb23-16" tabindex="-1"></a>}</span>
+<span id="cb23-17"><a href="cases.html#cb23-17" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="cases.html#cb23-18" tabindex="-1"></a>onco_genes <span class="ot">&lt;-</span> aplotExtra<span class="sc">:::</span><span class="fu">get_oncoplot_genes</span>(laml)</span>
+<span id="cb23-19"><a href="cases.html#cb23-19" tabindex="-1"></a>brca <span class="ot">&lt;-</span> <span class="fu">plot_tcga_expr</span>(BRCA.mRNA, onco_genes, <span class="st">&quot;Gene Expression in TCGA</span><span class="sc">\n</span><span class="st">breast cancer patients&quot;</span>)</span>
+<span id="cb23-20"><a href="cases.html#cb23-20" tabindex="-1"></a>ov <span class="ot">&lt;-</span> <span class="fu">plot_tcga_expr</span>(OV.mRNA, onco_genes, <span class="st">&quot;Gene Expression in TCGA</span><span class="sc">\n</span><span class="st">ovarian cancer patients&quot;</span>)</span>
+<span id="cb23-21"><a href="cases.html#cb23-21" tabindex="-1"></a></span>
+<span id="cb23-22"><a href="cases.html#cb23-22" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">insert_right</span>(onco, brca, <span class="at">width =</span> .<span class="dv">6</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-23"><a href="cases.html#cb23-23" tabindex="-1"></a>    <span class="fu">insert_right</span>(ov, <span class="at">width=</span>.<span class="dv">6</span>)</span>
+<span id="cb23-24"><a href="cases.html#cb23-24" tabindex="-1"></a>op</span></code></pre></div>
+<p><img src="aplot_files/figure-html/onco-1.png" width="1536" /></p>
 </div>
 <div id="funky-heatmap" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> funky heatmap<a href="cases.html#funky-heatmap" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="cases.html#cb22-1" tabindex="-1"></a><span class="fu">library</span>(aplotExtra)</span>
-<span id="cb22-2"><a href="cases.html#cb22-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb22-3"><a href="cases.html#cb22-3" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;mtcars&quot;</span>)</span>
-<span id="cb22-4"><a href="cases.html#cb22-4" tabindex="-1"></a></span>
-<span id="cb22-5"><a href="cases.html#cb22-5" tabindex="-1"></a></span>
-<span id="cb22-6"><a href="cases.html#cb22-6" tabindex="-1"></a>d <span class="ot">&lt;-</span> yulab.utils<span class="sc">::</span><span class="fu">scale_range</span>(mtcars) <span class="sc">|&gt;</span></span>
-<span id="cb22-7"><a href="cases.html#cb22-7" tabindex="-1"></a>    <span class="fu">rownames_to_column</span>(<span class="st">&quot;id&quot;</span>) <span class="sc">|&gt;</span></span>
-<span id="cb22-8"><a href="cases.html#cb22-8" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(mpg))</span>
-<span id="cb22-9"><a href="cases.html#cb22-9" tabindex="-1"></a></span>
-<span id="cb22-10"><a href="cases.html#cb22-10" tabindex="-1"></a></span>
-<span id="cb22-11"><a href="cases.html#cb22-11" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">funky_text</span>(d)</span>
-<span id="cb22-12"><a href="cases.html#cb22-12" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">funky_bar</span>(d, <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#CC4C02&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#FFFFE5&quot;</span>)</span>
-<span id="cb22-13"><a href="cases.html#cb22-13" tabindex="-1"></a>g3 <span class="ot">&lt;-</span> <span class="fu">funky_bar</span>(d, <span class="dv">3</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">high =</span> <span class="st">&quot;firebrick&quot;</span>) </span>
-<span id="cb22-14"><a href="cases.html#cb22-14" tabindex="-1"></a>g4 <span class="ot">&lt;-</span> <span class="fu">funky_point</span>(d, <span class="dv">4</span><span class="sc">:</span><span class="dv">7</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#CC4C02&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#FFFFE5&quot;</span>)</span>
-<span id="cb22-15"><a href="cases.html#cb22-15" tabindex="-1"></a>g5 <span class="ot">&lt;-</span> <span class="fu">funky_point</span>(d, <span class="dv">8</span><span class="sc">:</span><span class="dv">12</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#08519C&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#F7FBFF&quot;</span>) </span>
-<span id="cb22-16"><a href="cases.html#cb22-16" tabindex="-1"></a></span>
-<span id="cb22-17"><a href="cases.html#cb22-17" tabindex="-1"></a></span>
-<span id="cb22-18"><a href="cases.html#cb22-18" tabindex="-1"></a><span class="co">#funky_heatmap(data=mtcars)</span></span>
-<span id="cb22-19"><a href="cases.html#cb22-19" tabindex="-1"></a>fp <span class="ot">&lt;-</span> <span class="fu">funky_heatmap</span>(g1, g2, g4, g5, <span class="at">options=</span><span class="fu">theme_stamp</span>())</span>
-<span id="cb22-20"><a href="cases.html#cb22-20" tabindex="-1"></a>fp</span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="cases.html#cb24-1" tabindex="-1"></a><span class="fu">library</span>(aplotExtra)</span>
+<span id="cb24-2"><a href="cases.html#cb24-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb24-3"><a href="cases.html#cb24-3" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;mtcars&quot;</span>)</span>
+<span id="cb24-4"><a href="cases.html#cb24-4" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="cases.html#cb24-5" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="cases.html#cb24-6" tabindex="-1"></a>d <span class="ot">&lt;-</span> yulab.utils<span class="sc">::</span><span class="fu">scale_range</span>(mtcars) <span class="sc">|&gt;</span></span>
+<span id="cb24-7"><a href="cases.html#cb24-7" tabindex="-1"></a>    <span class="fu">rownames_to_column</span>(<span class="st">&quot;id&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-8"><a href="cases.html#cb24-8" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(mpg))</span>
+<span id="cb24-9"><a href="cases.html#cb24-9" tabindex="-1"></a></span>
+<span id="cb24-10"><a href="cases.html#cb24-10" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="cases.html#cb24-11" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">funky_text</span>(d)</span>
+<span id="cb24-12"><a href="cases.html#cb24-12" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">funky_bar</span>(d, <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#CC4C02&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#FFFFE5&quot;</span>)</span>
+<span id="cb24-13"><a href="cases.html#cb24-13" tabindex="-1"></a>g3 <span class="ot">&lt;-</span> <span class="fu">funky_bar</span>(d, <span class="dv">3</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">high =</span> <span class="st">&quot;firebrick&quot;</span>) </span>
+<span id="cb24-14"><a href="cases.html#cb24-14" tabindex="-1"></a>g4 <span class="ot">&lt;-</span> <span class="fu">funky_point</span>(d, <span class="dv">4</span><span class="sc">:</span><span class="dv">7</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#CC4C02&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#FFFFE5&quot;</span>)</span>
+<span id="cb24-15"><a href="cases.html#cb24-15" tabindex="-1"></a>g5 <span class="ot">&lt;-</span> <span class="fu">funky_point</span>(d, <span class="dv">8</span><span class="sc">:</span><span class="dv">12</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#08519C&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#F7FBFF&quot;</span>) </span>
+<span id="cb24-16"><a href="cases.html#cb24-16" tabindex="-1"></a></span>
+<span id="cb24-17"><a href="cases.html#cb24-17" tabindex="-1"></a></span>
+<span id="cb24-18"><a href="cases.html#cb24-18" tabindex="-1"></a><span class="co">#funky_heatmap(data=mtcars)</span></span>
+<span id="cb24-19"><a href="cases.html#cb24-19" tabindex="-1"></a>fp <span class="ot">&lt;-</span> <span class="fu">funky_heatmap</span>(g1, g2, g4, g5, <span class="at">options=</span><span class="fu">theme_stamp</span>())</span>
+<span id="cb24-20"><a href="cases.html#cb24-20" tabindex="-1"></a>fp</span></code></pre></div>
 <p><img src="aplot_files/figure-html/funky-1.png" width="768" /></p>
 
 </div>
