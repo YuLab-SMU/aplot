@@ -1,3 +1,8 @@
+# aplot 0.2.3.001
+
++ update DESCRIPTION to add citation (2024-12-17, Tue)
+  - G Yu (2018) <doi:10.1093/molbev/msy194>
+
 # aplot 0.2.3
 
 + `xlab2()` and `ylab2()` to prevent axis label aignment (2024-06-17, Mon)
