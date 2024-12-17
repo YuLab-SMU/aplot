@@ -1,4 +1,4 @@
-# aplot 0.2.3.001
+# aplot 0.2.4
 
 + update DESCRIPTION to add citation (2024-12-17, Tue)
   - G Yu (2018) <doi:10.1093/molbev/msy194>
