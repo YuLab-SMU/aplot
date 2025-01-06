@@ -42,6 +42,9 @@ insert_left <- function(.data, plot, width=1) {
 ##' @rdname plot-insertion
 ##' @export
 insert_right <- function(.data, plot, width=1) {
+
+    yulab.utils:::.crap(n=3L, fn = 'caller function')
+
     insert_lr(.data = .data, plot = plot,
               width = width, side = "right")
 }
@@ -102,6 +105,9 @@ insert_lr <- function(.data, plot, width,  side) {
 ##' @rdname plot-insertion
 ##' @export
 insert_top <- function(.data, plot, height=1) {
+
+    yulab.utils:::.crap(n=3L, fn = 'caller function')
+
     insert_tb(.data = .data, plot = plot,
               height = height, side = "top")
 }
@@ -110,6 +116,9 @@ insert_top <- function(.data, plot, height=1) {
 ##' @rdname plot-insertion
 ##' @export
 insert_bottom <- function(.data, plot, height=1) {
+
+    yulab.utils:::.crap(n=3L, fn = 'caller function')
+
     insert_tb(.data = .data, plot = plot,
               height = height, side = "bottom")
 }
