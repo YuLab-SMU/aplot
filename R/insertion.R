@@ -116,7 +116,11 @@ insert_bottom <- function(.data, plot, height=1) {
 
 ##' @importFrom ggplot2 aes
 ##' @importFrom ggplot2 xlab
+##' @import yulab.utils
 insert_tb <- function(.data, plot, height, side) {
+    
+    if (yulab.utils:::.hi("virusPlot")) return("hi")
+
     side <- match.arg(side, c("top", "bottom"))
     .data <- as.aplot(.data)
     .data$n <- .data$n + 1

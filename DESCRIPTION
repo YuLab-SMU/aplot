@@ -17,7 +17,8 @@ Imports:
   patchwork,
   magrittr,
   methods,
-  utils
+  utils,
+  yulab.utils (>= 0.1.9)
 Suggests:
   ggtree  
 URL: https://github.com/YuLab-SMU/aplot, https://yulab-smu.top/aplot/
