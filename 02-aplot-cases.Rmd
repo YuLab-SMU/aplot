@@ -225,6 +225,9 @@ library(aplot)
 library(ChIPseeker)
 library(clusterProfiler)
 library(org.Hs.eg.db)
+library(IRanges)
+library(GenomicFeatures)
+library(gggenes)
 
 scale <- "log10"
 limits <- c(0,1.7)
@@ -239,11 +242,10 @@ epigenetics_data <- qs::qread("./data/epigenetics_data.qs")
 getPlotGene <- function(txdb, chr, x_min, x_max, tx_id = NULL,
                         OrgDb = NULL){
 
-    require(GenomicFeatures)
     win <- GRanges(seqnames = chr,
-                     ranges = IRanges::IRanges(start = x_min, end = x_max))
-
-    gene_df <- suppressMessages(data.frame(IRanges::subsetByOverlaps(GenomicFeatures::genes(txdb), win, type = "any")))
+                   ranges = IRanges::IRanges(start = x_min, end = x_max))
+    all_genes <- GenomicFeatures::genes(txdb)
+    gene_df <- data.frame(subsetByOverlaps(x = all_genes, ranges = win, type = "any"))
     gene_df[gene_df[, "start"] < x_min, "start"] <- x_min
     gene_df[gene_df[, "end"] > x_max, "end"] <- x_max
     gene_df$gene_id <- factor(gene_df$gene_id, levels = unique(gene_df$gene_id))
