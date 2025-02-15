@@ -203,21 +203,28 @@ aplot will show its power by combining these three parts of epigenetics result.
 
 The purpose of this case is to show the different epigenetics characteristics of cell line 
 GM12878(normal lymphoblastoid cell line) and cell line K562(chronic myeloid leukemia cell lines).
-Hic data are derived from GSM1551550(GM12878) and GSM1551618(K562). 
+Hic data are derived from GM12878([GSM1551550](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1551550)) and K562([GSM1551618](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1551618)). 
 ChIP-seq data have four parts: H3K27ac, H3K4me1, H3K4me3 and H3K36me3.
-ChIP-seq Control data are derived from GSM733742(GM12878) and GSM733780(K562).
-ChIP-seq H3K27ac data are derived from GSM733771(GM12878) and GSM733656(K562).
-ChIP-seq H3K4me1 data are derived from GSM733772(GM12878) and GSM733692 (K562).
-ChIP-seq H3K4me3 data are derived from GSM733708(GM12878) and GSM733680(K562).
-ChIP-seq H3K36me3 data are derived from GSM733771(GSM733679) and GSM733656(GSM733714).
-We download the bam files and re-analyze it by using macs2 to get peak results and different peak results.
-Gene track visualization is implemented by using gggenes.
-
+ChIP-seq Control data are derived from GM12878([GSM733742](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733742)) and K562([GSM733780](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733780)).
+ChIP-seq H3K27ac data are derived from GM12878([GSM733771](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733771)) and K562([GSM733656](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733656)).
+ChIP-seq H3K4me1 data are derived from GM12878([GSM733772](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733772)) and K562([GSM733692](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733692)).
+ChIP-seq H3K4me3 data are derived from GM12878([GSM733708](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733708)) and K562([GSM733680](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733680)).
+ChIP-seq H3K36me3 data are derived from GM12878([GSM733679](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733679)) and K562([GSM733714](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733714)).
+We download the bam files and re-analyze it by using macs2 to get peak results and different peak results. 
 In order to manifest the strength of aplot, we will show the usages of aplot in two parts.
 combine data is the comparison result. The comparison result of Hic data are calculated by using `HiContacts::divide` to get
 foldchange(K562/GM12878). The comparison result of ChIP-seq data are calculated by using the `bdgdiff` function of `macs2`.
 split data is to exhibit the hic data and ChIP-seq data of two cell lines individually.
-All the data is pre-calculated and store in a .qs file.
+
+All analyzed result store in epigenetics_data.qs file.
+This file have nine parts. `epigenetics_data[["H3K4me1_peak"]]` stores differential peak analysis result of H3K4me1. 
+`epigenetics_data[["H3K4me3_peak"]]`, `epigenetics_data[["H3K27ac_peak"]]` and `epigenetics_data[["H3K36me3_peak"]]` are also differential peak analysis results.
+`epigenetics_data[["GM12878_peak"]]` and `epigenetics_data[["K562_peak"]]` store the ChIP-seq data of GM12878 and K562.
+`epigenetics_data[["GM12878_hic"]]` and `epigenetics_data[["K562_hic"]]` store the hic data.
+`epigenetics_data[["div_hic"]]` store the compare result of GM12878 and K562 hic data.
+
+
+
 ```{r}
 library(ggplot2)
 library(TxDb.Hsapiens.UCSC.hg19.knownGene)
