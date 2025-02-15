@@ -15,3 +15,6 @@ genes-in-pathways
 all-in-one
 oncoplot-example
 funky-heatmap
+epigenetics
+combine-data
+split-data
