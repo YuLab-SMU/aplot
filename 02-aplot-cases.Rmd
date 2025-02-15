@@ -223,7 +223,147 @@ This file have nine parts. `epigenetics_data[["H3K4me1_peak"]]` stores different
 `epigenetics_data[["GM12878_hic"]]` and `epigenetics_data[["K562_hic"]]` store the hic data.
 `epigenetics_data[["div_hic"]]` store the compare result of GM12878 and K562 hic data.
 
+Following code show how to preprocess Hic data.
+```{r, eval=F}
+# deal with hic data
+# download GM12878.hic
+# wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM1551550&format=file&file=GSM1551550%5FHIC001%5F30%2Ehic
+# download K562.hic
+# wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM1551618&format=file&file=GSM1551618%5FHIC069%5F30%2Ehic
+GM12878_hic <- HiCExperiment::import("GM12878.hic",
+                                    focus = "6:43600000-44100000",
+                                    resolution = 5000)
+K562_hic <- HiCExperiment::import("K562.hic",
+                                  focus = "6:43600000-44100000",
+                                  resolution = 5000)
 
+epigenetics_data[["K562_hic"]] <- K562_hic
+epigenetics_data[["GM12878_hic"]] <- GM12878_hic
+epigenetics_data[["div_hic"]] <- HiContacts::divide("K562.hic", by = "GM12878.hic")
+
+```
+
+Following code show how to preprocess ChIP-seq data
+```{sh,eval = F}
+# GM12878 Control_rep2.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733742)
+wget https://www.ncbi.nlm.nih.gov/geo/download/\?acc\=GSM733742\&format\=file\&file\=GSM733742%5Fhg19%5FwgEncodeBroadHistoneGm12878ControlStdAlnRep2%2Ebam
+
+# GM12878 H3K4me1_rep2.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733772)
+wget https://www.ncbi.nlm.nih.gov/geo/download/\?acc\=GSM733772\&format\=file\&file\=GSM733772%5Fhg19%5FwgEncodeBroadHistoneGm12878H3k4me1StdAlnRep2%2Ebam
+
+# GM12878 H3K4me3_rep2.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733708)
+wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733708&format=file&file=GSM733708%5Fhg19%5FwgEncodeBroadHistoneGm12878H3k4me3StdAlnRep2%2Ebam
+
+# GM12878 H3K27ac_rep2.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733771)
+wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733771&format=file&file=GSM733771%5Fhg19%5FwgEncodeBroadHistoneGm12878H3k27acStdAlnRep2%2Ebam
+
+# GM12878 H3K36me3_rep2.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733679)
+wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733679&format=file&file=GSM733679%5Fhg19%5FwgEncodeBroadHistoneGm12878H3k36me3StdAlnRep2%2Ebam
+
+# GM12878 H3K4me1, output GM12878_H3K4me1_peaks.narrowPeak
+nohup macs2 callpeak -c Control_rep2.bam -t H3K4me1_rep2.bam -f BAM -g 2.7e9 -n GM12878_H3K4me1 -B --outdir . >macs2.log 2>&1 &
+
+# GM12878 H3K4me3, output GM12878_H3K4me3_peaks.narrowPeak
+nohup macs2 callpeak -c Control_rep2.bam -t H3K4me3_rep2.bam -f BAM -g 2.7e9 -n GM12878_H3K4me3 -B --outdir . >macs2.log 2>&1 &
+
+# GM12878 H3K27ac, output GM12878_H3K27ac_peaks.narrowPeak
+nohup macs2 callpeak -c Control_rep2.bam -t H3K27ac_rep2.bam -f BAM -g 2.7e9 -n GM12878_H3K27ac -B --outdir . >macs2.log 2>&1 &
+
+# GM12878 H3K36me3, output GM12878_H3K36me3_peaks.narrowPeak
+nohup macs2 callpeak -c Control_rep2.bam -t H3K36me3_rep2.bam -f BAM -g 2.7e9 -n GM12878_H3K36me3 -B --outdir . >macs2.log 2>&1 &
+
+# K562 Control_rep1.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733780)
+wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733780&format=file&file=GSM733780%5Fhg19%5FwgEncodeBroadHistoneK562ControlStdAlnRep1%2Ebam
+
+# K562 H3K4me1_rep1.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733692)
+wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733692&format=file&file=GSM733692%5Fhg19%5FwgEncodeBroadHistoneK562H3k4me1StdAlnRep1%2Ebam
+
+# K562 H3K4me3_rep1.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733680)
+wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733680&format=file&file=GSM733680%5Fhg19%5FwgEncodeBroadHistoneK562H3k4me3StdAlnRep1%2Ebam
+
+# K562 H3K27ac_rep1.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733656)
+wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733656&format=file&file=GSM733656%5Fhg19%5FwgEncodeBroadHistoneK562H3k27acStdAlnRep1%2Ebam
+
+# K562 H3K36me3_rep1.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733714)
+wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733714&format=file&file=GSM733714%5Fhg19%5FwgEncodeBroadHistoneK562H3k36me3StdAlnRep1%2Ebam
+
+# K562 H3K4me1, output K562_H3K4me1_peaks.narrowPeak
+nohup macs2 callpeak -c Control_rep1.bam -t H3K4me1_rep1.bam -f BAM -g 2.7e9 -n K562_H3K4me1 -B --outdir . >macs2.log 2>&1 &
+
+# K562 H3K4me3, output K562_H3K4me3_peaks.narrowPeak
+nohup macs2 callpeak -c Control_rep1.bam -t H3K4me3_rep1.bam -f BAM -g 2.7e9 -n K562_H3K4me3 -B --outdir . >macs2.log 2>&1 &
+
+# K562 H3K27ac, output K562_H3K27ac_peaks.narrowPeak
+nohup macs2 callpeak -c Control_rep1.bam -t H3K27ac_rep1.bam -f BAM -g 2.7e9 -n K562_H3K27ac -B --outdir . >macs2.log 2>&1 &
+
+# K562 H3K36me3, output K562_H3K36me3_peaks.narrowPeak
+nohup macs2 callpeak -c Control_rep1.bam -t H3K36me3_rep1.bam -f BAM -g 2.7e9 -n K562_H3K36me3 -B --outdir . >macs2.log 2>&1 &
+
+# --d1 --d2 is the sequence depth in control file(https://github.com/macs3-project/MACS/wiki/Call-differential-binding-events), user can cat .log file in /callpeak_result/xxxx/macs2.log to obtain.
+# H3K4me1
+# GM12878 control 6284864
+# K562 control 18559220
+nohup macs2 bdgdiff --t1 GM12878_H3K4me1_treat_pileup.bdg --c1 GM12878_H3K4me1_control_lambda.bdg --d1 6284864 --t2 K562_H3K4me1_treat_pileup.bdg --c2 K562_H3K4me1_control_lambda.bdg --d2 18559220 --outdir . -o H3K4me1_GM12878.bed H3K4me1_K562.bed nondiff_peak.bed 1>bdgdiff.log 2>&1 &
+
+# H3K4me3
+# GM12878 control 6284864
+# K562 control 18559220
+nohup macs2 bdgdiff --t1 GM12878_H3K4me3_treat_pileup.bdg --c1 GM12878_H3K4me3_control_lambda.bdg --d1 6284864 --t2 K562_H3K4me3_treat_pileup.bdg --c2 K562_H3K4me3_control_lambda.bdg --d2 18559220 --outdir . -o H3K4me3_GM12878.bed H3K4me3_K562.bed nondiff_peak.bed 1>bdgdiff.log 2>&1 &
+
+# H3K27ac
+# GM12878 control 6284864
+# K562 control 18559220
+nohup macs2 bdgdiff --t1 GM12878_H3K27ac_treat_pileup.bdg --c1 GM12878_H3K27ac_control_lambda.bdg --d1 6284864 --t2 K562_H3K27ac_treat_pileup.bdg --c2 K562_H3K27ac_control_lambda.bdg --d2 18559220 --outdir . -o H3K27ac_GM12878.bed H3K27ac_K562.bed nondiff_peak.bed 1>bdgdiff.log 2>&1 &
+
+# H3K36me3
+# GM12878 control 6284864
+# K562 control 18559220
+nohup macs2 bdgdiff --t1 GM12878_H3K36me3_treat_pileup.bdg --c1 GM12878_H3K36me3_control_lambda.bdg --d1 6284864 --t2 K562_H3K36me3_treat_pileup.bdg --c2 H3K36me3/K562_H3K36me3_control_lambda.bdg --d2 18559220 --outdir . -o H3K36me3_GM12878.bed H3K36me3_K562.bed nondiff_peak.bed 1>bdgdiff.log 2>&1 &
+
+# subset data
+grep '^chr6[[:space:]]' GM12878_H3K4me1_peaks.narrowPeak > GM12878_H3K4me1_peaks_chr6.narrowPeak
+grep '^chr6[[:space:]]' GM12878_H3K4me3_peaks.narrowPeak > GM12878_H3K4me3_peaks_chr6.narrowPeak
+grep '^chr6[[:space:]]' GM12878_H3K27ac_peaks.narrowPeak > GM12878_H3K27ac_peaks_chr6.narrowPeak
+grep '^chr6[[:space:]]' GM12878_H3K36me3_peaks.narrowPeak > GM12878_H3K36me3_peaks_chr6.narrowPeak
+grep '^chr6[[:space:]]' K562_H3K4me1_peaks.narrowPeak > K562_H3K4me1_peaks_chr6.narrowPeak
+grep '^chr6[[:space:]]' K562_H3K4me3_peaks.narrowPeak > K562_H3K4me3_peaks_chr6.narrowPeak
+grep '^chr6[[:space:]]' K562_H3K27ac_peaks.narrowPeak > K562_H3K27ac_peaks_chr6.narrowPeak
+grep '^chr6[[:space:]]' K562_H3K36me3_peaks.narrowPeak > K562_H3K36me3_peaks_chr6.narrowPeak
+```
+
+Read ChIP-seq data
+```{r, eval=F}
+library(ChIPseeker)
+K562_peak_files <- c(H3K27ac = "K562_H3K27ac_peaks_chr6.narrowPeak",
+                     H3K36me3 = "K562_H3K36me3_peaks_chr6.narrowPeak",
+                     H3K4me1 = "K562_H3K4me1_peaks_chr6.narrowPeak",
+                     H3K4me3 = "K562_H3K4me3_peaks_chr6.narrowPeak")
+epigenetics_data[["K562_peak"]] <- lapply(K562_peak_files, readPeakFile)
+
+GM12878_peak_files <- c(H3K27ac = "GM12878_H3K27ac_peaks_chr6.narrowPeak",
+                        H3K36me3 = "GM12878_H3K36me3_peaks_chr6.narrowPeak",
+                        H3K4me1 = "GM12878_H3K4me1_peaks_chr6.narrowPeak",
+                        H3K4me3 = "GM12878_H3K4me3_peaks_chr6.narrowPeak")
+epigenetics_data[["GM12878_peak"]] <- lapply(GM12878_peak_files, readPeakFile)
+
+H3K4me1_files <- c(peak_in_GM12878 = "H3K4me1_GM12878_chr6.bed",
+                   peak_in_K562 = "H3K4me1_K562_chr6.bed")
+epigenetics_data[["H3K4me1_peak"]] <- lapply(H3K4me1_files, readPeakFile)
+
+H3K36me3_files <- c(peak_in_GM12878 = "H3K36me3_GM12878_chr6.bed",
+                    peak_in_K562 = "H3K36me3_K562_chr6.bed")
+epigenetics_data[["H3K36me3_peak"]] <- lapply(H3K36me3_files, readPeakFile)
+
+H3K27ac_files <- c(peak_in_GM12878 = "./data/H3K27ac_GM12878_chr6.bed",
+                   peak_in_K562 = "./data/H3K27ac_K562_chr6.bed")
+epigenetics_data[["H3K27ac_peak"]] <- lapply(H3K27ac_files, readPeakFile)
+
+H3K4me3_files <- c(peak_in_GM12878 = "./data/H3K4me3_GM12878_chr6.bed",
+                   peak_in_K562 = "./data/H3K4me3_K562_chr6.bed")
+epigenetics_data[["H3K4me3_peak"]] <- lapply(H3K4me3_files, readPeakFile)
+```
+
+load package
 
 ```{r}
 library(ggplot2)
