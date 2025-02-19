@@ -1,3 +1,7 @@
+# aplot 0.2.5
+
++ support main plot with `coord_fixed()` (2025-02-19, Wed, #45)
+
 # aplot 0.2.4
 
 + update DESCRIPTION to add citation (2024-12-17, Tue)

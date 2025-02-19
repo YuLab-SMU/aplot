@@ -10,18 +10,15 @@ html_preview: false
 
 # `aplot` for decorating a plot with associated information
 
-[![License: Artistic-2.0](https://img.shields.io/badge/license-Artistic--2.0-blue.svg)](https://cran.r-project.org/web/licenses/Artistic-2.0)
-[![](https://img.shields.io/badge/devel%20version-0.2.2-black.svg)](https://github.com/YuLab-SMU/aplot)
-[![](https://img.shields.io/github/languages/code-size/YuLab-SMU/aplot.svg)](https://github.com/YuLab-SMU/aplot)
-[![](https://img.shields.io/github/last-commit/YuLab-SMU/aplot.svg)](https://github.com/YuLab-SMU/aplot/commits/master)
+`r badger::badge_license("Artistic-2.0")`
+`r badger::badge_github_version("YuLab-SMU/aplot", "blue")`
+`r badger::badge_code_size("YuLab-SMU/aplot")`
+`r badger::badge_last_commit("YuLab-SMU/aplot", 'master')`
 <br>
-[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/aplot?color=green)](https://cran.r-project.org/package=aplot)
-![](http://cranlogs.r-pkg.org/badges/grand-total/aplot?color=green)
-![](http://cranlogs.r-pkg.org/badges/aplot?color=green)
-![](http://cranlogs.r-pkg.org/badges/last-week/aplot?color=green)
-<br>
-[![R build status](https://github.com/YuLab-SMU/aplot/workflows/rworkflows/badge.svg)](https://github.com/YuLab-SMU/aplot/actions)
-[![](https://codecov.io/gh/YuLab-SMU/aplot/branch/master/graph/badge.svg)](https://app.codecov.io/gh/YuLab-SMU/aplot)
+`r badger::badge_cran_release('aplot', 'green')`
+`r badger::badge_cran_download('aplot', 'grand-total', 'green')`
+`r badger::badge_github_actions("YuLab-SMU/aplot", action='rworkflows')`
+`r badger::badge_codecov(ref='YuLab-SMU/aplot', branch='master')`
 
 
 ```{r comment="", echo=FALSE, results='asis'}
@@ -56,4 +53,4 @@ remotes::install_github("YuLab-SMU/aplot")
 
 ## :book: Vignette
 
-For more details, please refer to the [online vignette](https://yulab-smu.top/pkgdocs/aplot.html).
+For more details, please refer to the [online vignette](https://yulab-smu.top/aplot).
