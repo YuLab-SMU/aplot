@@ -23,7 +23,7 @@ build2: rd
 	cd ..;\
 	R CMD build --no-build-vignettes $(PKGSRC)
 
-install: build
+install: build2
 	cd ..;\
 	R CMD INSTALL $(PKGNAME)_$(PKGVERS).tar.gz
 

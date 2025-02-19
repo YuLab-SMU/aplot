@@ -50,25 +50,34 @@ as.patchwork <- function(x,
         return(res)
     }
     
-    mp <- x$plotlist[[1]]
+    mp <- x[[1]]
     if ( length(x$plotlist) == 1) {
         return(ggplotGrob(mp))
     }
-    
+    width <- x$width
+    height <- x$height
     if(align == "x" || align == "xy"){
-        for (i in x$layout[, x$main_col]) {
+        for (ind in seq(length(x$layout[, x$main_col]))) {
+            i <- x$layout[,x$main_col][ind]
             if (is.na(i)) next
             if (i == 1) next
-            x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + xlim2(mp))
+            x[[i]] <- suppressMessages(x[[i]] + xlim2(mp))
+            x <- adjust_coord(x, i, ind, type = "height")
         }
     }
     
     if(align == "y" || align == "xy"){
-        for (i in x$layout[x$main_row,]) {
+        for (ind in seq(length(x$layout[x$main_row,]))) {
+            i <- x$layout[x$main_row,][ind]
             if(is.na(i)) next
             if (i == 1) next
-            x$plotlist[[i]] <- suppressMessages(x$plotlist[[i]] + ylim2(mp))
+            x[[i]] <- suppressMessages(x[[i]] + ylim2(mp))
+            x <- adjust_coord(x, i, ind, type = "width")
         }
+    }
+
+    if (is.coord_fixed(mp)){
+        width <- height <- NULL
     }
     
     idx <- as.vector(x$layout)
@@ -104,8 +113,8 @@ as.patchwork <- function(x,
 
     pp + plot_layout(byrow=F,
                      ncol=ncol(x$layout),
-                     widths = x$width,
-                     heights= x$height,
+                     widths = width,
+                     heights= height,
                      guides = guides)
 }
 
