@@ -194,442 +194,268 @@ fp
 ```
 
 
-## Epigenetics 
-In this part, we will show case of epigenetics by using aplot to integrate the visualization
-of hic data, ChIP-seq data and gene track. Hic data will be manipulated and visualized by 
-`HiContacts` and `HiCExperiment`. ChIP-seq data will be manipulated and visualize by `ChIPseeker`.
-Gene track will be visualized by `gggenes` by fetching gene information from txdb object.
-aplot will show its power by combining these three parts of epigenetics result.
+## Genomics track example
 
-The purpose of this case is to show the different epigenetics characteristics of cell line 
-GM12878(normal lymphoblastoid cell line) and cell line K562(chronic myeloid leukemia cell lines).
-Hic data are derived from GM12878([GSM1551550](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1551550)) and K562([GSM1551618](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM1551618)). 
-ChIP-seq data have four parts: H3K27ac, H3K4me1, H3K4me3 and H3K36me3.
-ChIP-seq Control data are derived from GM12878([GSM733742](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733742)) and K562([GSM733780](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733780)).
-ChIP-seq H3K27ac data are derived from GM12878([GSM733771](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733771)) and K562([GSM733656](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733656)).
-ChIP-seq H3K4me1 data are derived from GM12878([GSM733772](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733772)) and K562([GSM733692](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733692)).
-ChIP-seq H3K4me3 data are derived from GM12878([GSM733708](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733708)) and K562([GSM733680](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733680)).
-ChIP-seq H3K36me3 data are derived from GM12878([GSM733679](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733679)) and K562([GSM733714](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733714)).
-We download the bam files and re-analyze it by using macs2 to get peak results and different peak results. 
-In order to manifest the strength of aplot, we will show the usages of aplot in two parts.
-combine data is the comparison result. The comparison result of Hic data are calculated by using `HiContacts::divide` to get
-foldchange(K562/GM12878). The comparison result of ChIP-seq data are calculated by using the `bdgdiff` function of `macs2`.
-split data is to exhibit the hic data and ChIP-seq data of two cell lines individually.
+### Setup packages and parameteres
+```{r setup-genomics}
+pload(ChIPseeker)
+pload(TxDb.Hsapiens.UCSC.hg19.knownGene)
+pload(org.Hs.eg.db)
+pload(IRanges)
+pload(GenomicFeatures)
+pload(gggenes)
+pload(HiContacts)
+pload(cowplot)
 
-All analyzed result store in epigenetics_data.qs file.
-This file have nine parts. `epigenetics_data[["H3K4me1_peak"]]` stores differential peak analysis result of H3K4me1. 
-`epigenetics_data[["H3K4me3_peak"]]`, `epigenetics_data[["H3K27ac_peak"]]` and `epigenetics_data[["H3K36me3_peak"]]` are also differential peak analysis results.
-`epigenetics_data[["GM12878_peak"]]` and `epigenetics_data[["K562_peak"]]` store the ChIP-seq data of GM12878 and K562.
-`epigenetics_data[["GM12878_hic"]]` and `epigenetics_data[["K562_hic"]]` store the hic data.
-`epigenetics_data[["div_hic"]]` store the compare result of GM12878 and K562 hic data.
+# This analysis uses processed genomic data from:
+# 1. Hi-C data: GM12878 (GSM1551550) and K562 (GSM1551618)
+# 2. ChIP-seq data for histone modifications:
+#    - H3K27ac (GM12878: GSM733771, K562: GSM733656)
+#    - H3K4me1 (GM12878: GSM733772, K562: GSM733692)
+#    - H3K4me3 (GM12878: GSM733708, K562: GSM733680)
+#    - H3K36me3 (GM12878: GSM733679, K562: GSM733714)
+#    Controls: GM12878 (GSM733742), K562 (GSM733780)
 
-Following code show how to preprocess Hic data.
-```{r, eval=F}
-# deal with hic data
-# download GM12878.hic
-# wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM1551550&format=file&file=GSM1551550%5FHIC001%5F30%2Ehic
-# download K562.hic
-# wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM1551618&format=file&file=GSM1551618%5FHIC069%5F30%2Ehic
-GM12878_hic <- HiCExperiment::import("GM12878.hic",
-                                    focus = "6:43600000-44100000",
-                                    resolution = 5000)
-K562_hic <- HiCExperiment::import("K562.hic",
-                                  focus = "6:43600000-44100000",
-                                  resolution = 5000)
+# Analysis parameters:
+# - MACS2 peak calling: default parameters except:
+#   * genome size: -g 2.7e9 (human)
+# - MACS2 bdgdiff: default parameters except:
+#   * d1: 6284864 (GM12878 sequencing depth) and d2: 18559220 (K562 sequencing depth)
 
-epigenetics_data[["K562_hic"]] <- K562_hic
-epigenetics_data[["GM12878_hic"]] <- GM12878_hic
-epigenetics_data[["div_hic"]] <- HiContacts::divide("K562.hic", by = "GM12878.hic")
-
-```
-
-Following code show how to preprocess ChIP-seq data
-```{sh,eval = F}
-# GM12878 Control_rep2.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733742)
-wget https://www.ncbi.nlm.nih.gov/geo/download/\?acc\=GSM733742\&format\=file\&file\=GSM733742%5Fhg19%5FwgEncodeBroadHistoneGm12878ControlStdAlnRep2%2Ebam
-
-# GM12878 H3K4me1_rep2.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733772)
-wget https://www.ncbi.nlm.nih.gov/geo/download/\?acc\=GSM733772\&format\=file\&file\=GSM733772%5Fhg19%5FwgEncodeBroadHistoneGm12878H3k4me1StdAlnRep2%2Ebam
-
-# GM12878 H3K4me3_rep2.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733708)
-wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733708&format=file&file=GSM733708%5Fhg19%5FwgEncodeBroadHistoneGm12878H3k4me3StdAlnRep2%2Ebam
-
-# GM12878 H3K27ac_rep2.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733771)
-wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733771&format=file&file=GSM733771%5Fhg19%5FwgEncodeBroadHistoneGm12878H3k27acStdAlnRep2%2Ebam
-
-# GM12878 H3K36me3_rep2.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733679)
-wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733679&format=file&file=GSM733679%5Fhg19%5FwgEncodeBroadHistoneGm12878H3k36me3StdAlnRep2%2Ebam
-
-# GM12878 H3K4me1, output GM12878_H3K4me1_peaks.narrowPeak
-nohup macs2 callpeak -c Control_rep2.bam -t H3K4me1_rep2.bam -f BAM -g 2.7e9 -n GM12878_H3K4me1 -B --outdir . >macs2.log 2>&1 &
-
-# GM12878 H3K4me3, output GM12878_H3K4me3_peaks.narrowPeak
-nohup macs2 callpeak -c Control_rep2.bam -t H3K4me3_rep2.bam -f BAM -g 2.7e9 -n GM12878_H3K4me3 -B --outdir . >macs2.log 2>&1 &
-
-# GM12878 H3K27ac, output GM12878_H3K27ac_peaks.narrowPeak
-nohup macs2 callpeak -c Control_rep2.bam -t H3K27ac_rep2.bam -f BAM -g 2.7e9 -n GM12878_H3K27ac -B --outdir . >macs2.log 2>&1 &
-
-# GM12878 H3K36me3, output GM12878_H3K36me3_peaks.narrowPeak
-nohup macs2 callpeak -c Control_rep2.bam -t H3K36me3_rep2.bam -f BAM -g 2.7e9 -n GM12878_H3K36me3 -B --outdir . >macs2.log 2>&1 &
-
-# K562 Control_rep1.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733780)
-wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733780&format=file&file=GSM733780%5Fhg19%5FwgEncodeBroadHistoneK562ControlStdAlnRep1%2Ebam
-
-# K562 H3K4me1_rep1.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733692)
-wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733692&format=file&file=GSM733692%5Fhg19%5FwgEncodeBroadHistoneK562H3k4me1StdAlnRep1%2Ebam
-
-# K562 H3K4me3_rep1.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733680)
-wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733680&format=file&file=GSM733680%5Fhg19%5FwgEncodeBroadHistoneK562H3k4me3StdAlnRep1%2Ebam
-
-# K562 H3K27ac_rep1.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733656)
-wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733656&format=file&file=GSM733656%5Fhg19%5FwgEncodeBroadHistoneK562H3k27acStdAlnRep1%2Ebam
-
-# K562 H3K36me3_rep1.bam (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSM733714)
-wget https://www.ncbi.nlm.nih.gov/geo/download/?acc=GSM733714&format=file&file=GSM733714%5Fhg19%5FwgEncodeBroadHistoneK562H3k36me3StdAlnRep1%2Ebam
-
-# K562 H3K4me1, output K562_H3K4me1_peaks.narrowPeak
-nohup macs2 callpeak -c Control_rep1.bam -t H3K4me1_rep1.bam -f BAM -g 2.7e9 -n K562_H3K4me1 -B --outdir . >macs2.log 2>&1 &
-
-# K562 H3K4me3, output K562_H3K4me3_peaks.narrowPeak
-nohup macs2 callpeak -c Control_rep1.bam -t H3K4me3_rep1.bam -f BAM -g 2.7e9 -n K562_H3K4me3 -B --outdir . >macs2.log 2>&1 &
-
-# K562 H3K27ac, output K562_H3K27ac_peaks.narrowPeak
-nohup macs2 callpeak -c Control_rep1.bam -t H3K27ac_rep1.bam -f BAM -g 2.7e9 -n K562_H3K27ac -B --outdir . >macs2.log 2>&1 &
-
-# K562 H3K36me3, output K562_H3K36me3_peaks.narrowPeak
-nohup macs2 callpeak -c Control_rep1.bam -t H3K36me3_rep1.bam -f BAM -g 2.7e9 -n K562_H3K36me3 -B --outdir . >macs2.log 2>&1 &
-
-# --d1 --d2 is the sequence depth in control file(https://github.com/macs3-project/MACS/wiki/Call-differential-binding-events), user can cat .log file in /callpeak_result/xxxx/macs2.log to obtain.
-# H3K4me1
-# GM12878 control 6284864
-# K562 control 18559220
-nohup macs2 bdgdiff --t1 GM12878_H3K4me1_treat_pileup.bdg --c1 GM12878_H3K4me1_control_lambda.bdg --d1 6284864 --t2 K562_H3K4me1_treat_pileup.bdg --c2 K562_H3K4me1_control_lambda.bdg --d2 18559220 --outdir . -o H3K4me1_GM12878.bed H3K4me1_K562.bed nondiff_peak.bed 1>bdgdiff.log 2>&1 &
-
-# H3K4me3
-# GM12878 control 6284864
-# K562 control 18559220
-nohup macs2 bdgdiff --t1 GM12878_H3K4me3_treat_pileup.bdg --c1 GM12878_H3K4me3_control_lambda.bdg --d1 6284864 --t2 K562_H3K4me3_treat_pileup.bdg --c2 K562_H3K4me3_control_lambda.bdg --d2 18559220 --outdir . -o H3K4me3_GM12878.bed H3K4me3_K562.bed nondiff_peak.bed 1>bdgdiff.log 2>&1 &
-
-# H3K27ac
-# GM12878 control 6284864
-# K562 control 18559220
-nohup macs2 bdgdiff --t1 GM12878_H3K27ac_treat_pileup.bdg --c1 GM12878_H3K27ac_control_lambda.bdg --d1 6284864 --t2 K562_H3K27ac_treat_pileup.bdg --c2 K562_H3K27ac_control_lambda.bdg --d2 18559220 --outdir . -o H3K27ac_GM12878.bed H3K27ac_K562.bed nondiff_peak.bed 1>bdgdiff.log 2>&1 &
-
-# H3K36me3
-# GM12878 control 6284864
-# K562 control 18559220
-nohup macs2 bdgdiff --t1 GM12878_H3K36me3_treat_pileup.bdg --c1 GM12878_H3K36me3_control_lambda.bdg --d1 6284864 --t2 K562_H3K36me3_treat_pileup.bdg --c2 H3K36me3/K562_H3K36me3_control_lambda.bdg --d2 18559220 --outdir . -o H3K36me3_GM12878.bed H3K36me3_K562.bed nondiff_peak.bed 1>bdgdiff.log 2>&1 &
-
-# subset data
-grep '^chr6[[:space:]]' GM12878_H3K4me1_peaks.narrowPeak > GM12878_H3K4me1_peaks_chr6.narrowPeak
-grep '^chr6[[:space:]]' GM12878_H3K4me3_peaks.narrowPeak > GM12878_H3K4me3_peaks_chr6.narrowPeak
-grep '^chr6[[:space:]]' GM12878_H3K27ac_peaks.narrowPeak > GM12878_H3K27ac_peaks_chr6.narrowPeak
-grep '^chr6[[:space:]]' GM12878_H3K36me3_peaks.narrowPeak > GM12878_H3K36me3_peaks_chr6.narrowPeak
-grep '^chr6[[:space:]]' K562_H3K4me1_peaks.narrowPeak > K562_H3K4me1_peaks_chr6.narrowPeak
-grep '^chr6[[:space:]]' K562_H3K4me3_peaks.narrowPeak > K562_H3K4me3_peaks_chr6.narrowPeak
-grep '^chr6[[:space:]]' K562_H3K27ac_peaks.narrowPeak > K562_H3K27ac_peaks_chr6.narrowPeak
-grep '^chr6[[:space:]]' K562_H3K36me3_peaks.narrowPeak > K562_H3K36me3_peaks_chr6.narrowPeak
-```
-
-Read ChIP-seq data
-```{r, eval=F}
-library(ChIPseeker)
-K562_peak_files <- c(H3K27ac = "K562_H3K27ac_peaks_chr6.narrowPeak",
-                     H3K36me3 = "K562_H3K36me3_peaks_chr6.narrowPeak",
-                     H3K4me1 = "K562_H3K4me1_peaks_chr6.narrowPeak",
-                     H3K4me3 = "K562_H3K4me3_peaks_chr6.narrowPeak")
-epigenetics_data[["K562_peak"]] <- lapply(K562_peak_files, readPeakFile)
-
-GM12878_peak_files <- c(H3K27ac = "GM12878_H3K27ac_peaks_chr6.narrowPeak",
-                        H3K36me3 = "GM12878_H3K36me3_peaks_chr6.narrowPeak",
-                        H3K4me1 = "GM12878_H3K4me1_peaks_chr6.narrowPeak",
-                        H3K4me3 = "GM12878_H3K4me3_peaks_chr6.narrowPeak")
-epigenetics_data[["GM12878_peak"]] <- lapply(GM12878_peak_files, readPeakFile)
-
-H3K4me1_files <- c(peak_in_GM12878 = "H3K4me1_GM12878_chr6.bed",
-                   peak_in_K562 = "H3K4me1_K562_chr6.bed")
-epigenetics_data[["H3K4me1_peak"]] <- lapply(H3K4me1_files, readPeakFile)
-
-H3K36me3_files <- c(peak_in_GM12878 = "H3K36me3_GM12878_chr6.bed",
-                    peak_in_K562 = "H3K36me3_K562_chr6.bed")
-epigenetics_data[["H3K36me3_peak"]] <- lapply(H3K36me3_files, readPeakFile)
-
-H3K27ac_files <- c(peak_in_GM12878 = "./data/H3K27ac_GM12878_chr6.bed",
-                   peak_in_K562 = "./data/H3K27ac_K562_chr6.bed")
-epigenetics_data[["H3K27ac_peak"]] <- lapply(H3K27ac_files, readPeakFile)
-
-H3K4me3_files <- c(peak_in_GM12878 = "./data/H3K4me3_GM12878_chr6.bed",
-                   peak_in_K562 = "./data/H3K4me3_K562_chr6.bed")
-epigenetics_data[["H3K4me3_peak"]] <- lapply(H3K4me3_files, readPeakFile)
-```
-
-load package
-
-```{r}
-library(ggplot2)
-library(TxDb.Hsapiens.UCSC.hg19.knownGene)
-library(aplot)
-library(ChIPseeker)
-library(clusterProfiler)
-library(org.Hs.eg.db)
-library(IRanges)
-library(GenomicFeatures)
-library(gggenes)
-
-scale <- "log10"
-limits <- c(0,1.7)
-chr <- "chr6"
-chr_hic <- "6"
-x_min <- 43600000
-x_max <- 44100000
-txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+# Load processed genomic data
 epigenetics_data <- qs::qread("./data/epigenetics_data.qs")
 
-# functions to visualize gene track
-getPlotGene <- function(txdb, chr, x_min, x_max, tx_id = NULL,
-                        OrgDb = NULL){
+# Global parameters and themes
+plot_params <- list(
+    scale = "log10",
+    limits = c(0, 1.7),
+    chr = "chr6",
+    x_min = 43600000,
+    x_max = 44100000,
+    highlight_regions = list(
+        region1 = c(43738000, 43754500),
+        region2 = c(43900000, 44000000),
+        region3 = c(44060000, 44100000)
+    ),
+    peak_color = c("peak_in_K562" = "#E05B5B", "peak_in_GM12878" = "#519CBA")
+)
 
+common_theme <- theme_minimal() +
+    theme(
+        axis.title.x = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_line(colour = "black"),
+        panel.border = element_blank(),
+        plot.title = element_text(hjust = 0.5)
+    )
+
+txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene
+
+# Function to add highlight rectangles
+addHighlights <- function(p, ymax, alpha=0.2) {
+    p + 
+    annotate("rect", 
+             xmin=plot_params$highlight_regions$region1[1], 
+             xmax=plot_params$highlight_regions$region1[2],
+             ymin=0, ymax=ymax, fill="#c6c3c3", alpha=alpha) +
+    annotate("rect", 
+             xmin=plot_params$highlight_regions$region2[1], 
+             xmax=plot_params$highlight_regions$region2[2],
+             ymin=0, ymax=ymax, fill="#c6c3c3", alpha=alpha) +
+    annotate("rect", 
+             xmin=plot_params$highlight_regions$region3[1], 
+             xmax=plot_params$highlight_regions$region3[2],
+             ymin=0, ymax=ymax, fill="#c6c3c3", alpha=alpha) 
+}
+
+# Generate gene plot
+generateGenePlot <- function(txdb, chr, x_min, x_max, OrgDb, show_legend = FALSE) {
+    # Get genes in the region
     win <- GRanges(seqnames = chr,
                    ranges = IRanges::IRanges(start = x_min, end = x_max))
     all_genes <- GenomicFeatures::genes(txdb)
     gene_df <- data.frame(subsetByOverlaps(x = all_genes, ranges = win, type = "any"))
-    gene_df[gene_df[, "start"] < x_min, "start"] <- x_min
-    gene_df[gene_df[, "end"] > x_max, "end"] <- x_max
     gene_df$gene_id <- factor(gene_df$gene_id, levels = unique(gene_df$gene_id))
     
+    # Process gene data
     gene_df <- gene_df[,c("seqnames", "gene_id", "start", "end", "strand")]
     colnames(gene_df)[1] <- "chromosome"
     gene_df$forward <- ifelse(gene_df$strand=="+", TRUE, FALSE)
 
-    if(!is.null(OrgDb)){
-      require(clusterProfiler)
-      require(OrgDb , character.only = TRUE)
+    # Convert gene IDs
+    changeid <- bitr(geneID = gene_df$gene_id, 
+                     fromType = "ENTREZID", toType = "SYMBOL",
+                     OrgDb = OrgDb)
+    colnames(changeid)[1] <- c("gene_id") 
+    gene_df <- merge(gene_df, changeid, all.x = TRUE)
+    gene_df <- gene_df[, c(2:ncol(gene_df))]
+    colnames(gene_df)[ncol(gene_df)] <- "gene_symbol"
 
-      changeid <- bitr(geneID = gene_df$gene_id, 
-                       fromType = "ENTREZID", toType = "SYMBOL",
-                       OrgDb = OrgDb)
-      colnames(changeid)[1] <- c("gene_id") 
-      gene_df <- merge(gene_df, changeid)
-      gene_df <- gene_df[, c(2:ncol(gene_df))]
-      colnames(gene_df)[ncol(gene_df)] <- "gene_symbol"
+    gene_df$start <- pmax(gene_df$start, x_min)
+    gene_df$end <- pmin(gene_df$end, x_max)      
+        
+    p <- ggplot(gene_df, aes(xmin = start, xmax = end, 
+                  y = gene_symbol, forward=forward, fill = gene_symbol)) +
+    geom_gene_arrow() +
+    xlim(c(x_min, x_max)) +
+    theme_genes() +
+    scale_fill_brewer(palette = "Set3") + 
+    labs(fill = "gene symbol") +
+    common_theme
+    
+    if (!show_legend) {
+        p <- p + theme(legend.position = "none")
     }
-
-    return(gene_df)
+    
+    return(p)
 }
 
+# Generate HiC plot
+generateHicPlot <- function(data, label, use_scores = NULL, show_legend = TRUE) {   
+    if (is.null(use_scores)) {
+        p <- HiContacts::plotMatrix(data, 
+            maxDistance = plot_params$x_max - plot_params$x_min, 
+            caption = FALSE,
+            scale = plot_params$scale, 
+            limits = plot_params$limits) + 
+            xlim(plot_params$x_min, plot_params$x_max) + 
+            labs(fill = 'hic score') +
+            ylab(paste0(label, " hic")) +
+            common_theme
+    } else {
+        p <- HiContacts::plotMatrix(data,
+            maxDistance = plot_params$x_max - plot_params$x_min, 
+            use.scores = use_scores,
+            caption = FALSE,
+            cmap = HiContacts::bbrColors()) +
+            xlim(plot_params$x_min, plot_params$x_max) + 
+            labs(fill = 'log2fc') +
+            ylab(paste0(label, " ")) +
+            common_theme
+    }
+    
+    if (!show_legend) {
+        p <- p + theme(legend.position = "none")
+    }
+    
+    return(p)
+}
 
-plotGene <- function(df,x_min = NULL, x_max = NULL){
-  
-  require(gggenes)
-  if(is.null(x_min)){
-    x_min <- min(c(df[, "start"], df[, "end"]))
-  }
-
-  if(is.null(x_max)){
-    x_max <- max(c(df[, "start"], df[, "end"]))
-  }
-
-  gene_p <- ggplot(df, aes(xmin = start, xmax = end, 
-                           y = gene_symbol, forward=forward, fill = gene_symbol)) +
-                    geom_gene_arrow() +
-                    xlim(c(x_min, x_max))+
-                    theme_genes() +
-                    theme(legend.position = 'none')
-  return(gene_p)
+# Generate coverage plot
+generateCoveragePlot <- function(data, label, ymax, colors = NULL, 
+                                add_facet = FALSE, show_legend = TRUE) {
+    p <- covplot(data, 
+        weightCol = "V5",
+        chrs = plot_params$chr,
+        xlim = c(plot_params$x_min, plot_params$x_max),
+        ylab = label,
+        title = "") +
+        ylim(c(0, ymax)) +
+        common_theme
+    
+    if (!is.null(colors)) {
+        p <- p + scale_color_manual(values = colors) +
+                 scale_fill_manual(values = colors)
+    } else {
+        p <- p + scale_fill_brewer(palette = "Set2") +
+                 scale_color_brewer(palette = "Set2")
+    }
+    
+    if (add_facet) {
+        p <- p + facet_grid(.id ~ .) +
+            theme(strip.text.y = element_blank())
+    }
+    
+    if (!show_legend) {
+        p <- p + theme(legend.position = "none")
+    }
+    
+    return(p)
 }
 ```
 
-### combine data
+### Visualization of comparative genomics data tracks
 ```{r combine_data, fig.width=10, fig.height=15}
-combine_hic_p <- HiContacts::plotMatrix(epigenetics_data[["div_hic"]], 
-                                        use.scores = "balanced.fc",
-                                        maxDistance = x_max - x_min,caption = FALSE,
-                                        cmap = HiContacts::bbrColors()) + 
-                        xlim(x_min, x_max) +
-                        ylab("K562/GM12878 hic compare ") + xlab("") + labs(fill = "log2fc") + 
-                        theme(plot.title = element_text(hjust = 0.5),
-                              axis.text.y = element_blank(),
-                              axis.ticks.y = element_blank(),
-                              axis.text.x = element_text(size = 9))
+# Generate HiC comparision plot
+combine_hic_p <- generateHicPlot(epigenetics_data[["div_hic"]], 
+                                "K562/GM12878 hic compare",
+                                use_scores = "balanced.fc")
 
-peak_color <- c("#E05B5B","#519CBA")
-names(peak_color) <- c("peak_in_K562", "peak_in_GM12878")
+# Generate histone modification comparision plots
+histone_plots <- list(
+    H3K27ac = list(data = epigenetics_data[["H3K27ac_peak"]], ymax = 100),
+    H3K36me3 = list(data = epigenetics_data[["H3K36me3_peak"]], ymax = 10),
+    H3K4me1 = list(data = epigenetics_data[["H3K4me1_peak"]], ymax = 30),
+    H3K4me3 = list(data = epigenetics_data[["H3K4me3_peak"]], ymax = 25)
+) %>%
+map2(names(.), function(x, name) {
+    p <- generateCoveragePlot(x$data, name, x$ymax, 
+                             plot_params$peak_color, add_facet = FALSE)
+    addHighlights(p, x$ymax)
+})
 
-H3K27ac_p <- covplot(epigenetics_data[["H3K27ac_peak"]], 
-                     weightCol="V5", chrs=chr, xlim=c(x_min, x_max),
-                     ylab = "H3K27ac", title = "", xlab = "") + 
-                annotate("rect", xmin = 43737946,xmax = 43754223,
-                         ymin= 0, ymax=100, fill = "#c6c3c3", alpha= 0.2) + 
-                annotate("rect", xmin = 43900000,xmax = 44000000,
-                         ymin= 0, ymax=100, fill = "#c6c3c3" , alpha= 0.2) + 
-                annotate("rect", xmin = 44060000,xmax = 44100000,
-                         ymin= 0, ymax=100, fill = "#c6c3c3" , alpha= 0.2) + 
-                scale_color_manual(values = peak_color) +
-                scale_fill_manual(values = peak_color) +
-                theme(strip.text.y = element_blank())
+# Generate gene track
+gene_p <- generateGenePlot(txdb = txdb,
+                   chr = plot_params$chr,
+                   x_min = plot_params$x_min,
+                   x_max = plot_params$x_max,
+                   OrgDb = "org.Hs.eg.db")
+gene_p_highlighted <- addHighlights(gene_p, ymax=9)
 
+# Combine all plots using aplot
+combined_p <- combine_hic_p %>% 
+    insert_bottom(histone_plots$H3K27ac, height = .2) %>% 
+    insert_bottom(histone_plots$H3K36me3, height = .2) %>% 
+    insert_bottom(histone_plots$H3K4me1, height = .2) %>%
+    insert_bottom(histone_plots$H3K4me3, height = .2) %>%
+    insert_bottom(gene_p_highlighted, height = .5)
 
-H3K36me3_p <- covplot(epigenetics_data[["H3K36me3_peak"]], 
-                      weightCol="V5", chrs=chr, xlim=c(x_min, x_max),
-                      ylab = "H3K36me3", title = "", xlab = "") + 
-                annotate("rect", xmin = 43737946,xmax = 43754223,
-                         ymin= 0, ymax=10, fill =  "#c6c3c3" , alpha= 0.2) + 
-                annotate("rect", xmin = 43900000,xmax = 44000000,
-                         ymin= 0, ymax=10, fill =  "#c6c3c3" , alpha= 0.2) + 
-                annotate("rect", xmin = 44060000,xmax = 44100000,
-                         ymin= 0, ymax=10,
-                         fill =  "#c6c3c3" , alpha= 0.2) + 
-                scale_color_manual(values = peak_color) +
-                scale_fill_manual(values = peak_color) +
-                theme(strip.text.y = element_blank())
-
-
-H3K4me1_p <- covplot(epigenetics_data[["H3K4me1_peak"]], 
-                     weightCol="V5", chrs=chr, xlim=c(x_min, x_max),
-                     ylab = "H3K4me1", title = "", xlab = "") + 
-                annotate("rect", xmin = 43737946,xmax = 43754223,
-                         ymin= 0, ymax=30, fill =  "#c6c3c3" , alpha= 0.2) + 
-                annotate("rect", xmin = 43900000,xmax = 44000000,
-                         ymin= 0, ymax=30, fill =  "#c6c3c3" , alpha= 0.2) + 
-                annotate("rect", xmin = 44060000,xmax = 44100000,
-                         ymin= 0, ymax=30, fill =  "#c6c3c3" , alpha= 0.2) + 
-                scale_color_manual(values = peak_color) +
-                scale_fill_manual(values = peak_color) +
-                theme(strip.text.y = element_blank())
-
-
-H3K4me3_p <- covplot(epigenetics_data[["H3K4me3_peak"]], 
-                     weightCol="V5", chrs=chr, xlim=c(x_min, x_max),
-                     ylab = "H3K4me3", title = "", xlab = "") + 
-                annotate("rect", xmin = 43737946,xmax = 43754223,
-                         ymin= 0, ymax=25, fill =  "#c6c3c3" , alpha= 0.2) + 
-                annotate("rect", xmin = 43900000,xmax = 44000000,
-                         ymin= 0, ymax=25, fill =  "#c6c3c3" , alpha= 0.2) + 
-                annotate("rect", xmin = 44060000,xmax = 44100000,
-                         ymin= 0, ymax=25, fill =  "#c6c3c3" , alpha= 0.2) + 
-                scale_color_manual(values = peak_color) +
-                scale_fill_manual(values = peak_color) +
-                theme(strip.text.y = element_blank())
-
-gene_p <- plotGene(df = getPlotGene(txdb = txdb, 
-                                    chr = chr, 
-                                    x_min = x_min, 
-                                    x_max = x_max,OrgDb = "org.Hs.eg.db"),
-                    x_min = x_min,
-                    x_max = x_max) + 
-                    scale_fill_brewer(palette = "Set3") + 
-                    labs(fill = "gene symbol") + 
-                        annotate("rect",
-                                 xmin = 43737946,xmax = 43754223,
-                                 ymin= 0, ymax=9,
-                                 fill =  "#c6c3c3" , alpha= 0.2) + 
-                        annotate("rect",
-                                 xmin = 43900000,xmax = 44000000,
-                                 ymin= 0, ymax=9,
-                                 fill =  "#c6c3c3" , alpha= 0.2) + 
-                        annotate("rect",
-                                 xmin = 44060000,xmax = 44100000,
-                                 ymin= 0, ymax=9,
-                                 fill =  "#c6c3c3" , alpha= 0.2)
-
-p <- combine_hic_p %>% 
-            insert_bottom(H3K27ac_p,height = .2) %>% 
-            insert_bottom(H3K36me3_p,height = .2) %>% 
-            insert_bottom(H3K4me1_p,height = .2) %>%
-            insert_bottom(H3K4me3_p,height = .2) %>%
-        insert_bottom(gene_p, height = .5)
-
-p
+combined_p
 ```
 
-### split data
+### Visualization of different genomics data tracks
 ```{r split_data, fig.width=16, fig.height=10}
-gene_p <- plotGene(df = getPlotGene(txdb = txdb, 
-                                    chr = chr, 
-                                    x_min = x_min, 
-                                    x_max = x_max,OrgDb = "org.Hs.eg.db"),
-                    x_min = x_min,
-                    x_max = x_max) + 
-                    scale_fill_brewer(palette = "Set3") + 
-                    labs(fill = "gene symbol")+ 
-                  annotate("rect", xmin = 43737946,xmax = 43754223,
-                           ymin= 0, ymax=9, fill =  "#c6c3c3" , alpha= 0.2) + 
-                  annotate("rect", xmin = 43900000,xmax = 44000000,
-                           ymin= 0, ymax=9, fill =  "#c6c3c3" , alpha= 0.2) + 
-                  annotate("rect", xmin = 44060000,xmax = 44100000,
-                           ymin= 0, ymax=9, fill =  "#c6c3c3" , alpha= 0.2)
+# Generate HiC plots
+GM12878_hic_p <- generateHicPlot(epigenetics_data[["GM12878_hic"]], 
+                                "GM12878", show_legend = FALSE)
+K562_hic_p <- generateHicPlot(epigenetics_data[["K562_hic"]], 
+                             "K562", show_legend = FALSE)
 
+# Generate ChIP-seq coverage plots
+GM12878_cov_p <- generateCoveragePlot(epigenetics_data[["GM12878_peak"]], 
+                                     "GM12878 ChIP-seq", 
+                                     2000,
+                                     add_facet = TRUE,
+                                     show_legend = FALSE)
+GM12878_cov_p <- addHighlights(GM12878_cov_p, ymax = 2000)
 
-GM12878_hic_p <- HiContacts::plotMatrix(epigenetics_data[["GM12878_hic"]], 
-                                        maxDistance = x_max - x_min,
-                                        caption = FALSE, 
-                                        scale = scale, limits = limits) + 
-                        xlim(x_min, x_max) + labs(fill = 'hic score') +
-                        ylab("GM12878 hic") + xlab("") + 
-                        theme(plot.title = element_text(hjust = 0.5),
-                              axis.text.y = element_blank(),
-                              axis.ticks.y = element_blank(),
-                              axis.text.x = element_text(size = 9))
+K562_cov_p <- generateCoveragePlot(epigenetics_data[["K562_peak"]], 
+                                  "K562 ChIP-seq", 
+                                  2000,
+                                  add_facet = TRUE,
+                                  show_legend = FALSE)
+K562_cov_p <- addHighlights(K562_cov_p, ymax = 2000)
 
-
-GM12878_cov_p <- covplot(epigenetics_data[["GM12878_peak"]], 
-                         weightCol="V5", chrs=chr, xlim=c(x_min, x_max),
-                         ylab = "GM12878 ChIP-seq", title = "", xlab = "") + 
-                        ylim(c(0,2000)) +
-                        annotate("rect", xmin = 43737946,xmax = 43754223,
-                                 ymin= 0, ymax=2000, fill =  "#c6c3c3" , alpha= 0.2) + 
-                        annotate("rect", xmin = 43900000,xmax = 44000000,
-                                 ymin= 0, ymax=2000, fill =  "#c6c3c3" , alpha= 0.2) + 
-                        annotate("rect", xmin = 44060000,xmax = 44100000,
-                                 ymin= 0, ymax=2000, fill =  "#c6c3c3" , alpha= 0.2) + 
-                        facet_grid(.id ~ .) +  
-                        scale_fill_brewer(palette = "Set2") +
-                        scale_color_brewer(palette = "Set2") + 
-                        theme(strip.text.y = element_blank())
-                        
-
+# Combine plots using aplot
 GM12878_p <- (GM12878_hic_p + theme(legend.position = 'none'))  %>% 
-             insert_bottom(GM12878_cov_p + theme(legend.position = 'none')) %>% 
-             insert_bottom(gene_p + theme(legend.position = 'none'), height = .6)
-
-
-K562_hic_p <- HiContacts::plotMatrix(epigenetics_data[["K562_hic"]], 
-                                     maxDistance = x_max - x_min,
-                                     caption = FALSE, scale = scale, 
-                                     limits = limits) + 
-                        xlim(x_min, x_max) +
-                        ylab("K562 hic") + xlab("") + labs(fill = 'hic score') +
-                        theme(plot.title = element_text(hjust = 0.5),
-                              axis.text.y = element_blank(),
-                              axis.ticks.y = element_blank(),
-                              axis.text.x = element_text(size = 9))
-
-
-K562_cov_p <- covplot(epigenetics_data[["K562_peak"]], 
-                      weightCol="V5", chrs=chr, xlim=c(x_min, x_max),
-                      ylab = "K562 ChIP-seq", title = "", xlab = "") + 
-                  ylim(c(0,2000)) + 
-                  annotate("rect", xmin = 43737946,xmax = 43754223,
-                           ymin= 0, ymax=2000, fill =  "#c6c3c3" , alpha= 0.2) + 
-                  annotate("rect", xmin = 43900000,xmax = 44000000,
-                           ymin= 0, ymax=2000, fill =  "#c6c3c3" , alpha= 0.2) + 
-                  annotate("rect", xmin = 44060000,xmax = 44100000,
-                           ymin= 0, ymax=2000, fill =  "#c6c3c3" , alpha= 0.2) +  
-                  facet_grid(.id ~ .) + 
-                  scale_fill_brewer(palette = "Set2") +
-                  scale_color_brewer(palette = "Set2") +  
-                  theme(strip.text.y = element_blank())
+             insert_bottom(GM12878_cov_p) %>% 
+             insert_bottom(gene_p_highlighted, height = .6)
 
 K562_p <- (K562_hic_p + theme(legend.position = 'none')) %>% 
-             insert_bottom(K562_cov_p + theme(legend.position = 'none')) %>% 
-             insert_bottom(gene_p + theme(legend.position = 'none'), height = .6)
+             insert_bottom(K562_cov_p) %>% 
+             insert_bottom(gene_p_highlighted, height = .6)
 
-hic_legend <- cowplot::get_legend(K562_hic_p)
-cov_legend <- cowplot::get_legend(K562_cov_p)
+# Add legends and create final view
+split_p <- plot_list(
+    gglist = list(GM12878_p, K562_p, 
+                 plot_grid(get_legend(generateHicPlot(epigenetics_data[["K562_hic"]], "K562")),
+                          get_legend(generateCoveragePlot(epigenetics_data[["K562_peak"]], 
+                                                       "K562 ChIP-seq", 
+                                                       2000,
+                                                       add_facet = TRUE)), 
+                          nrow = 1)),
+    design = c("AAAAAABBBBBBCC")
+)
 
-combined_legends <- cowplot::plot_grid(hic_legend, cov_legend, nrow = 1)
-p <- plot_list(gglist = list(GM12878_p, K562_p, combined_legends),
-               design = c("AAAAAABBBBBBCC"))
-
-p
+split_p
 ```
