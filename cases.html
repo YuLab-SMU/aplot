@@ -22,7 +22,7 @@
 
 
 
-<meta name="date" content="2025-02-15" />
+<meta name="date" content="2025-02-20" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -155,10 +155,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 <li class="chapter" data-level="3.2" data-path="cases.html"><a href="cases.html#oncoplot-example"><i class="fa fa-check"></i><b>3.2</b> Oncoplot example</a></li>
 <li class="chapter" data-level="3.3" data-path="cases.html"><a href="cases.html#funky-heatmap"><i class="fa fa-check"></i><b>3.3</b> funky heatmap</a></li>
-<li class="chapter" data-level="3.4" data-path="cases.html"><a href="cases.html#epigenetics"><i class="fa fa-check"></i><b>3.4</b> Epigenetics</a>
+<li class="chapter" data-level="3.4" data-path="cases.html"><a href="cases.html#genomics-track-example"><i class="fa fa-check"></i><b>3.4</b> Genomics track example</a>
 <ul>
-<li class="chapter" data-level="3.4.1" data-path="cases.html"><a href="cases.html#combine-data"><i class="fa fa-check"></i><b>3.4.1</b> combine data</a></li>
-<li class="chapter" data-level="3.4.2" data-path="cases.html"><a href="cases.html#split-data"><i class="fa fa-check"></i><b>3.4.2</b> split data</a></li>
+<li class="chapter" data-level="3.4.1" data-path="cases.html"><a href="cases.html#setup-packages-and-parameteres"><i class="fa fa-check"></i><b>3.4.1</b> Setup packages and parameteres</a></li>
+<li class="chapter" data-level="3.4.2" data-path="cases.html"><a href="cases.html#visualization-of-comparative-genomics-data-tracks"><i class="fa fa-check"></i><b>3.4.2</b> Visualization of comparative genomics data tracks</a></li>
+<li class="chapter" data-level="3.4.3" data-path="cases.html"><a href="cases.html#visualization-of-different-genomics-data-tracks"><i class="fa fa-check"></i><b>3.4.3</b> Visualization of different genomics data tracks</a></li>
 </ul></li>
 </ul></li>
 </ul>
@@ -377,293 +378,269 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb24-20"><a href="cases.html#cb24-20" tabindex="-1"></a>fp</span></code></pre></div>
 <p><img src="aplot_files/figure-html/funky-1.png" width="768" /></p>
 </div>
-<div id="epigenetics" class="section level2 hasAnchor" number="3.4">
-<h2><span class="header-section-number">3.4</span> Epigenetics<a href="cases.html#epigenetics" class="anchor-section" aria-label="Anchor link to header"></a></h2>
-<p>In this part, we will show case of epigenetics by using aplot to integrate the visualization
-of hic data, ChIP-seq data and gene track. Hic data will be manipulated and visualized by
-<code>HiContacts</code> and <code>HiCExperiment</code>. ChIP-seq data will be manipulated and visualize by <code>ChIPseeker</code>.
-Gene track will be visualized by <code>gggenes</code> by fetching gene information from txdb object.
-aplot will show its power by combining these three parts of epigenetics result.</p>
-<p>The purpose of this case is to show the different epigenetics characteristics of cell line
-GM12878(normal lymphoblastoid cell line) and cell line K562(chronic myeloid leukemia cell lines).
-Hic data are derived from GSM1551550(GM12878) and GSM1551618(K562).
-ChIP-seq data have four parts: H3K27ac, H3K4me1, H3K4me3 and H3K36me3.
-ChIP-seq Control data are derived from GSM733742(GM12878) and GSM733780(K562).
-ChIP-seq H3K27ac data are derived from GSM733771(GM12878) and GSM733656(K562).
-ChIP-seq H3K4me1 data are derived from GSM733772(GM12878) and GSM733692 (K562).
-ChIP-seq H3K4me3 data are derived from GSM733708(GM12878) and GSM733680(K562).
-ChIP-seq H3K36me3 data are derived from GSM733771(GSM733679) and GSM733656(GSM733714).
-We download the bam files and re-analyze it by using macs2 to get peak results and different peak results.
-Gene track visualization is implemented by using gggenes.</p>
-<p>In order to manifest the strength of aplot, we will show the usages of aplot in two parts.
-combine data is the comparison result. The comparison result of Hic data are calculated by using <code>HiContacts::divide</code> to get
-foldchange(K562/GM12878). The comparison result of ChIP-seq data are calculated by using the <code>bdgdiff</code> function of <code>macs2</code>.
-split data is to exhibit the hic data and ChIP-seq data of two cell lines individually.
-All the data is pre-calculated and store in a .qs file.</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="cases.html#cb25-1" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb25-2"><a href="cases.html#cb25-2" tabindex="-1"></a><span class="fu">library</span>(TxDb.Hsapiens.UCSC.hg19.knownGene)</span>
-<span id="cb25-3"><a href="cases.html#cb25-3" tabindex="-1"></a><span class="fu">library</span>(aplot)</span>
-<span id="cb25-4"><a href="cases.html#cb25-4" tabindex="-1"></a><span class="fu">library</span>(ChIPseeker)</span>
-<span id="cb25-5"><a href="cases.html#cb25-5" tabindex="-1"></a><span class="fu">library</span>(clusterProfiler)</span>
-<span id="cb25-6"><a href="cases.html#cb25-6" tabindex="-1"></a><span class="fu">library</span>(org.Hs.eg.db)</span>
-<span id="cb25-7"><a href="cases.html#cb25-7" tabindex="-1"></a><span class="fu">library</span>(IRanges)</span>
-<span id="cb25-8"><a href="cases.html#cb25-8" tabindex="-1"></a><span class="fu">library</span>(GenomicFeatures)</span>
-<span id="cb25-9"><a href="cases.html#cb25-9" tabindex="-1"></a><span class="fu">library</span>(gggenes)</span>
-<span id="cb25-10"><a href="cases.html#cb25-10" tabindex="-1"></a></span>
-<span id="cb25-11"><a href="cases.html#cb25-11" tabindex="-1"></a>scale <span class="ot">&lt;-</span> <span class="st">&quot;log10&quot;</span></span>
-<span id="cb25-12"><a href="cases.html#cb25-12" tabindex="-1"></a>limits <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="fl">1.7</span>)</span>
-<span id="cb25-13"><a href="cases.html#cb25-13" tabindex="-1"></a>chr <span class="ot">&lt;-</span> <span class="st">&quot;chr6&quot;</span></span>
-<span id="cb25-14"><a href="cases.html#cb25-14" tabindex="-1"></a>chr_hic <span class="ot">&lt;-</span> <span class="st">&quot;6&quot;</span></span>
-<span id="cb25-15"><a href="cases.html#cb25-15" tabindex="-1"></a>x_min <span class="ot">&lt;-</span> <span class="dv">43600000</span></span>
-<span id="cb25-16"><a href="cases.html#cb25-16" tabindex="-1"></a>x_max <span class="ot">&lt;-</span> <span class="dv">44100000</span></span>
-<span id="cb25-17"><a href="cases.html#cb25-17" tabindex="-1"></a>txdb <span class="ot">&lt;-</span> TxDb.Hsapiens.UCSC.hg19.knownGene</span>
-<span id="cb25-18"><a href="cases.html#cb25-18" tabindex="-1"></a>epigenetics_data <span class="ot">&lt;-</span> qs<span class="sc">::</span><span class="fu">qread</span>(<span class="st">&quot;./data/epigenetics_data.qs&quot;</span>)</span>
-<span id="cb25-19"><a href="cases.html#cb25-19" tabindex="-1"></a></span>
-<span id="cb25-20"><a href="cases.html#cb25-20" tabindex="-1"></a><span class="co"># functions to visualize gene track</span></span>
-<span id="cb25-21"><a href="cases.html#cb25-21" tabindex="-1"></a>getPlotGene <span class="ot">&lt;-</span> <span class="cf">function</span>(txdb, chr, x_min, x_max, <span class="at">tx_id =</span> <span class="cn">NULL</span>,</span>
-<span id="cb25-22"><a href="cases.html#cb25-22" tabindex="-1"></a>                        <span class="at">OrgDb =</span> <span class="cn">NULL</span>){</span>
-<span id="cb25-23"><a href="cases.html#cb25-23" tabindex="-1"></a></span>
-<span id="cb25-24"><a href="cases.html#cb25-24" tabindex="-1"></a>    win <span class="ot">&lt;-</span> <span class="fu">GRanges</span>(<span class="at">seqnames =</span> chr,</span>
-<span id="cb25-25"><a href="cases.html#cb25-25" tabindex="-1"></a>                   <span class="at">ranges =</span> IRanges<span class="sc">::</span><span class="fu">IRanges</span>(<span class="at">start =</span> x_min, <span class="at">end =</span> x_max))</span>
-<span id="cb25-26"><a href="cases.html#cb25-26" tabindex="-1"></a>    all_genes <span class="ot">&lt;-</span> GenomicFeatures<span class="sc">::</span><span class="fu">genes</span>(txdb)</span>
-<span id="cb25-27"><a href="cases.html#cb25-27" tabindex="-1"></a>    gene_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">subsetByOverlaps</span>(<span class="at">x =</span> all_genes, <span class="at">ranges =</span> win, <span class="at">type =</span> <span class="st">&quot;any&quot;</span>))</span>
-<span id="cb25-28"><a href="cases.html#cb25-28" tabindex="-1"></a>    gene_df[gene_df[, <span class="st">&quot;start&quot;</span>] <span class="sc">&lt;</span> x_min, <span class="st">&quot;start&quot;</span>] <span class="ot">&lt;-</span> x_min</span>
-<span id="cb25-29"><a href="cases.html#cb25-29" tabindex="-1"></a>    gene_df[gene_df[, <span class="st">&quot;end&quot;</span>] <span class="sc">&gt;</span> x_max, <span class="st">&quot;end&quot;</span>] <span class="ot">&lt;-</span> x_max</span>
-<span id="cb25-30"><a href="cases.html#cb25-30" tabindex="-1"></a>    gene_df<span class="sc">$</span>gene_id <span class="ot">&lt;-</span> <span class="fu">factor</span>(gene_df<span class="sc">$</span>gene_id, <span class="at">levels =</span> <span class="fu">unique</span>(gene_df<span class="sc">$</span>gene_id))</span>
-<span id="cb25-31"><a href="cases.html#cb25-31" tabindex="-1"></a>    </span>
-<span id="cb25-32"><a href="cases.html#cb25-32" tabindex="-1"></a>    gene_df <span class="ot">&lt;-</span> gene_df[,<span class="fu">c</span>(<span class="st">&quot;seqnames&quot;</span>, <span class="st">&quot;gene_id&quot;</span>, <span class="st">&quot;start&quot;</span>, <span class="st">&quot;end&quot;</span>, <span class="st">&quot;strand&quot;</span>)]</span>
-<span id="cb25-33"><a href="cases.html#cb25-33" tabindex="-1"></a>    <span class="fu">colnames</span>(gene_df)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;chromosome&quot;</span></span>
-<span id="cb25-34"><a href="cases.html#cb25-34" tabindex="-1"></a>    gene_df<span class="sc">$</span>forward <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(gene_df<span class="sc">$</span>strand<span class="sc">==</span><span class="st">&quot;+&quot;</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
-<span id="cb25-35"><a href="cases.html#cb25-35" tabindex="-1"></a></span>
-<span id="cb25-36"><a href="cases.html#cb25-36" tabindex="-1"></a>    <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(OrgDb)){</span>
-<span id="cb25-37"><a href="cases.html#cb25-37" tabindex="-1"></a>      <span class="fu">require</span>(clusterProfiler)</span>
-<span id="cb25-38"><a href="cases.html#cb25-38" tabindex="-1"></a>      <span class="fu">require</span>(OrgDb , <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb25-39"><a href="cases.html#cb25-39" tabindex="-1"></a></span>
-<span id="cb25-40"><a href="cases.html#cb25-40" tabindex="-1"></a>      changeid <span class="ot">&lt;-</span> <span class="fu">bitr</span>(<span class="at">geneID =</span> gene_df<span class="sc">$</span>gene_id, </span>
-<span id="cb25-41"><a href="cases.html#cb25-41" tabindex="-1"></a>                       <span class="at">fromType =</span> <span class="st">&quot;ENTREZID&quot;</span>, <span class="at">toType =</span> <span class="st">&quot;SYMBOL&quot;</span>,</span>
-<span id="cb25-42"><a href="cases.html#cb25-42" tabindex="-1"></a>                       <span class="at">OrgDb =</span> OrgDb)</span>
-<span id="cb25-43"><a href="cases.html#cb25-43" tabindex="-1"></a>      <span class="fu">colnames</span>(changeid)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;gene_id&quot;</span>) </span>
-<span id="cb25-44"><a href="cases.html#cb25-44" tabindex="-1"></a>      gene_df <span class="ot">&lt;-</span> <span class="fu">merge</span>(gene_df, changeid)</span>
-<span id="cb25-45"><a href="cases.html#cb25-45" tabindex="-1"></a>      gene_df <span class="ot">&lt;-</span> gene_df[, <span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(gene_df))]</span>
-<span id="cb25-46"><a href="cases.html#cb25-46" tabindex="-1"></a>      <span class="fu">colnames</span>(gene_df)[<span class="fu">ncol</span>(gene_df)] <span class="ot">&lt;-</span> <span class="st">&quot;gene_symbol&quot;</span></span>
-<span id="cb25-47"><a href="cases.html#cb25-47" tabindex="-1"></a>    }</span>
-<span id="cb25-48"><a href="cases.html#cb25-48" tabindex="-1"></a></span>
-<span id="cb25-49"><a href="cases.html#cb25-49" tabindex="-1"></a>    <span class="fu">return</span>(gene_df)</span>
-<span id="cb25-50"><a href="cases.html#cb25-50" tabindex="-1"></a>}</span>
+<div id="genomics-track-example" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Genomics track example<a href="cases.html#genomics-track-example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="setup-packages-and-parameteres" class="section level3 hasAnchor" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> Setup packages and parameteres<a href="cases.html#setup-packages-and-parameteres" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="cases.html#cb25-1" tabindex="-1"></a><span class="fu">pload</span>(ChIPseeker)</span>
+<span id="cb25-2"><a href="cases.html#cb25-2" tabindex="-1"></a><span class="fu">pload</span>(TxDb.Hsapiens.UCSC.hg19.knownGene)</span>
+<span id="cb25-3"><a href="cases.html#cb25-3" tabindex="-1"></a><span class="fu">pload</span>(org.Hs.eg.db)</span>
+<span id="cb25-4"><a href="cases.html#cb25-4" tabindex="-1"></a><span class="fu">pload</span>(IRanges)</span>
+<span id="cb25-5"><a href="cases.html#cb25-5" tabindex="-1"></a><span class="fu">pload</span>(GenomicFeatures)</span>
+<span id="cb25-6"><a href="cases.html#cb25-6" tabindex="-1"></a><span class="fu">pload</span>(gggenes)</span>
+<span id="cb25-7"><a href="cases.html#cb25-7" tabindex="-1"></a><span class="fu">pload</span>(HiContacts)</span>
+<span id="cb25-8"><a href="cases.html#cb25-8" tabindex="-1"></a><span class="fu">pload</span>(cowplot)</span>
+<span id="cb25-9"><a href="cases.html#cb25-9" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="cases.html#cb25-10" tabindex="-1"></a><span class="co"># This analysis uses processed genomic data from:</span></span>
+<span id="cb25-11"><a href="cases.html#cb25-11" tabindex="-1"></a><span class="co"># 1. Hi-C data: GM12878 (GSM1551550) and K562 (GSM1551618)</span></span>
+<span id="cb25-12"><a href="cases.html#cb25-12" tabindex="-1"></a><span class="co"># 2. ChIP-seq data for histone modifications:</span></span>
+<span id="cb25-13"><a href="cases.html#cb25-13" tabindex="-1"></a><span class="co">#    - H3K27ac (GM12878: GSM733771, K562: GSM733656)</span></span>
+<span id="cb25-14"><a href="cases.html#cb25-14" tabindex="-1"></a><span class="co">#    - H3K4me1 (GM12878: GSM733772, K562: GSM733692)</span></span>
+<span id="cb25-15"><a href="cases.html#cb25-15" tabindex="-1"></a><span class="co">#    - H3K4me3 (GM12878: GSM733708, K562: GSM733680)</span></span>
+<span id="cb25-16"><a href="cases.html#cb25-16" tabindex="-1"></a><span class="co">#    - H3K36me3 (GM12878: GSM733679, K562: GSM733714)</span></span>
+<span id="cb25-17"><a href="cases.html#cb25-17" tabindex="-1"></a><span class="co">#    Controls: GM12878 (GSM733742), K562 (GSM733780)</span></span>
+<span id="cb25-18"><a href="cases.html#cb25-18" tabindex="-1"></a></span>
+<span id="cb25-19"><a href="cases.html#cb25-19" tabindex="-1"></a><span class="co"># Analysis parameters:</span></span>
+<span id="cb25-20"><a href="cases.html#cb25-20" tabindex="-1"></a><span class="co"># - MACS2 peak calling: default parameters except:</span></span>
+<span id="cb25-21"><a href="cases.html#cb25-21" tabindex="-1"></a><span class="co">#   * genome size: -g 2.7e9 (human)</span></span>
+<span id="cb25-22"><a href="cases.html#cb25-22" tabindex="-1"></a><span class="co"># - MACS2 bdgdiff: default parameters except:</span></span>
+<span id="cb25-23"><a href="cases.html#cb25-23" tabindex="-1"></a><span class="co">#   * d1: 6284864 (GM12878 sequencing depth) and d2: 18559220 (K562 sequencing depth)</span></span>
+<span id="cb25-24"><a href="cases.html#cb25-24" tabindex="-1"></a></span>
+<span id="cb25-25"><a href="cases.html#cb25-25" tabindex="-1"></a><span class="co"># Load processed genomic data</span></span>
+<span id="cb25-26"><a href="cases.html#cb25-26" tabindex="-1"></a>epigenetics_data <span class="ot">&lt;-</span> qs<span class="sc">::</span><span class="fu">qread</span>(<span class="st">&quot;./data/epigenetics_data.qs&quot;</span>)</span>
+<span id="cb25-27"><a href="cases.html#cb25-27" tabindex="-1"></a></span>
+<span id="cb25-28"><a href="cases.html#cb25-28" tabindex="-1"></a><span class="co"># Global parameters and themes</span></span>
+<span id="cb25-29"><a href="cases.html#cb25-29" tabindex="-1"></a>plot_params <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb25-30"><a href="cases.html#cb25-30" tabindex="-1"></a>    <span class="at">scale =</span> <span class="st">&quot;log10&quot;</span>,</span>
+<span id="cb25-31"><a href="cases.html#cb25-31" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.7</span>),</span>
+<span id="cb25-32"><a href="cases.html#cb25-32" tabindex="-1"></a>    <span class="at">chr =</span> <span class="st">&quot;chr6&quot;</span>,</span>
+<span id="cb25-33"><a href="cases.html#cb25-33" tabindex="-1"></a>    <span class="at">x_min =</span> <span class="dv">43600000</span>,</span>
+<span id="cb25-34"><a href="cases.html#cb25-34" tabindex="-1"></a>    <span class="at">x_max =</span> <span class="dv">44100000</span>,</span>
+<span id="cb25-35"><a href="cases.html#cb25-35" tabindex="-1"></a>    <span class="at">highlight_regions =</span> <span class="fu">list</span>(</span>
+<span id="cb25-36"><a href="cases.html#cb25-36" tabindex="-1"></a>        <span class="at">region1 =</span> <span class="fu">c</span>(<span class="dv">43738000</span>, <span class="dv">43754500</span>),</span>
+<span id="cb25-37"><a href="cases.html#cb25-37" tabindex="-1"></a>        <span class="at">region2 =</span> <span class="fu">c</span>(<span class="dv">43900000</span>, <span class="dv">44000000</span>),</span>
+<span id="cb25-38"><a href="cases.html#cb25-38" tabindex="-1"></a>        <span class="at">region3 =</span> <span class="fu">c</span>(<span class="dv">44060000</span>, <span class="dv">44100000</span>)</span>
+<span id="cb25-39"><a href="cases.html#cb25-39" tabindex="-1"></a>    ),</span>
+<span id="cb25-40"><a href="cases.html#cb25-40" tabindex="-1"></a>    <span class="at">peak_color =</span> <span class="fu">c</span>(<span class="st">&quot;peak_in_K562&quot;</span> <span class="ot">=</span> <span class="st">&quot;#E05B5B&quot;</span>, <span class="st">&quot;peak_in_GM12878&quot;</span> <span class="ot">=</span> <span class="st">&quot;#519CBA&quot;</span>)</span>
+<span id="cb25-41"><a href="cases.html#cb25-41" tabindex="-1"></a>)</span>
+<span id="cb25-42"><a href="cases.html#cb25-42" tabindex="-1"></a></span>
+<span id="cb25-43"><a href="cases.html#cb25-43" tabindex="-1"></a>common_theme <span class="ot">&lt;-</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb25-44"><a href="cases.html#cb25-44" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb25-45"><a href="cases.html#cb25-45" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb25-46"><a href="cases.html#cb25-46" tabindex="-1"></a>        <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb25-47"><a href="cases.html#cb25-47" tabindex="-1"></a>        <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">&quot;black&quot;</span>),</span>
+<span id="cb25-48"><a href="cases.html#cb25-48" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb25-49"><a href="cases.html#cb25-49" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)</span>
+<span id="cb25-50"><a href="cases.html#cb25-50" tabindex="-1"></a>    )</span>
 <span id="cb25-51"><a href="cases.html#cb25-51" tabindex="-1"></a></span>
-<span id="cb25-52"><a href="cases.html#cb25-52" tabindex="-1"></a></span>
-<span id="cb25-53"><a href="cases.html#cb25-53" tabindex="-1"></a>plotGene <span class="ot">&lt;-</span> <span class="cf">function</span>(df,<span class="at">x_min =</span> <span class="cn">NULL</span>, <span class="at">x_max =</span> <span class="cn">NULL</span>){</span>
-<span id="cb25-54"><a href="cases.html#cb25-54" tabindex="-1"></a>  </span>
-<span id="cb25-55"><a href="cases.html#cb25-55" tabindex="-1"></a>  <span class="fu">require</span>(gggenes)</span>
-<span id="cb25-56"><a href="cases.html#cb25-56" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(x_min)){</span>
-<span id="cb25-57"><a href="cases.html#cb25-57" tabindex="-1"></a>    x_min <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fu">c</span>(df[, <span class="st">&quot;start&quot;</span>], df[, <span class="st">&quot;end&quot;</span>]))</span>
-<span id="cb25-58"><a href="cases.html#cb25-58" tabindex="-1"></a>  }</span>
-<span id="cb25-59"><a href="cases.html#cb25-59" tabindex="-1"></a></span>
-<span id="cb25-60"><a href="cases.html#cb25-60" tabindex="-1"></a>  <span class="cf">if</span>(<span class="fu">is.null</span>(x_max)){</span>
-<span id="cb25-61"><a href="cases.html#cb25-61" tabindex="-1"></a>    x_max <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">c</span>(df[, <span class="st">&quot;start&quot;</span>], df[, <span class="st">&quot;end&quot;</span>]))</span>
-<span id="cb25-62"><a href="cases.html#cb25-62" tabindex="-1"></a>  }</span>
-<span id="cb25-63"><a href="cases.html#cb25-63" tabindex="-1"></a></span>
-<span id="cb25-64"><a href="cases.html#cb25-64" tabindex="-1"></a>  gene_p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(df, <span class="fu">aes</span>(<span class="at">xmin =</span> start, <span class="at">xmax =</span> end, </span>
-<span id="cb25-65"><a href="cases.html#cb25-65" tabindex="-1"></a>                           <span class="at">y =</span> gene_symbol, <span class="at">forward=</span>forward, <span class="at">fill =</span> gene_symbol)) <span class="sc">+</span></span>
-<span id="cb25-66"><a href="cases.html#cb25-66" tabindex="-1"></a>                    <span class="fu">geom_gene_arrow</span>() <span class="sc">+</span></span>
-<span id="cb25-67"><a href="cases.html#cb25-67" tabindex="-1"></a>                    <span class="fu">xlim</span>(<span class="fu">c</span>(x_min, x_max))<span class="sc">+</span></span>
-<span id="cb25-68"><a href="cases.html#cb25-68" tabindex="-1"></a>                    <span class="fu">theme_genes</span>() <span class="sc">+</span></span>
-<span id="cb25-69"><a href="cases.html#cb25-69" tabindex="-1"></a>                    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>)</span>
-<span id="cb25-70"><a href="cases.html#cb25-70" tabindex="-1"></a>  <span class="fu">return</span>(gene_p)</span>
-<span id="cb25-71"><a href="cases.html#cb25-71" tabindex="-1"></a>}</span></code></pre></div>
-<div id="combine-data" class="section level3 hasAnchor" number="3.4.1">
-<h3><span class="header-section-number">3.4.1</span> combine data<a href="cases.html#combine-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="cases.html#cb26-1" tabindex="-1"></a>combine_hic_p <span class="ot">&lt;-</span> HiContacts<span class="sc">::</span><span class="fu">plotMatrix</span>(epigenetics_data[[<span class="st">&quot;div_hic&quot;</span>]], </span>
-<span id="cb26-2"><a href="cases.html#cb26-2" tabindex="-1"></a>                                        <span class="at">use.scores =</span> <span class="st">&quot;balanced.fc&quot;</span>,</span>
-<span id="cb26-3"><a href="cases.html#cb26-3" tabindex="-1"></a>                                        <span class="at">maxDistance =</span> x_max <span class="sc">-</span> x_min,<span class="at">caption =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb26-4"><a href="cases.html#cb26-4" tabindex="-1"></a>                                        <span class="at">cmap =</span> HiContacts<span class="sc">::</span><span class="fu">bbrColors</span>()) <span class="sc">+</span> </span>
-<span id="cb26-5"><a href="cases.html#cb26-5" tabindex="-1"></a>                        <span class="fu">xlim</span>(x_min, x_max) <span class="sc">+</span></span>
-<span id="cb26-6"><a href="cases.html#cb26-6" tabindex="-1"></a>                        <span class="fu">ylab</span>(<span class="st">&quot;K562/GM12878 hic compare &quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&quot;log2fc&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb26-7"><a href="cases.html#cb26-7" tabindex="-1"></a>                        <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb26-8"><a href="cases.html#cb26-8" tabindex="-1"></a>                              <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb26-9"><a href="cases.html#cb26-9" tabindex="-1"></a>                              <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb26-10"><a href="cases.html#cb26-10" tabindex="-1"></a>                              <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">9</span>))</span>
-<span id="cb26-11"><a href="cases.html#cb26-11" tabindex="-1"></a></span>
-<span id="cb26-12"><a href="cases.html#cb26-12" tabindex="-1"></a>peak_color <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;#E05B5B&quot;</span>,<span class="st">&quot;#519CBA&quot;</span>)</span>
-<span id="cb26-13"><a href="cases.html#cb26-13" tabindex="-1"></a><span class="fu">names</span>(peak_color) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;peak_in_K562&quot;</span>, <span class="st">&quot;peak_in_GM12878&quot;</span>)</span>
-<span id="cb26-14"><a href="cases.html#cb26-14" tabindex="-1"></a></span>
-<span id="cb26-15"><a href="cases.html#cb26-15" tabindex="-1"></a>H3K27ac_p <span class="ot">&lt;-</span> <span class="fu">covplot</span>(epigenetics_data[[<span class="st">&quot;H3K27ac_peak&quot;</span>]], </span>
-<span id="cb26-16"><a href="cases.html#cb26-16" tabindex="-1"></a>                     <span class="at">weightCol=</span><span class="st">&quot;V5&quot;</span>, <span class="at">chrs=</span>chr, <span class="at">xlim=</span><span class="fu">c</span>(x_min, x_max),</span>
-<span id="cb26-17"><a href="cases.html#cb26-17" tabindex="-1"></a>                     <span class="at">ylab =</span> <span class="st">&quot;H3K27ac&quot;</span>, <span class="at">title =</span> <span class="st">&quot;&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb26-18"><a href="cases.html#cb26-18" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43737946</span>,<span class="at">xmax =</span> <span class="dv">43754223</span>,</span>
-<span id="cb26-19"><a href="cases.html#cb26-19" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">100</span>, <span class="at">fill =</span> <span class="st">&quot;#c6c3c3&quot;</span>, <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-20"><a href="cases.html#cb26-20" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43900000</span>,<span class="at">xmax =</span> <span class="dv">44000000</span>,</span>
-<span id="cb26-21"><a href="cases.html#cb26-21" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">100</span>, <span class="at">fill =</span> <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-22"><a href="cases.html#cb26-22" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">44060000</span>,<span class="at">xmax =</span> <span class="dv">44100000</span>,</span>
-<span id="cb26-23"><a href="cases.html#cb26-23" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">100</span>, <span class="at">fill =</span> <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-24"><a href="cases.html#cb26-24" tabindex="-1"></a>                <span class="fu">scale_color_manual</span>(<span class="at">values =</span> peak_color) <span class="sc">+</span></span>
-<span id="cb26-25"><a href="cases.html#cb26-25" tabindex="-1"></a>                <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> peak_color) <span class="sc">+</span></span>
-<span id="cb26-26"><a href="cases.html#cb26-26" tabindex="-1"></a>                <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb26-27"><a href="cases.html#cb26-27" tabindex="-1"></a></span>
-<span id="cb26-28"><a href="cases.html#cb26-28" tabindex="-1"></a></span>
-<span id="cb26-29"><a href="cases.html#cb26-29" tabindex="-1"></a>H3K36me3_p <span class="ot">&lt;-</span> <span class="fu">covplot</span>(epigenetics_data[[<span class="st">&quot;H3K36me3_peak&quot;</span>]], </span>
-<span id="cb26-30"><a href="cases.html#cb26-30" tabindex="-1"></a>                      <span class="at">weightCol=</span><span class="st">&quot;V5&quot;</span>, <span class="at">chrs=</span>chr, <span class="at">xlim=</span><span class="fu">c</span>(x_min, x_max),</span>
-<span id="cb26-31"><a href="cases.html#cb26-31" tabindex="-1"></a>                      <span class="at">ylab =</span> <span class="st">&quot;H3K36me3&quot;</span>, <span class="at">title =</span> <span class="st">&quot;&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb26-32"><a href="cases.html#cb26-32" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43737946</span>,<span class="at">xmax =</span> <span class="dv">43754223</span>,</span>
-<span id="cb26-33"><a href="cases.html#cb26-33" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">10</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-34"><a href="cases.html#cb26-34" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43900000</span>,<span class="at">xmax =</span> <span class="dv">44000000</span>,</span>
-<span id="cb26-35"><a href="cases.html#cb26-35" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">10</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-36"><a href="cases.html#cb26-36" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">44060000</span>,<span class="at">xmax =</span> <span class="dv">44100000</span>,</span>
-<span id="cb26-37"><a href="cases.html#cb26-37" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">10</span>,</span>
-<span id="cb26-38"><a href="cases.html#cb26-38" tabindex="-1"></a>                         <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-39"><a href="cases.html#cb26-39" tabindex="-1"></a>                <span class="fu">scale_color_manual</span>(<span class="at">values =</span> peak_color) <span class="sc">+</span></span>
-<span id="cb26-40"><a href="cases.html#cb26-40" tabindex="-1"></a>                <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> peak_color) <span class="sc">+</span></span>
-<span id="cb26-41"><a href="cases.html#cb26-41" tabindex="-1"></a>                <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb26-42"><a href="cases.html#cb26-42" tabindex="-1"></a></span>
-<span id="cb26-43"><a href="cases.html#cb26-43" tabindex="-1"></a></span>
-<span id="cb26-44"><a href="cases.html#cb26-44" tabindex="-1"></a>H3K4me1_p <span class="ot">&lt;-</span> <span class="fu">covplot</span>(epigenetics_data[[<span class="st">&quot;H3K4me1_peak&quot;</span>]], </span>
-<span id="cb26-45"><a href="cases.html#cb26-45" tabindex="-1"></a>                     <span class="at">weightCol=</span><span class="st">&quot;V5&quot;</span>, <span class="at">chrs=</span>chr, <span class="at">xlim=</span><span class="fu">c</span>(x_min, x_max),</span>
-<span id="cb26-46"><a href="cases.html#cb26-46" tabindex="-1"></a>                     <span class="at">ylab =</span> <span class="st">&quot;H3K4me1&quot;</span>, <span class="at">title =</span> <span class="st">&quot;&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb26-47"><a href="cases.html#cb26-47" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43737946</span>,<span class="at">xmax =</span> <span class="dv">43754223</span>,</span>
-<span id="cb26-48"><a href="cases.html#cb26-48" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">30</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-49"><a href="cases.html#cb26-49" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43900000</span>,<span class="at">xmax =</span> <span class="dv">44000000</span>,</span>
-<span id="cb26-50"><a href="cases.html#cb26-50" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">30</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-51"><a href="cases.html#cb26-51" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">44060000</span>,<span class="at">xmax =</span> <span class="dv">44100000</span>,</span>
-<span id="cb26-52"><a href="cases.html#cb26-52" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">30</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-53"><a href="cases.html#cb26-53" tabindex="-1"></a>                <span class="fu">scale_color_manual</span>(<span class="at">values =</span> peak_color) <span class="sc">+</span></span>
-<span id="cb26-54"><a href="cases.html#cb26-54" tabindex="-1"></a>                <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> peak_color) <span class="sc">+</span></span>
-<span id="cb26-55"><a href="cases.html#cb26-55" tabindex="-1"></a>                <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb26-56"><a href="cases.html#cb26-56" tabindex="-1"></a></span>
-<span id="cb26-57"><a href="cases.html#cb26-57" tabindex="-1"></a></span>
-<span id="cb26-58"><a href="cases.html#cb26-58" tabindex="-1"></a>H3K4me3_p <span class="ot">&lt;-</span> <span class="fu">covplot</span>(epigenetics_data[[<span class="st">&quot;H3K4me3_peak&quot;</span>]], </span>
-<span id="cb26-59"><a href="cases.html#cb26-59" tabindex="-1"></a>                     <span class="at">weightCol=</span><span class="st">&quot;V5&quot;</span>, <span class="at">chrs=</span>chr, <span class="at">xlim=</span><span class="fu">c</span>(x_min, x_max),</span>
-<span id="cb26-60"><a href="cases.html#cb26-60" tabindex="-1"></a>                     <span class="at">ylab =</span> <span class="st">&quot;H3K4me3&quot;</span>, <span class="at">title =</span> <span class="st">&quot;&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb26-61"><a href="cases.html#cb26-61" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43737946</span>,<span class="at">xmax =</span> <span class="dv">43754223</span>,</span>
-<span id="cb26-62"><a href="cases.html#cb26-62" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">25</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-63"><a href="cases.html#cb26-63" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43900000</span>,<span class="at">xmax =</span> <span class="dv">44000000</span>,</span>
-<span id="cb26-64"><a href="cases.html#cb26-64" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">25</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-65"><a href="cases.html#cb26-65" tabindex="-1"></a>                <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">44060000</span>,<span class="at">xmax =</span> <span class="dv">44100000</span>,</span>
-<span id="cb26-66"><a href="cases.html#cb26-66" tabindex="-1"></a>                         <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">25</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-67"><a href="cases.html#cb26-67" tabindex="-1"></a>                <span class="fu">scale_color_manual</span>(<span class="at">values =</span> peak_color) <span class="sc">+</span></span>
-<span id="cb26-68"><a href="cases.html#cb26-68" tabindex="-1"></a>                <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> peak_color) <span class="sc">+</span></span>
-<span id="cb26-69"><a href="cases.html#cb26-69" tabindex="-1"></a>                <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb26-70"><a href="cases.html#cb26-70" tabindex="-1"></a></span>
-<span id="cb26-71"><a href="cases.html#cb26-71" tabindex="-1"></a>gene_p <span class="ot">&lt;-</span> <span class="fu">plotGene</span>(<span class="at">df =</span> <span class="fu">getPlotGene</span>(<span class="at">txdb =</span> txdb, </span>
-<span id="cb26-72"><a href="cases.html#cb26-72" tabindex="-1"></a>                                    <span class="at">chr =</span> chr, </span>
-<span id="cb26-73"><a href="cases.html#cb26-73" tabindex="-1"></a>                                    <span class="at">x_min =</span> x_min, </span>
-<span id="cb26-74"><a href="cases.html#cb26-74" tabindex="-1"></a>                                    <span class="at">x_max =</span> x_max,<span class="at">OrgDb =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>),</span>
-<span id="cb26-75"><a href="cases.html#cb26-75" tabindex="-1"></a>                    <span class="at">x_min =</span> x_min,</span>
-<span id="cb26-76"><a href="cases.html#cb26-76" tabindex="-1"></a>                    <span class="at">x_max =</span> x_max) <span class="sc">+</span> </span>
-<span id="cb26-77"><a href="cases.html#cb26-77" tabindex="-1"></a>                    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set3&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb26-78"><a href="cases.html#cb26-78" tabindex="-1"></a>                    <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&quot;gene symbol&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb26-79"><a href="cases.html#cb26-79" tabindex="-1"></a>                        <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>,</span>
-<span id="cb26-80"><a href="cases.html#cb26-80" tabindex="-1"></a>                                 <span class="at">xmin =</span> <span class="dv">43737946</span>,<span class="at">xmax =</span> <span class="dv">43754223</span>,</span>
-<span id="cb26-81"><a href="cases.html#cb26-81" tabindex="-1"></a>                                 <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">9</span>,</span>
-<span id="cb26-82"><a href="cases.html#cb26-82" tabindex="-1"></a>                                 <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-83"><a href="cases.html#cb26-83" tabindex="-1"></a>                        <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>,</span>
-<span id="cb26-84"><a href="cases.html#cb26-84" tabindex="-1"></a>                                 <span class="at">xmin =</span> <span class="dv">43900000</span>,<span class="at">xmax =</span> <span class="dv">44000000</span>,</span>
-<span id="cb26-85"><a href="cases.html#cb26-85" tabindex="-1"></a>                                 <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">9</span>,</span>
-<span id="cb26-86"><a href="cases.html#cb26-86" tabindex="-1"></a>                                 <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb26-87"><a href="cases.html#cb26-87" tabindex="-1"></a>                        <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>,</span>
-<span id="cb26-88"><a href="cases.html#cb26-88" tabindex="-1"></a>                                 <span class="at">xmin =</span> <span class="dv">44060000</span>,<span class="at">xmax =</span> <span class="dv">44100000</span>,</span>
-<span id="cb26-89"><a href="cases.html#cb26-89" tabindex="-1"></a>                                 <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">9</span>,</span>
-<span id="cb26-90"><a href="cases.html#cb26-90" tabindex="-1"></a>                                 <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>)</span>
-<span id="cb26-91"><a href="cases.html#cb26-91" tabindex="-1"></a></span>
-<span id="cb26-92"><a href="cases.html#cb26-92" tabindex="-1"></a>p <span class="ot">&lt;-</span> combine_hic_p <span class="sc">%&gt;%</span> </span>
-<span id="cb26-93"><a href="cases.html#cb26-93" tabindex="-1"></a>            <span class="fu">insert_bottom</span>(H3K27ac_p,<span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-94"><a href="cases.html#cb26-94" tabindex="-1"></a>            <span class="fu">insert_bottom</span>(H3K36me3_p,<span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb26-95"><a href="cases.html#cb26-95" tabindex="-1"></a>            <span class="fu">insert_bottom</span>(H3K4me1_p,<span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-96"><a href="cases.html#cb26-96" tabindex="-1"></a>            <span class="fu">insert_bottom</span>(H3K4me3_p,<span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb26-97"><a href="cases.html#cb26-97" tabindex="-1"></a>        <span class="fu">insert_bottom</span>(gene_p, <span class="at">height =</span> .<span class="dv">5</span>)</span>
-<span id="cb26-98"><a href="cases.html#cb26-98" tabindex="-1"></a></span>
-<span id="cb26-99"><a href="cases.html#cb26-99" tabindex="-1"></a>p</span></code></pre></div>
+<span id="cb25-52"><a href="cases.html#cb25-52" tabindex="-1"></a>txdb <span class="ot">&lt;-</span> TxDb.Hsapiens.UCSC.hg19.knownGene</span>
+<span id="cb25-53"><a href="cases.html#cb25-53" tabindex="-1"></a></span>
+<span id="cb25-54"><a href="cases.html#cb25-54" tabindex="-1"></a><span class="co"># Function to add highlight rectangles</span></span>
+<span id="cb25-55"><a href="cases.html#cb25-55" tabindex="-1"></a>addHighlights <span class="ot">&lt;-</span> <span class="cf">function</span>(p, ymax, <span class="at">alpha=</span><span class="fl">0.2</span>) {</span>
+<span id="cb25-56"><a href="cases.html#cb25-56" tabindex="-1"></a>    p <span class="sc">+</span> </span>
+<span id="cb25-57"><a href="cases.html#cb25-57" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, </span>
+<span id="cb25-58"><a href="cases.html#cb25-58" tabindex="-1"></a>             <span class="at">xmin=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region1[<span class="dv">1</span>], </span>
+<span id="cb25-59"><a href="cases.html#cb25-59" tabindex="-1"></a>             <span class="at">xmax=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region1[<span class="dv">2</span>],</span>
+<span id="cb25-60"><a href="cases.html#cb25-60" tabindex="-1"></a>             <span class="at">ymin=</span><span class="dv">0</span>, <span class="at">ymax=</span>ymax, <span class="at">fill=</span><span class="st">&quot;#c6c3c3&quot;</span>, <span class="at">alpha=</span>alpha) <span class="sc">+</span></span>
+<span id="cb25-61"><a href="cases.html#cb25-61" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, </span>
+<span id="cb25-62"><a href="cases.html#cb25-62" tabindex="-1"></a>             <span class="at">xmin=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region2[<span class="dv">1</span>], </span>
+<span id="cb25-63"><a href="cases.html#cb25-63" tabindex="-1"></a>             <span class="at">xmax=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region2[<span class="dv">2</span>],</span>
+<span id="cb25-64"><a href="cases.html#cb25-64" tabindex="-1"></a>             <span class="at">ymin=</span><span class="dv">0</span>, <span class="at">ymax=</span>ymax, <span class="at">fill=</span><span class="st">&quot;#c6c3c3&quot;</span>, <span class="at">alpha=</span>alpha) <span class="sc">+</span></span>
+<span id="cb25-65"><a href="cases.html#cb25-65" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, </span>
+<span id="cb25-66"><a href="cases.html#cb25-66" tabindex="-1"></a>             <span class="at">xmin=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region3[<span class="dv">1</span>], </span>
+<span id="cb25-67"><a href="cases.html#cb25-67" tabindex="-1"></a>             <span class="at">xmax=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region3[<span class="dv">2</span>],</span>
+<span id="cb25-68"><a href="cases.html#cb25-68" tabindex="-1"></a>             <span class="at">ymin=</span><span class="dv">0</span>, <span class="at">ymax=</span>ymax, <span class="at">fill=</span><span class="st">&quot;#c6c3c3&quot;</span>, <span class="at">alpha=</span>alpha) </span>
+<span id="cb25-69"><a href="cases.html#cb25-69" tabindex="-1"></a>}</span>
+<span id="cb25-70"><a href="cases.html#cb25-70" tabindex="-1"></a></span>
+<span id="cb25-71"><a href="cases.html#cb25-71" tabindex="-1"></a><span class="co"># Generate gene plot</span></span>
+<span id="cb25-72"><a href="cases.html#cb25-72" tabindex="-1"></a>generateGenePlot <span class="ot">&lt;-</span> <span class="cf">function</span>(txdb, chr, x_min, x_max, OrgDb, <span class="at">show_legend =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb25-73"><a href="cases.html#cb25-73" tabindex="-1"></a>    <span class="co"># Get genes in the region</span></span>
+<span id="cb25-74"><a href="cases.html#cb25-74" tabindex="-1"></a>    win <span class="ot">&lt;-</span> <span class="fu">GRanges</span>(<span class="at">seqnames =</span> chr,</span>
+<span id="cb25-75"><a href="cases.html#cb25-75" tabindex="-1"></a>                   <span class="at">ranges =</span> IRanges<span class="sc">::</span><span class="fu">IRanges</span>(<span class="at">start =</span> x_min, <span class="at">end =</span> x_max))</span>
+<span id="cb25-76"><a href="cases.html#cb25-76" tabindex="-1"></a>    all_genes <span class="ot">&lt;-</span> GenomicFeatures<span class="sc">::</span><span class="fu">genes</span>(txdb)</span>
+<span id="cb25-77"><a href="cases.html#cb25-77" tabindex="-1"></a>    gene_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">subsetByOverlaps</span>(<span class="at">x =</span> all_genes, <span class="at">ranges =</span> win, <span class="at">type =</span> <span class="st">&quot;any&quot;</span>))</span>
+<span id="cb25-78"><a href="cases.html#cb25-78" tabindex="-1"></a>    gene_df<span class="sc">$</span>gene_id <span class="ot">&lt;-</span> <span class="fu">factor</span>(gene_df<span class="sc">$</span>gene_id, <span class="at">levels =</span> <span class="fu">unique</span>(gene_df<span class="sc">$</span>gene_id))</span>
+<span id="cb25-79"><a href="cases.html#cb25-79" tabindex="-1"></a>    </span>
+<span id="cb25-80"><a href="cases.html#cb25-80" tabindex="-1"></a>    <span class="co"># Process gene data</span></span>
+<span id="cb25-81"><a href="cases.html#cb25-81" tabindex="-1"></a>    gene_df <span class="ot">&lt;-</span> gene_df[,<span class="fu">c</span>(<span class="st">&quot;seqnames&quot;</span>, <span class="st">&quot;gene_id&quot;</span>, <span class="st">&quot;start&quot;</span>, <span class="st">&quot;end&quot;</span>, <span class="st">&quot;strand&quot;</span>)]</span>
+<span id="cb25-82"><a href="cases.html#cb25-82" tabindex="-1"></a>    <span class="fu">colnames</span>(gene_df)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;chromosome&quot;</span></span>
+<span id="cb25-83"><a href="cases.html#cb25-83" tabindex="-1"></a>    gene_df<span class="sc">$</span>forward <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(gene_df<span class="sc">$</span>strand<span class="sc">==</span><span class="st">&quot;+&quot;</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
+<span id="cb25-84"><a href="cases.html#cb25-84" tabindex="-1"></a></span>
+<span id="cb25-85"><a href="cases.html#cb25-85" tabindex="-1"></a>    <span class="co"># Convert gene IDs</span></span>
+<span id="cb25-86"><a href="cases.html#cb25-86" tabindex="-1"></a>    changeid <span class="ot">&lt;-</span> <span class="fu">bitr</span>(<span class="at">geneID =</span> gene_df<span class="sc">$</span>gene_id, </span>
+<span id="cb25-87"><a href="cases.html#cb25-87" tabindex="-1"></a>                     <span class="at">fromType =</span> <span class="st">&quot;ENTREZID&quot;</span>, <span class="at">toType =</span> <span class="st">&quot;SYMBOL&quot;</span>,</span>
+<span id="cb25-88"><a href="cases.html#cb25-88" tabindex="-1"></a>                     <span class="at">OrgDb =</span> OrgDb)</span>
+<span id="cb25-89"><a href="cases.html#cb25-89" tabindex="-1"></a>    <span class="fu">colnames</span>(changeid)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;gene_id&quot;</span>) </span>
+<span id="cb25-90"><a href="cases.html#cb25-90" tabindex="-1"></a>    gene_df <span class="ot">&lt;-</span> <span class="fu">merge</span>(gene_df, changeid, <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb25-91"><a href="cases.html#cb25-91" tabindex="-1"></a>    gene_df <span class="ot">&lt;-</span> gene_df[, <span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(gene_df))]</span>
+<span id="cb25-92"><a href="cases.html#cb25-92" tabindex="-1"></a>    <span class="fu">colnames</span>(gene_df)[<span class="fu">ncol</span>(gene_df)] <span class="ot">&lt;-</span> <span class="st">&quot;gene_symbol&quot;</span></span>
+<span id="cb25-93"><a href="cases.html#cb25-93" tabindex="-1"></a></span>
+<span id="cb25-94"><a href="cases.html#cb25-94" tabindex="-1"></a>    gene_df<span class="sc">$</span>start <span class="ot">&lt;-</span> <span class="fu">pmax</span>(gene_df<span class="sc">$</span>start, x_min)</span>
+<span id="cb25-95"><a href="cases.html#cb25-95" tabindex="-1"></a>    gene_df<span class="sc">$</span>end <span class="ot">&lt;-</span> <span class="fu">pmin</span>(gene_df<span class="sc">$</span>end, x_max)      </span>
+<span id="cb25-96"><a href="cases.html#cb25-96" tabindex="-1"></a>        </span>
+<span id="cb25-97"><a href="cases.html#cb25-97" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gene_df, <span class="fu">aes</span>(<span class="at">xmin =</span> start, <span class="at">xmax =</span> end, </span>
+<span id="cb25-98"><a href="cases.html#cb25-98" tabindex="-1"></a>                  <span class="at">y =</span> gene_symbol, <span class="at">forward=</span>forward, <span class="at">fill =</span> gene_symbol)) <span class="sc">+</span></span>
+<span id="cb25-99"><a href="cases.html#cb25-99" tabindex="-1"></a>    <span class="fu">geom_gene_arrow</span>() <span class="sc">+</span></span>
+<span id="cb25-100"><a href="cases.html#cb25-100" tabindex="-1"></a>    <span class="fu">xlim</span>(<span class="fu">c</span>(x_min, x_max)) <span class="sc">+</span></span>
+<span id="cb25-101"><a href="cases.html#cb25-101" tabindex="-1"></a>    <span class="fu">theme_genes</span>() <span class="sc">+</span></span>
+<span id="cb25-102"><a href="cases.html#cb25-102" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set3&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb25-103"><a href="cases.html#cb25-103" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&quot;gene symbol&quot;</span>) <span class="sc">+</span></span>
+<span id="cb25-104"><a href="cases.html#cb25-104" tabindex="-1"></a>    common_theme</span>
+<span id="cb25-105"><a href="cases.html#cb25-105" tabindex="-1"></a>    </span>
+<span id="cb25-106"><a href="cases.html#cb25-106" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>show_legend) {</span>
+<span id="cb25-107"><a href="cases.html#cb25-107" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb25-108"><a href="cases.html#cb25-108" tabindex="-1"></a>    }</span>
+<span id="cb25-109"><a href="cases.html#cb25-109" tabindex="-1"></a>    </span>
+<span id="cb25-110"><a href="cases.html#cb25-110" tabindex="-1"></a>    <span class="fu">return</span>(p)</span>
+<span id="cb25-111"><a href="cases.html#cb25-111" tabindex="-1"></a>}</span>
+<span id="cb25-112"><a href="cases.html#cb25-112" tabindex="-1"></a></span>
+<span id="cb25-113"><a href="cases.html#cb25-113" tabindex="-1"></a><span class="co"># Generate HiC plot</span></span>
+<span id="cb25-114"><a href="cases.html#cb25-114" tabindex="-1"></a>generateHicPlot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, label, <span class="at">use_scores =</span> <span class="cn">NULL</span>, <span class="at">show_legend =</span> <span class="cn">TRUE</span>) {   </span>
+<span id="cb25-115"><a href="cases.html#cb25-115" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.null</span>(use_scores)) {</span>
+<span id="cb25-116"><a href="cases.html#cb25-116" tabindex="-1"></a>        p <span class="ot">&lt;-</span> HiContacts<span class="sc">::</span><span class="fu">plotMatrix</span>(data, </span>
+<span id="cb25-117"><a href="cases.html#cb25-117" tabindex="-1"></a>            <span class="at">maxDistance =</span> plot_params<span class="sc">$</span>x_max <span class="sc">-</span> plot_params<span class="sc">$</span>x_min, </span>
+<span id="cb25-118"><a href="cases.html#cb25-118" tabindex="-1"></a>            <span class="at">caption =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb25-119"><a href="cases.html#cb25-119" tabindex="-1"></a>            <span class="at">scale =</span> plot_params<span class="sc">$</span>scale, </span>
+<span id="cb25-120"><a href="cases.html#cb25-120" tabindex="-1"></a>            <span class="at">limits =</span> plot_params<span class="sc">$</span>limits) <span class="sc">+</span> </span>
+<span id="cb25-121"><a href="cases.html#cb25-121" tabindex="-1"></a>            <span class="fu">xlim</span>(plot_params<span class="sc">$</span>x_min, plot_params<span class="sc">$</span>x_max) <span class="sc">+</span> </span>
+<span id="cb25-122"><a href="cases.html#cb25-122" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&#39;hic score&#39;</span>) <span class="sc">+</span></span>
+<span id="cb25-123"><a href="cases.html#cb25-123" tabindex="-1"></a>            <span class="fu">ylab</span>(<span class="fu">paste0</span>(label, <span class="st">&quot; hic&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb25-124"><a href="cases.html#cb25-124" tabindex="-1"></a>            common_theme</span>
+<span id="cb25-125"><a href="cases.html#cb25-125" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb25-126"><a href="cases.html#cb25-126" tabindex="-1"></a>        p <span class="ot">&lt;-</span> HiContacts<span class="sc">::</span><span class="fu">plotMatrix</span>(data,</span>
+<span id="cb25-127"><a href="cases.html#cb25-127" tabindex="-1"></a>            <span class="at">maxDistance =</span> plot_params<span class="sc">$</span>x_max <span class="sc">-</span> plot_params<span class="sc">$</span>x_min, </span>
+<span id="cb25-128"><a href="cases.html#cb25-128" tabindex="-1"></a>            <span class="at">use.scores =</span> use_scores,</span>
+<span id="cb25-129"><a href="cases.html#cb25-129" tabindex="-1"></a>            <span class="at">caption =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb25-130"><a href="cases.html#cb25-130" tabindex="-1"></a>            <span class="at">cmap =</span> HiContacts<span class="sc">::</span><span class="fu">bbrColors</span>()) <span class="sc">+</span></span>
+<span id="cb25-131"><a href="cases.html#cb25-131" tabindex="-1"></a>            <span class="fu">xlim</span>(plot_params<span class="sc">$</span>x_min, plot_params<span class="sc">$</span>x_max) <span class="sc">+</span> </span>
+<span id="cb25-132"><a href="cases.html#cb25-132" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&#39;log2fc&#39;</span>) <span class="sc">+</span></span>
+<span id="cb25-133"><a href="cases.html#cb25-133" tabindex="-1"></a>            <span class="fu">ylab</span>(<span class="fu">paste0</span>(label, <span class="st">&quot; &quot;</span>)) <span class="sc">+</span></span>
+<span id="cb25-134"><a href="cases.html#cb25-134" tabindex="-1"></a>            common_theme</span>
+<span id="cb25-135"><a href="cases.html#cb25-135" tabindex="-1"></a>    }</span>
+<span id="cb25-136"><a href="cases.html#cb25-136" tabindex="-1"></a>    </span>
+<span id="cb25-137"><a href="cases.html#cb25-137" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>show_legend) {</span>
+<span id="cb25-138"><a href="cases.html#cb25-138" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb25-139"><a href="cases.html#cb25-139" tabindex="-1"></a>    }</span>
+<span id="cb25-140"><a href="cases.html#cb25-140" tabindex="-1"></a>    </span>
+<span id="cb25-141"><a href="cases.html#cb25-141" tabindex="-1"></a>    <span class="fu">return</span>(p)</span>
+<span id="cb25-142"><a href="cases.html#cb25-142" tabindex="-1"></a>}</span>
+<span id="cb25-143"><a href="cases.html#cb25-143" tabindex="-1"></a></span>
+<span id="cb25-144"><a href="cases.html#cb25-144" tabindex="-1"></a><span class="co"># Generate coverage plot</span></span>
+<span id="cb25-145"><a href="cases.html#cb25-145" tabindex="-1"></a>generateCoveragePlot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, label, ymax, <span class="at">colors =</span> <span class="cn">NULL</span>, </span>
+<span id="cb25-146"><a href="cases.html#cb25-146" tabindex="-1"></a>                                <span class="at">add_facet =</span> <span class="cn">FALSE</span>, <span class="at">show_legend =</span> <span class="cn">TRUE</span>) {</span>
+<span id="cb25-147"><a href="cases.html#cb25-147" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">covplot</span>(data, </span>
+<span id="cb25-148"><a href="cases.html#cb25-148" tabindex="-1"></a>        <span class="at">weightCol =</span> <span class="st">&quot;V5&quot;</span>,</span>
+<span id="cb25-149"><a href="cases.html#cb25-149" tabindex="-1"></a>        <span class="at">chrs =</span> plot_params<span class="sc">$</span>chr,</span>
+<span id="cb25-150"><a href="cases.html#cb25-150" tabindex="-1"></a>        <span class="at">xlim =</span> <span class="fu">c</span>(plot_params<span class="sc">$</span>x_min, plot_params<span class="sc">$</span>x_max),</span>
+<span id="cb25-151"><a href="cases.html#cb25-151" tabindex="-1"></a>        <span class="at">ylab =</span> label,</span>
+<span id="cb25-152"><a href="cases.html#cb25-152" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb25-153"><a href="cases.html#cb25-153" tabindex="-1"></a>        <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, ymax)) <span class="sc">+</span></span>
+<span id="cb25-154"><a href="cases.html#cb25-154" tabindex="-1"></a>        common_theme</span>
+<span id="cb25-155"><a href="cases.html#cb25-155" tabindex="-1"></a>    </span>
+<span id="cb25-156"><a href="cases.html#cb25-156" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(colors)) {</span>
+<span id="cb25-157"><a href="cases.html#cb25-157" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors) <span class="sc">+</span></span>
+<span id="cb25-158"><a href="cases.html#cb25-158" tabindex="-1"></a>                 <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> colors)</span>
+<span id="cb25-159"><a href="cases.html#cb25-159" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb25-160"><a href="cases.html#cb25-160" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
+<span id="cb25-161"><a href="cases.html#cb25-161" tabindex="-1"></a>                 <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>)</span>
+<span id="cb25-162"><a href="cases.html#cb25-162" tabindex="-1"></a>    }</span>
+<span id="cb25-163"><a href="cases.html#cb25-163" tabindex="-1"></a>    </span>
+<span id="cb25-164"><a href="cases.html#cb25-164" tabindex="-1"></a>    <span class="cf">if</span> (add_facet) {</span>
+<span id="cb25-165"><a href="cases.html#cb25-165" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">facet_grid</span>(.id <span class="sc">~</span> .) <span class="sc">+</span></span>
+<span id="cb25-166"><a href="cases.html#cb25-166" tabindex="-1"></a>            <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb25-167"><a href="cases.html#cb25-167" tabindex="-1"></a>    }</span>
+<span id="cb25-168"><a href="cases.html#cb25-168" tabindex="-1"></a>    </span>
+<span id="cb25-169"><a href="cases.html#cb25-169" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>show_legend) {</span>
+<span id="cb25-170"><a href="cases.html#cb25-170" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb25-171"><a href="cases.html#cb25-171" tabindex="-1"></a>    }</span>
+<span id="cb25-172"><a href="cases.html#cb25-172" tabindex="-1"></a>    </span>
+<span id="cb25-173"><a href="cases.html#cb25-173" tabindex="-1"></a>    <span class="fu">return</span>(p)</span>
+<span id="cb25-174"><a href="cases.html#cb25-174" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="visualization-of-comparative-genomics-data-tracks" class="section level3 hasAnchor" number="3.4.2">
+<h3><span class="header-section-number">3.4.2</span> Visualization of comparative genomics data tracks<a href="cases.html#visualization-of-comparative-genomics-data-tracks" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="cases.html#cb26-1" tabindex="-1"></a><span class="co"># Generate HiC comparision plot</span></span>
+<span id="cb26-2"><a href="cases.html#cb26-2" tabindex="-1"></a>combine_hic_p <span class="ot">&lt;-</span> <span class="fu">generateHicPlot</span>(epigenetics_data[[<span class="st">&quot;div_hic&quot;</span>]], </span>
+<span id="cb26-3"><a href="cases.html#cb26-3" tabindex="-1"></a>                                <span class="st">&quot;K562/GM12878 hic compare&quot;</span>,</span>
+<span id="cb26-4"><a href="cases.html#cb26-4" tabindex="-1"></a>                                <span class="at">use_scores =</span> <span class="st">&quot;balanced.fc&quot;</span>)</span>
+<span id="cb26-5"><a href="cases.html#cb26-5" tabindex="-1"></a></span>
+<span id="cb26-6"><a href="cases.html#cb26-6" tabindex="-1"></a><span class="co"># Generate histone modification comparision plots</span></span>
+<span id="cb26-7"><a href="cases.html#cb26-7" tabindex="-1"></a>histone_plots <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb26-8"><a href="cases.html#cb26-8" tabindex="-1"></a>    <span class="at">H3K27ac =</span> <span class="fu">list</span>(<span class="at">data =</span> epigenetics_data[[<span class="st">&quot;H3K27ac_peak&quot;</span>]], <span class="at">ymax =</span> <span class="dv">100</span>),</span>
+<span id="cb26-9"><a href="cases.html#cb26-9" tabindex="-1"></a>    <span class="at">H3K36me3 =</span> <span class="fu">list</span>(<span class="at">data =</span> epigenetics_data[[<span class="st">&quot;H3K36me3_peak&quot;</span>]], <span class="at">ymax =</span> <span class="dv">10</span>),</span>
+<span id="cb26-10"><a href="cases.html#cb26-10" tabindex="-1"></a>    <span class="at">H3K4me1 =</span> <span class="fu">list</span>(<span class="at">data =</span> epigenetics_data[[<span class="st">&quot;H3K4me1_peak&quot;</span>]], <span class="at">ymax =</span> <span class="dv">30</span>),</span>
+<span id="cb26-11"><a href="cases.html#cb26-11" tabindex="-1"></a>    <span class="at">H3K4me3 =</span> <span class="fu">list</span>(<span class="at">data =</span> epigenetics_data[[<span class="st">&quot;H3K4me3_peak&quot;</span>]], <span class="at">ymax =</span> <span class="dv">25</span>)</span>
+<span id="cb26-12"><a href="cases.html#cb26-12" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-13"><a href="cases.html#cb26-13" tabindex="-1"></a><span class="fu">map2</span>(<span class="fu">names</span>(.), <span class="cf">function</span>(x, name) {</span>
+<span id="cb26-14"><a href="cases.html#cb26-14" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">generateCoveragePlot</span>(x<span class="sc">$</span>data, name, x<span class="sc">$</span>ymax, </span>
+<span id="cb26-15"><a href="cases.html#cb26-15" tabindex="-1"></a>                             plot_params<span class="sc">$</span>peak_color, <span class="at">add_facet =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb26-16"><a href="cases.html#cb26-16" tabindex="-1"></a>    <span class="fu">addHighlights</span>(p, x<span class="sc">$</span>ymax)</span>
+<span id="cb26-17"><a href="cases.html#cb26-17" tabindex="-1"></a>})</span>
+<span id="cb26-18"><a href="cases.html#cb26-18" tabindex="-1"></a></span>
+<span id="cb26-19"><a href="cases.html#cb26-19" tabindex="-1"></a><span class="co"># Generate gene track</span></span>
+<span id="cb26-20"><a href="cases.html#cb26-20" tabindex="-1"></a>gene_p <span class="ot">&lt;-</span> <span class="fu">generateGenePlot</span>(<span class="at">txdb =</span> txdb,</span>
+<span id="cb26-21"><a href="cases.html#cb26-21" tabindex="-1"></a>                   <span class="at">chr =</span> plot_params<span class="sc">$</span>chr,</span>
+<span id="cb26-22"><a href="cases.html#cb26-22" tabindex="-1"></a>                   <span class="at">x_min =</span> plot_params<span class="sc">$</span>x_min,</span>
+<span id="cb26-23"><a href="cases.html#cb26-23" tabindex="-1"></a>                   <span class="at">x_max =</span> plot_params<span class="sc">$</span>x_max,</span>
+<span id="cb26-24"><a href="cases.html#cb26-24" tabindex="-1"></a>                   <span class="at">OrgDb =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>)</span>
+<span id="cb26-25"><a href="cases.html#cb26-25" tabindex="-1"></a>gene_p_highlighted <span class="ot">&lt;-</span> <span class="fu">addHighlights</span>(gene_p, <span class="at">ymax=</span><span class="dv">9</span>)</span>
+<span id="cb26-26"><a href="cases.html#cb26-26" tabindex="-1"></a></span>
+<span id="cb26-27"><a href="cases.html#cb26-27" tabindex="-1"></a><span class="co"># Combine all plots using aplot</span></span>
+<span id="cb26-28"><a href="cases.html#cb26-28" tabindex="-1"></a>combined_p <span class="ot">&lt;-</span> combine_hic_p <span class="sc">%&gt;%</span> </span>
+<span id="cb26-29"><a href="cases.html#cb26-29" tabindex="-1"></a>    <span class="fu">insert_bottom</span>(histone_plots<span class="sc">$</span>H3K27ac, <span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-30"><a href="cases.html#cb26-30" tabindex="-1"></a>    <span class="fu">insert_bottom</span>(histone_plots<span class="sc">$</span>H3K36me3, <span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb26-31"><a href="cases.html#cb26-31" tabindex="-1"></a>    <span class="fu">insert_bottom</span>(histone_plots<span class="sc">$</span>H3K4me1, <span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-32"><a href="cases.html#cb26-32" tabindex="-1"></a>    <span class="fu">insert_bottom</span>(histone_plots<span class="sc">$</span>H3K4me3, <span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb26-33"><a href="cases.html#cb26-33" tabindex="-1"></a>    <span class="fu">insert_bottom</span>(gene_p_highlighted, <span class="at">height =</span> .<span class="dv">5</span>)</span>
+<span id="cb26-34"><a href="cases.html#cb26-34" tabindex="-1"></a></span>
+<span id="cb26-35"><a href="cases.html#cb26-35" tabindex="-1"></a>combined_p</span></code></pre></div>
 <p><img src="aplot_files/figure-html/combine_data-1.png" width="960" /></p>
 </div>
-<div id="split-data" class="section level3 hasAnchor" number="3.4.2">
-<h3><span class="header-section-number">3.4.2</span> split data<a href="cases.html#split-data" class="anchor-section" aria-label="Anchor link to header"></a></h3>
-<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="cases.html#cb27-1" tabindex="-1"></a>gene_p <span class="ot">&lt;-</span> <span class="fu">plotGene</span>(<span class="at">df =</span> <span class="fu">getPlotGene</span>(<span class="at">txdb =</span> txdb, </span>
-<span id="cb27-2"><a href="cases.html#cb27-2" tabindex="-1"></a>                                    <span class="at">chr =</span> chr, </span>
-<span id="cb27-3"><a href="cases.html#cb27-3" tabindex="-1"></a>                                    <span class="at">x_min =</span> x_min, </span>
-<span id="cb27-4"><a href="cases.html#cb27-4" tabindex="-1"></a>                                    <span class="at">x_max =</span> x_max,<span class="at">OrgDb =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>),</span>
-<span id="cb27-5"><a href="cases.html#cb27-5" tabindex="-1"></a>                    <span class="at">x_min =</span> x_min,</span>
-<span id="cb27-6"><a href="cases.html#cb27-6" tabindex="-1"></a>                    <span class="at">x_max =</span> x_max) <span class="sc">+</span> </span>
-<span id="cb27-7"><a href="cases.html#cb27-7" tabindex="-1"></a>                    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set3&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb27-8"><a href="cases.html#cb27-8" tabindex="-1"></a>                    <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&quot;gene symbol&quot;</span>)<span class="sc">+</span> </span>
-<span id="cb27-9"><a href="cases.html#cb27-9" tabindex="-1"></a>                  <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43737946</span>,<span class="at">xmax =</span> <span class="dv">43754223</span>,</span>
-<span id="cb27-10"><a href="cases.html#cb27-10" tabindex="-1"></a>                           <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">9</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb27-11"><a href="cases.html#cb27-11" tabindex="-1"></a>                  <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43900000</span>,<span class="at">xmax =</span> <span class="dv">44000000</span>,</span>
-<span id="cb27-12"><a href="cases.html#cb27-12" tabindex="-1"></a>                           <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">9</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb27-13"><a href="cases.html#cb27-13" tabindex="-1"></a>                  <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">44060000</span>,<span class="at">xmax =</span> <span class="dv">44100000</span>,</span>
-<span id="cb27-14"><a href="cases.html#cb27-14" tabindex="-1"></a>                           <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">9</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>)</span>
-<span id="cb27-15"><a href="cases.html#cb27-15" tabindex="-1"></a></span>
-<span id="cb27-16"><a href="cases.html#cb27-16" tabindex="-1"></a></span>
-<span id="cb27-17"><a href="cases.html#cb27-17" tabindex="-1"></a>GM12878_hic_p <span class="ot">&lt;-</span> HiContacts<span class="sc">::</span><span class="fu">plotMatrix</span>(epigenetics_data[[<span class="st">&quot;GM12878_hic&quot;</span>]], </span>
-<span id="cb27-18"><a href="cases.html#cb27-18" tabindex="-1"></a>                                        <span class="at">maxDistance =</span> x_max <span class="sc">-</span> x_min,</span>
-<span id="cb27-19"><a href="cases.html#cb27-19" tabindex="-1"></a>                                        <span class="at">caption =</span> <span class="cn">FALSE</span>, </span>
-<span id="cb27-20"><a href="cases.html#cb27-20" tabindex="-1"></a>                                        <span class="at">scale =</span> scale, <span class="at">limits =</span> limits) <span class="sc">+</span> </span>
-<span id="cb27-21"><a href="cases.html#cb27-21" tabindex="-1"></a>                        <span class="fu">xlim</span>(x_min, x_max) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&#39;hic score&#39;</span>) <span class="sc">+</span></span>
-<span id="cb27-22"><a href="cases.html#cb27-22" tabindex="-1"></a>                        <span class="fu">ylab</span>(<span class="st">&quot;GM12878 hic&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb27-23"><a href="cases.html#cb27-23" tabindex="-1"></a>                        <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb27-24"><a href="cases.html#cb27-24" tabindex="-1"></a>                              <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb27-25"><a href="cases.html#cb27-25" tabindex="-1"></a>                              <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb27-26"><a href="cases.html#cb27-26" tabindex="-1"></a>                              <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">9</span>))</span>
-<span id="cb27-27"><a href="cases.html#cb27-27" tabindex="-1"></a></span>
-<span id="cb27-28"><a href="cases.html#cb27-28" tabindex="-1"></a></span>
-<span id="cb27-29"><a href="cases.html#cb27-29" tabindex="-1"></a>GM12878_cov_p <span class="ot">&lt;-</span> <span class="fu">covplot</span>(epigenetics_data[[<span class="st">&quot;GM12878_peak&quot;</span>]], </span>
-<span id="cb27-30"><a href="cases.html#cb27-30" tabindex="-1"></a>                         <span class="at">weightCol=</span><span class="st">&quot;V5&quot;</span>, <span class="at">chrs=</span>chr, <span class="at">xlim=</span><span class="fu">c</span>(x_min, x_max),</span>
-<span id="cb27-31"><a href="cases.html#cb27-31" tabindex="-1"></a>                         <span class="at">ylab =</span> <span class="st">&quot;GM12878 ChIP-seq&quot;</span>, <span class="at">title =</span> <span class="st">&quot;&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb27-32"><a href="cases.html#cb27-32" tabindex="-1"></a>                        <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2000</span>)) <span class="sc">+</span></span>
-<span id="cb27-33"><a href="cases.html#cb27-33" tabindex="-1"></a>                        <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43737946</span>,<span class="at">xmax =</span> <span class="dv">43754223</span>,</span>
-<span id="cb27-34"><a href="cases.html#cb27-34" tabindex="-1"></a>                                 <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">2000</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb27-35"><a href="cases.html#cb27-35" tabindex="-1"></a>                        <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43900000</span>,<span class="at">xmax =</span> <span class="dv">44000000</span>,</span>
-<span id="cb27-36"><a href="cases.html#cb27-36" tabindex="-1"></a>                                 <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">2000</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb27-37"><a href="cases.html#cb27-37" tabindex="-1"></a>                        <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">44060000</span>,<span class="at">xmax =</span> <span class="dv">44100000</span>,</span>
-<span id="cb27-38"><a href="cases.html#cb27-38" tabindex="-1"></a>                                 <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">2000</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb27-39"><a href="cases.html#cb27-39" tabindex="-1"></a>                        <span class="fu">facet_grid</span>(.id <span class="sc">~</span> .) <span class="sc">+</span>  </span>
-<span id="cb27-40"><a href="cases.html#cb27-40" tabindex="-1"></a>                        <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
-<span id="cb27-41"><a href="cases.html#cb27-41" tabindex="-1"></a>                        <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb27-42"><a href="cases.html#cb27-42" tabindex="-1"></a>                        <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb27-43"><a href="cases.html#cb27-43" tabindex="-1"></a>                        </span>
-<span id="cb27-44"><a href="cases.html#cb27-44" tabindex="-1"></a></span>
-<span id="cb27-45"><a href="cases.html#cb27-45" tabindex="-1"></a>GM12878_p <span class="ot">&lt;-</span> (GM12878_hic_p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>))  <span class="sc">%&gt;%</span> </span>
-<span id="cb27-46"><a href="cases.html#cb27-46" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(GM12878_cov_p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb27-47"><a href="cases.html#cb27-47" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(gene_p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>), <span class="at">height =</span> .<span class="dv">6</span>)</span>
-<span id="cb27-48"><a href="cases.html#cb27-48" tabindex="-1"></a></span>
-<span id="cb27-49"><a href="cases.html#cb27-49" tabindex="-1"></a></span>
-<span id="cb27-50"><a href="cases.html#cb27-50" tabindex="-1"></a>K562_hic_p <span class="ot">&lt;-</span> HiContacts<span class="sc">::</span><span class="fu">plotMatrix</span>(epigenetics_data[[<span class="st">&quot;K562_hic&quot;</span>]], </span>
-<span id="cb27-51"><a href="cases.html#cb27-51" tabindex="-1"></a>                                     <span class="at">maxDistance =</span> x_max <span class="sc">-</span> x_min,</span>
-<span id="cb27-52"><a href="cases.html#cb27-52" tabindex="-1"></a>                                     <span class="at">caption =</span> <span class="cn">FALSE</span>, <span class="at">scale =</span> scale, </span>
-<span id="cb27-53"><a href="cases.html#cb27-53" tabindex="-1"></a>                                     <span class="at">limits =</span> limits) <span class="sc">+</span> </span>
-<span id="cb27-54"><a href="cases.html#cb27-54" tabindex="-1"></a>                        <span class="fu">xlim</span>(x_min, x_max) <span class="sc">+</span></span>
-<span id="cb27-55"><a href="cases.html#cb27-55" tabindex="-1"></a>                        <span class="fu">ylab</span>(<span class="st">&quot;K562 hic&quot;</span>) <span class="sc">+</span> <span class="fu">xlab</span>(<span class="st">&quot;&quot;</span>) <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&#39;hic score&#39;</span>) <span class="sc">+</span></span>
-<span id="cb27-56"><a href="cases.html#cb27-56" tabindex="-1"></a>                        <span class="fu">theme</span>(<span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>),</span>
-<span id="cb27-57"><a href="cases.html#cb27-57" tabindex="-1"></a>                              <span class="at">axis.text.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb27-58"><a href="cases.html#cb27-58" tabindex="-1"></a>                              <span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb27-59"><a href="cases.html#cb27-59" tabindex="-1"></a>                              <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">9</span>))</span>
-<span id="cb27-60"><a href="cases.html#cb27-60" tabindex="-1"></a></span>
-<span id="cb27-61"><a href="cases.html#cb27-61" tabindex="-1"></a></span>
-<span id="cb27-62"><a href="cases.html#cb27-62" tabindex="-1"></a>K562_cov_p <span class="ot">&lt;-</span> <span class="fu">covplot</span>(epigenetics_data[[<span class="st">&quot;K562_peak&quot;</span>]], </span>
-<span id="cb27-63"><a href="cases.html#cb27-63" tabindex="-1"></a>                      <span class="at">weightCol=</span><span class="st">&quot;V5&quot;</span>, <span class="at">chrs=</span>chr, <span class="at">xlim=</span><span class="fu">c</span>(x_min, x_max),</span>
-<span id="cb27-64"><a href="cases.html#cb27-64" tabindex="-1"></a>                      <span class="at">ylab =</span> <span class="st">&quot;K562 ChIP-seq&quot;</span>, <span class="at">title =</span> <span class="st">&quot;&quot;</span>, <span class="at">xlab =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span> </span>
-<span id="cb27-65"><a href="cases.html#cb27-65" tabindex="-1"></a>                  <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">2000</span>)) <span class="sc">+</span> </span>
-<span id="cb27-66"><a href="cases.html#cb27-66" tabindex="-1"></a>                  <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43737946</span>,<span class="at">xmax =</span> <span class="dv">43754223</span>,</span>
-<span id="cb27-67"><a href="cases.html#cb27-67" tabindex="-1"></a>                           <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">2000</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb27-68"><a href="cases.html#cb27-68" tabindex="-1"></a>                  <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">43900000</span>,<span class="at">xmax =</span> <span class="dv">44000000</span>,</span>
-<span id="cb27-69"><a href="cases.html#cb27-69" tabindex="-1"></a>                           <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">2000</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span> </span>
-<span id="cb27-70"><a href="cases.html#cb27-70" tabindex="-1"></a>                  <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, <span class="at">xmin =</span> <span class="dv">44060000</span>,<span class="at">xmax =</span> <span class="dv">44100000</span>,</span>
-<span id="cb27-71"><a href="cases.html#cb27-71" tabindex="-1"></a>                           <span class="at">ymin=</span> <span class="dv">0</span>, <span class="at">ymax=</span><span class="dv">2000</span>, <span class="at">fill =</span>  <span class="st">&quot;#c6c3c3&quot;</span> , <span class="at">alpha=</span> <span class="fl">0.2</span>) <span class="sc">+</span>  </span>
-<span id="cb27-72"><a href="cases.html#cb27-72" tabindex="-1"></a>                  <span class="fu">facet_grid</span>(.id <span class="sc">~</span> .) <span class="sc">+</span> </span>
-<span id="cb27-73"><a href="cases.html#cb27-73" tabindex="-1"></a>                  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
-<span id="cb27-74"><a href="cases.html#cb27-74" tabindex="-1"></a>                  <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span>  </span>
-<span id="cb27-75"><a href="cases.html#cb27-75" tabindex="-1"></a>                  <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_blank</span>())</span>
-<span id="cb27-76"><a href="cases.html#cb27-76" tabindex="-1"></a></span>
-<span id="cb27-77"><a href="cases.html#cb27-77" tabindex="-1"></a>K562_p <span class="ot">&lt;-</span> (K562_hic_p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb27-78"><a href="cases.html#cb27-78" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(K562_cov_p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb27-79"><a href="cases.html#cb27-79" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(gene_p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>), <span class="at">height =</span> .<span class="dv">6</span>)</span>
-<span id="cb27-80"><a href="cases.html#cb27-80" tabindex="-1"></a></span>
-<span id="cb27-81"><a href="cases.html#cb27-81" tabindex="-1"></a>hic_legend <span class="ot">&lt;-</span> cowplot<span class="sc">::</span><span class="fu">get_legend</span>(K562_hic_p)</span>
-<span id="cb27-82"><a href="cases.html#cb27-82" tabindex="-1"></a>cov_legend <span class="ot">&lt;-</span> cowplot<span class="sc">::</span><span class="fu">get_legend</span>(K562_cov_p)</span>
-<span id="cb27-83"><a href="cases.html#cb27-83" tabindex="-1"></a></span>
-<span id="cb27-84"><a href="cases.html#cb27-84" tabindex="-1"></a>combined_legends <span class="ot">&lt;-</span> cowplot<span class="sc">::</span><span class="fu">plot_grid</span>(hic_legend, cov_legend, <span class="at">nrow =</span> <span class="dv">1</span>)</span>
-<span id="cb27-85"><a href="cases.html#cb27-85" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">plot_list</span>(<span class="at">gglist =</span> <span class="fu">list</span>(GM12878_p, K562_p, combined_legends),</span>
-<span id="cb27-86"><a href="cases.html#cb27-86" tabindex="-1"></a>               <span class="at">design =</span> <span class="fu">c</span>(<span class="st">&quot;AAAAAABBBBBBCC&quot;</span>))</span>
-<span id="cb27-87"><a href="cases.html#cb27-87" tabindex="-1"></a></span>
-<span id="cb27-88"><a href="cases.html#cb27-88" tabindex="-1"></a>p</span></code></pre></div>
+<div id="visualization-of-different-genomics-data-tracks" class="section level3 hasAnchor" number="3.4.3">
+<h3><span class="header-section-number">3.4.3</span> Visualization of different genomics data tracks<a href="cases.html#visualization-of-different-genomics-data-tracks" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="cases.html#cb27-1" tabindex="-1"></a><span class="co"># Generate HiC plots</span></span>
+<span id="cb27-2"><a href="cases.html#cb27-2" tabindex="-1"></a>GM12878_hic_p <span class="ot">&lt;-</span> <span class="fu">generateHicPlot</span>(epigenetics_data[[<span class="st">&quot;GM12878_hic&quot;</span>]], </span>
+<span id="cb27-3"><a href="cases.html#cb27-3" tabindex="-1"></a>                                <span class="st">&quot;GM12878&quot;</span>, <span class="at">show_legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-4"><a href="cases.html#cb27-4" tabindex="-1"></a>K562_hic_p <span class="ot">&lt;-</span> <span class="fu">generateHicPlot</span>(epigenetics_data[[<span class="st">&quot;K562_hic&quot;</span>]], </span>
+<span id="cb27-5"><a href="cases.html#cb27-5" tabindex="-1"></a>                             <span class="st">&quot;K562&quot;</span>, <span class="at">show_legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-6"><a href="cases.html#cb27-6" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="cases.html#cb27-7" tabindex="-1"></a><span class="co"># Generate ChIP-seq coverage plots</span></span>
+<span id="cb27-8"><a href="cases.html#cb27-8" tabindex="-1"></a>GM12878_cov_p <span class="ot">&lt;-</span> <span class="fu">generateCoveragePlot</span>(epigenetics_data[[<span class="st">&quot;GM12878_peak&quot;</span>]], </span>
+<span id="cb27-9"><a href="cases.html#cb27-9" tabindex="-1"></a>                                     <span class="st">&quot;GM12878 ChIP-seq&quot;</span>, </span>
+<span id="cb27-10"><a href="cases.html#cb27-10" tabindex="-1"></a>                                     <span class="dv">2000</span>,</span>
+<span id="cb27-11"><a href="cases.html#cb27-11" tabindex="-1"></a>                                     <span class="at">add_facet =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb27-12"><a href="cases.html#cb27-12" tabindex="-1"></a>                                     <span class="at">show_legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-13"><a href="cases.html#cb27-13" tabindex="-1"></a>GM12878_cov_p <span class="ot">&lt;-</span> <span class="fu">addHighlights</span>(GM12878_cov_p, <span class="at">ymax =</span> <span class="dv">2000</span>)</span>
+<span id="cb27-14"><a href="cases.html#cb27-14" tabindex="-1"></a></span>
+<span id="cb27-15"><a href="cases.html#cb27-15" tabindex="-1"></a>K562_cov_p <span class="ot">&lt;-</span> <span class="fu">generateCoveragePlot</span>(epigenetics_data[[<span class="st">&quot;K562_peak&quot;</span>]], </span>
+<span id="cb27-16"><a href="cases.html#cb27-16" tabindex="-1"></a>                                  <span class="st">&quot;K562 ChIP-seq&quot;</span>, </span>
+<span id="cb27-17"><a href="cases.html#cb27-17" tabindex="-1"></a>                                  <span class="dv">2000</span>,</span>
+<span id="cb27-18"><a href="cases.html#cb27-18" tabindex="-1"></a>                                  <span class="at">add_facet =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb27-19"><a href="cases.html#cb27-19" tabindex="-1"></a>                                  <span class="at">show_legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb27-20"><a href="cases.html#cb27-20" tabindex="-1"></a>K562_cov_p <span class="ot">&lt;-</span> <span class="fu">addHighlights</span>(K562_cov_p, <span class="at">ymax =</span> <span class="dv">2000</span>)</span>
+<span id="cb27-21"><a href="cases.html#cb27-21" tabindex="-1"></a></span>
+<span id="cb27-22"><a href="cases.html#cb27-22" tabindex="-1"></a><span class="co"># Combine plots using aplot</span></span>
+<span id="cb27-23"><a href="cases.html#cb27-23" tabindex="-1"></a>GM12878_p <span class="ot">&lt;-</span> (GM12878_hic_p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>))  <span class="sc">%&gt;%</span> </span>
+<span id="cb27-24"><a href="cases.html#cb27-24" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(GM12878_cov_p) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-25"><a href="cases.html#cb27-25" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(gene_p_highlighted, <span class="at">height =</span> .<span class="dv">6</span>)</span>
+<span id="cb27-26"><a href="cases.html#cb27-26" tabindex="-1"></a></span>
+<span id="cb27-27"><a href="cases.html#cb27-27" tabindex="-1"></a>K562_p <span class="ot">&lt;-</span> (K562_hic_p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-28"><a href="cases.html#cb27-28" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(K562_cov_p) <span class="sc">%&gt;%</span> </span>
+<span id="cb27-29"><a href="cases.html#cb27-29" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(gene_p_highlighted, <span class="at">height =</span> .<span class="dv">6</span>)</span>
+<span id="cb27-30"><a href="cases.html#cb27-30" tabindex="-1"></a></span>
+<span id="cb27-31"><a href="cases.html#cb27-31" tabindex="-1"></a><span class="co"># Add legends and create final view</span></span>
+<span id="cb27-32"><a href="cases.html#cb27-32" tabindex="-1"></a>split_p <span class="ot">&lt;-</span> <span class="fu">plot_list</span>(</span>
+<span id="cb27-33"><a href="cases.html#cb27-33" tabindex="-1"></a>    <span class="at">gglist =</span> <span class="fu">list</span>(GM12878_p, K562_p, </span>
+<span id="cb27-34"><a href="cases.html#cb27-34" tabindex="-1"></a>                 <span class="fu">plot_grid</span>(<span class="fu">get_legend</span>(<span class="fu">generateHicPlot</span>(epigenetics_data[[<span class="st">&quot;K562_hic&quot;</span>]], <span class="st">&quot;K562&quot;</span>)),</span>
+<span id="cb27-35"><a href="cases.html#cb27-35" tabindex="-1"></a>                          <span class="fu">get_legend</span>(<span class="fu">generateCoveragePlot</span>(epigenetics_data[[<span class="st">&quot;K562_peak&quot;</span>]], </span>
+<span id="cb27-36"><a href="cases.html#cb27-36" tabindex="-1"></a>                                                       <span class="st">&quot;K562 ChIP-seq&quot;</span>, </span>
+<span id="cb27-37"><a href="cases.html#cb27-37" tabindex="-1"></a>                                                       <span class="dv">2000</span>,</span>
+<span id="cb27-38"><a href="cases.html#cb27-38" tabindex="-1"></a>                                                       <span class="at">add_facet =</span> <span class="cn">TRUE</span>)), </span>
+<span id="cb27-39"><a href="cases.html#cb27-39" tabindex="-1"></a>                          <span class="at">nrow =</span> <span class="dv">1</span>)),</span>
+<span id="cb27-40"><a href="cases.html#cb27-40" tabindex="-1"></a>    <span class="at">design =</span> <span class="fu">c</span>(<span class="st">&quot;AAAAAABBBBBBCC&quot;</span>)</span>
+<span id="cb27-41"><a href="cases.html#cb27-41" tabindex="-1"></a>)</span>
+<span id="cb27-42"><a href="cases.html#cb27-42" tabindex="-1"></a></span>
+<span id="cb27-43"><a href="cases.html#cb27-43" tabindex="-1"></a>split_p</span></code></pre></div>
 <p><img src="aplot_files/figure-html/split_data-1.png" width="1536" /></p>
 
 </div>
