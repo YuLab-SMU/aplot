@@ -2,6 +2,8 @@
 
 # `aplot` for decorating a plot with associated information
 
+<a href="https://yulab-smu.top/aplot/"><img src="man/figures/aplot_logo.png" height="160" align="right" /></a>
+
 [![License:
 Artistic-2.0](https://img.shields.io/badge/license-Artistic--2.0-blue.svg)](https://cran.r-project.org/web/licenses/Artistic-2.0)
 [![](https://img.shields.io/badge/devel%20version-0.2.5-blue.svg)](https://github.com/YuLab-SMU/aplot)
@@ -17,10 +19,9 @@ status](https://github.com/YuLab-SMU/aplot/workflows/rworkflows/badge.svg)](http
 For many times, we are not just aligning plots as what ‘cowplot’ and
 ‘patchwork’ did. Users would like to align associated information that
 requires axes to be exactly matched in subplots, e.g. hierarchical
-clustering with a heatmap. Inspired by the ‘Method 2’ in ‘ggtree’ (G Yu
-(2018) <doi:10.1093/molbev/msy194>), ‘aplot’ provides utilities to
-aligns associated subplots to a main plot at different sides (left,
-right, top and bottom) with axes exactly matched.
+clustering with a heatmap. This package provides utilities to aligns
+associated subplots to a main plot at different sides (left, right, top
+and bottom) with axes exactly matched.
 
 ## :writing_hand: Authors
 

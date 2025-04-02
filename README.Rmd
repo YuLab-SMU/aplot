@@ -10,6 +10,8 @@ html_preview: false
 
 # `aplot` for decorating a plot with associated information
 
+<a href="https://yulab-smu.top/aplot/"><img src="man/figures/aplot_logo.png" height="160" align="right" /></a>
+
 `r badger::badge_license("Artistic-2.0")`
 `r badger::badge_github_version("YuLab-SMU/aplot", "blue")`
 `r badger::badge_code_size("YuLab-SMU/aplot")`
