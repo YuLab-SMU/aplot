@@ -1,3 +1,8 @@
+# aplot 0.2.6
+
++ add citation information (2025-06-12, Thu)
+  - <https://doi.org/10.1016/j.xinn.2025.100958>
+
 # aplot 0.2.5
 
 + support main plot with `coord_fixed()` (2025-02-19, Wed, #45)

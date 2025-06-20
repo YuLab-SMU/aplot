@@ -1,0 +1,43 @@
+citHeader("To cite aplot in publications use:")
+
+bibentry(
+    bibtype  = "article",
+    title  = "aplot: Simplifying the creation of complex graphs to visualize associations across diverse data types.",
+    author = c(
+        person("Shuangbin Xu"),
+        person("Qianwen", "Wang"),
+        person("Shaodi", "Wen"),
+        person("Junrui", "Li"),
+        person("Nan", "He"),
+        person("Ming", "Li"),
+        person("Thomas", "Hackl"),
+        person("Rui", "Wang"),
+        person("Dongqiang", "Zeng"),
+        person("Shixiang", "Wang"),
+        person("Shensuo", "Li"),
+        person("Chun-Hui", "Gao"),
+        person("Lang", "Zhou"),
+        person("Shaoguo", "Tao"),
+        person("Zijing", "Xie"),
+        person("Lin", "Deng"),
+        person("Guangchuang", "Yu", email = "guangchuangyu@gmail.com")
+        ),
+    year    = "2025",
+    journal = "The Innovation",
+    volume  = "6",
+    issue   = "9",
+    number  = "",
+    pages   = "100958.",
+    doi     = "10.1016/j.xinn.2025.100958",
+    PMID    = "",
+    url     = "https://doi.org/10.1016/j.xinn.2025.100958", 
+    textVersion =  paste("S Xu, Q Wang, S Wen, J Li, N He, M Li, T Hackl, R Wang, D Zeng, S Wang, S Li, CH Gao, L Zhou, S Tao, Z Xie, L Deng, G Yu.",
+                         "aplot: Simplifying the creation of complex graphs to visualize associations across diverse data types.",
+                         "The Innovation. 2025, 6(9):100958. doi: 10.1016/j.xinn.2025.100958"
+                         )
+    
+)
+
+
+
+
