@@ -37,7 +37,7 @@ alab_ <- function(label, axis, fontsize=11, ...) {
 ##' @importFrom ggplot2 element_blank
 ##' @importFrom ggplot2 margin
 ##' @export
-ggplot_add.alab <- function(object, plot, object_name) {
+ggplot_add.alab <- function(object, plot, object_name, ...) {
     label <- object$label
     object$label <- NULL
     axis <- object$axis
@@ -113,7 +113,7 @@ axis_align <- function(gg, limits = NULL, axis) {
 ##' @importFrom ggplot2 scale_y_continuous
 ##' @importFrom methods is
 ##' @export
-ggplot_add.axisAlign <- function(object, plot, object_name) {
+ggplot_add.axisAlign <- function(object, plot, object_name, ...) {
     limits <- object$limits
 
     ## expand_limits <- object$expand_limits
@@ -181,7 +181,7 @@ ggplot_add.axisAlign <- function(object, plot, object_name) {
         }
         ## }
     }
-    ggplot_add(scale_lim, plot, object_name)
+    ggplot_add(scale_lim, plot, object_name, ...)
 }
 
 set_scale_limits <- function(scales, limits, expand){
