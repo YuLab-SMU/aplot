@@ -1,3 +1,7 @@
+# aplot 0.2.7
+
++ S3 method consistency with ggplot2 (v=4.0.0) (2025-06-21, Sat, #47, #48)
+
 # aplot 0.2.6
 
 + add citation information (2025-06-12, Thu)
