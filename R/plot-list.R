@@ -22,7 +22,6 @@
 ##' @importFrom ggplot2 theme
 ##' @importFrom ggplot2 element_text
 ##' @importFrom ggplot2 labs
-##' @importFrom utils modifyList
 ##' @importFrom ggfun ggbreak2ggplot
 ##' @export
 ##' @author Guangchuang Yu
@@ -93,7 +92,7 @@ plot_list <- function(..., gglist = NULL,
 
 
 
-
+#' @importFrom ggplot2 ggplot_build
 plot_list2 <- function(gglist = NULL,
                       ncol = NULL, 
                       nrow = NULL, 
@@ -117,11 +116,11 @@ plot_list2 <- function(gglist = NULL,
                     )
 
     if (!is.null(tag_levels) || !is.null(labels)) {
-        pt <- p$theme$plot.tag
+        pt <- ggplot_build(p)$plot$theme$plot.tag
         if (is.null(pt)){
             pt <- ggplot2::element_text()
         }
-        pt <- modifyList(pt, list(size = tag_size))
+        pt$size <- tag_size
         p <- p + plot_annotation(tag_levels=tag_levels) &
             theme(plot.tag = pt)
     }
