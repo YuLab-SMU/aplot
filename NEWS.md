@@ -1,3 +1,7 @@
+# aplot 0.2.8
+
++ fixed `tag_levels` issue of `plot_list` for ggplot2 > 3.5.2 (2025-07-02, Wed)
+
 # aplot 0.2.7
 
 + S3 method consistency with ggplot2 (v=4.0.0) (2025-06-21, Sat, #47, #48)
