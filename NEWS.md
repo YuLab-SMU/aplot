@@ -1,3 +1,7 @@
+# aplot 0.2.8.001
+
++ inherit 'ggplot' class for output of `insert_` functions (2025-09-01, Mon, #50, #51)
+
 # aplot 0.2.8
 
 + fixed `tag_levels` issue of `plot_list` for ggplot2 > 3.5.2 (2025-07-02, Wed)
