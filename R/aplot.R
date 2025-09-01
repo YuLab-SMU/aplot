@@ -13,7 +13,7 @@ as.aplot <- function(plot) {
                    n = 1,
                    main_col = 1,
                    main_row = 1),
-              class = "aplot")
+              class = c("aplot", "ggplot"))
     
 }
 
