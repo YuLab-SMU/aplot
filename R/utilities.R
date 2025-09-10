@@ -20,7 +20,7 @@ is.coord_flip <- function(p) {
 }
 
 is.coord_fixed <- function(p){
-    inherits(p, "gg") && inherits(p$coordinates, "CoordFixed")
+    inherits(p, "gg") && !is.null(p$coordinates$ratio)
 }
 
 #' @importFrom ggplot2 coord_fixed
