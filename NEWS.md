@@ -1,4 +1,4 @@
-# aplot 0.2.8.002
+# aplot 0.2.9
 
 + fixed alignment when `coord_fixed()` is used (2025-09-10, Wed, #52)
 + inherit 'ggplot' class for output of `insert_` functions (2025-09-01, Mon, #50, #51)
