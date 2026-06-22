@@ -23,7 +23,7 @@ pload(Seurat)
 #
 # pbmc <- pbmc[, md$cell]
 
-pbmc <- qs::qread("data/pbmc-subset.qs")
+pbmc <- readRDS("data/pbmc-subset.rds")
 
 m <- FindAllMarkers(pbmc, only.pos=TRUE)
 
@@ -223,7 +223,7 @@ pload(cowplot)
 #   * d1: 6284864 (GM12878 sequencing depth) and d2: 18559220 (K562 sequencing depth)
 
 # Load processed genomic data
-epigenetics_data <- qs::qread("./data/epigenetics_data.qs")
+epigenetics_data <- readRDS("./data/epigenetics_data.rds")
 
 # Global parameters and themes
 plot_params <- list(
