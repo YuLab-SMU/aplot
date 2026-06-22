@@ -59,7 +59,6 @@ jobs:
         if: github.event_name != 'schedule' || steps.biweekly.outputs.run == 'true'
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          working-directory: bookdown
           packages: |
             any::bookdown
             any::BiocManager
@@ -91,12 +90,11 @@ jobs:
             any::IRanges
             any::GenomicFeatures
             any::HiContacts
-            local::..
+            github::YuLab-SMU/aplot
 
       - name: Render bookdown site
         if: github.event_name != 'schedule' || steps.biweekly.outputs.run == 'true'
         shell: bash
-        working-directory: bookdown
         run: make gitbook
 
       - name: Deploy to gh-pages
@@ -105,5 +103,5 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: bookdown/docs
+          publish_dir: docs
           force_orphan: true
