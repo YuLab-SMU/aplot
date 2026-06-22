@@ -1,4 +1,4 @@
-name: rworkflows
+name: R-check
 'on':
   push:
     branches:
@@ -13,7 +13,7 @@ name: rworkflows
     - devel
     - RELEASE_**
 jobs:
-  rworkflows:
+  r-check:
     permissions:
       contents: write
     runs-on: ${{ matrix.config.os }}

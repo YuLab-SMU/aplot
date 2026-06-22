@@ -1,0 +1,109 @@
+name: bookdown-gh-pages
+
+on:
+  push:
+    branches:
+      - bookdown
+  schedule:
+    - cron: "0 2 * * 0"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  bookdown-gh-pages:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Skip off-week schedule
+        if: github.event_name == 'schedule'
+        id: biweekly
+        shell: bash
+        run: |
+          week=$(date +%V)
+          if (( 10#$week % 2 == 0 )); then
+            echo "run=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "Skipping scheduled run on ISO week $week"
+          fi
+
+      - name: Stop early when skipped
+        if: github.event_name == 'schedule' && steps.biweekly.outputs.run == 'false'
+        shell: bash
+        run: exit 0
+
+      - name: Check out repository
+        if: github.event_name != 'schedule' || steps.biweekly.outputs.run == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: bookdown
+
+      - name: Set up R
+        if: github.event_name != 'schedule' || steps.biweekly.outputs.run == 'true'
+        uses: r-lib/actions/setup-r@v2
+
+      - name: Set up Pandoc
+        if: github.event_name != 'schedule' || steps.biweekly.outputs.run == 'true'
+        uses: r-lib/actions/setup-pandoc@v2
+
+      - name: Install system libraries
+        if: github.event_name != 'schedule' || steps.biweekly.outputs.run == 'true'
+        shell: bash
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libharfbuzz-dev libfribidi-dev libfontconfig1-dev libfreetype6-dev libpng-dev libtiff5-dev libjpeg-dev libcurl4-openssl-dev libxml2-dev libssl-dev
+
+      - name: Install R dependencies
+        if: github.event_name != 'schedule' || steps.biweekly.outputs.run == 'true'
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          working-directory: bookdown
+          packages: |
+            any::bookdown
+            any::BiocManager
+            any::conflicted
+            any::dplyr
+            any::knitr
+            any::ggplot2
+            any::patchwork
+            any::tidyr
+            any::readr
+            any::gggenes
+            any::cowplot
+            any::ape
+            any::yulab.utils
+            any::ggfun
+            any::ggtree
+            any::Seurat
+            any::igraph
+            any::clusterProfiler
+            any::tidytree
+            any::msigdbr
+            any::aplotExtra
+            any::RTCGA.mRNA
+            any::RTCGA
+            any::tidyverse
+            any::ChIPseeker
+            any::TxDb.Hsapiens.UCSC.hg19.knownGene
+            any::org.Hs.eg.db
+            any::IRanges
+            any::GenomicFeatures
+            any::HiContacts
+            local::..
+
+      - name: Render bookdown site
+        if: github.event_name != 'schedule' || steps.biweekly.outputs.run == 'true'
+        shell: bash
+        working-directory: bookdown
+        run: make gitbook
+
+      - name: Deploy to gh-pages
+        if: github.event_name != 'schedule' || steps.biweekly.outputs.run == 'true'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: bookdown/docs
+          force_orphan: true
