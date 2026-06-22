@@ -1,3 +1,7 @@
+# aplot 0.2.9.001
+
++ fixed discrete axis alignment when geoms use positional nudging (2026-06-22, Mon, #1)
+
 # aplot 0.2.9
 
 + fixed alignment when `coord_fixed()` is used (2025-09-10, Wed, #52)

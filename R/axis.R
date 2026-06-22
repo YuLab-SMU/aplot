@@ -93,14 +93,20 @@ ylim2 <- function(gg, limits = NULL) {
 }
 
 axis_align <- function(gg, limits = NULL, axis) {
+    continuous_limits <- NULL
     if (is.null(limits)) {
+        gb <- ggplot2::ggplot_build(gg)
         if (axis == "x") {
             limits <- xrange(gg, region = 'plot')
+            continuous_limits <- get_continuous_limits(gb, axis = "x")
         } else {
             limits <- yrange(gg, region = 'plot')
+            continuous_limits <- get_continuous_limits(gb, axis = "y")
         }
     }
-    structure(list(limits = limits, axis = axis),
+    structure(list(limits = limits,
+                   axis = axis,
+                   continuous_limits = continuous_limits),
               class = "axisAlign")
 }
 
@@ -115,6 +121,7 @@ axis_align <- function(gg, limits = NULL, axis) {
 ##' @export
 ggplot_add.axisAlign <- function(object, plot, object_name, ...) {
     limits <- object$limits
+    continuous_limits <- object$continuous_limits
 
     ## expand_limits <- object$expand_limits
     ## limits[1] <- limits[1] + (limits[1] * expand_limits[1]) - expand_limits[2]
@@ -136,9 +143,11 @@ ggplot_add.axisAlign <- function(object, plot, object_name, ...) {
             lim_y <- scale_y_discrete(limits = limits, expand = c(0, 0.6))
         }else{
             lim_x <- set_scale_limits(gb$layout$panel_scales_x[[1]], limits=limits, 
-                                      expand = gb$layout$panel_scales_x[[1]]$expand)
+                                      expand = gb$layout$panel_scales_x[[1]]$expand,
+                                      continuous_limits = continuous_limits)
             lim_y <- set_scale_limits(gb$layout$panel_scales_y[[1]], limits=limits, 
-                                      expand = gb$layout$panel_scales_y[[1]]$expand)
+                                      expand = gb$layout$panel_scales_y[[1]]$expand,
+                                      continuous_limits = continuous_limits)
         }
     }
 
@@ -184,10 +193,30 @@ ggplot_add.axisAlign <- function(object, plot, object_name, ...) {
     ggplot_add(scale_lim, plot, object_name, ...)
 }
 
-set_scale_limits <- function(scales, limits, expand){
+set_scale_limits <- function(scales, limits, expand, continuous_limits = NULL){
     scales$limits <- limits
+    if (!is.null(continuous_limits) && !is.numeric(limits)) {
+        scales$continuous_limits <- continuous_limits
+        expand <- c(0, 0)
+    }
     scales$expand <- expand
     return(scales)
+}
+
+get_continuous_limits <- function(gb, axis) {
+    axis_params <- gb$layout$panel_params[[1]][[axis]]
+    if (!is.null(axis_params$continuous_range)) {
+        return(axis_params$continuous_range)
+    }
+
+    scales <- gb$layout[[paste0("panel_scales_", axis)]][[1]]
+    if (!is.null(scales$continuous_limits)) {
+        return(scales$continuous_limits)
+    }
+    if (!is.null(scales$range_c$range)) {
+        return(scales$range_c$range)
+    }
+    NULL
 }
 
 switch_position <- function(scales){
