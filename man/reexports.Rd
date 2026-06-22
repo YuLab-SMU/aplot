@@ -15,10 +15,10 @@ These objects are imported from other packages. Follow the links
 below to see their documentation.
 
 \describe{
-  \item{ggfun}{\code{\link[ggfun]{ggrange}}, \code{\link[ggfun:ggrange]{xrange}}, \code{\link[ggfun:ggrange]{yrange}}}
+  \item{ggfun}{\code{\link[ggfun:ggrange]{ggrange()}}, \code{\link[ggfun:xrange]{xrange()}}, \code{\link[ggfun:yrange]{yrange()}}}
 
-  \item{ggplot2}{\code{\link[ggplot2]{ggsave}}}
+  \item{ggplot2}{\code{\link[ggplot2:ggsave]{ggsave()}}}
 
-  \item{magrittr}{\code{\link[magrittr:pipe]{\%>\%}}}
+  \item{magrittr}{\code{\link[magrittr:\%>\%]{\%>\%}}}
 }}
 
