@@ -90,6 +90,8 @@ jobs:
             any::IRanges
             any::GenomicFeatures
             any::HiContacts
+            any::R.utils
+            any::maftools
             github::YuLab-SMU/aplot
 
       - name: Render bookdown site
