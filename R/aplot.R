@@ -12,7 +12,8 @@ as.aplot <- function(plot) {
                    layout = matrix(1),
                    n = 1,
                    main_col = 1,
-                   main_row = 1),
+                   main_row = 1,
+                   spacing = NULL),
               class = c("aplot", "ggplot"))
     
 }
@@ -80,33 +81,24 @@ as.patchwork <- function(x,
         width <- height <- NULL
     }
     
+    spacing_spec <- .resolve_panel_spacing(x)
     idx <- as.vector(x$layout)
+    plotlist <- x$plotlist
+    plotlist[[x$n+1]] <- ggplot() + theme_void() # plot_spacer()
+    if (spacing_spec$mode == "object") {
+        plotlist <- .apply_panel_spacing(
+            plotlist = plotlist,
+            layout = x$layout,
+            spacing = spacing_spec$spacing
+        )
+    }
     idx[is.na(idx)] <- x$n + 1 
-    x$plotlist[[x$n+1]] <- ggplot() + theme_void() # plot_spacer()
-    plotlist <- x$plotlist[idx]
-    space <- getOption(x="space.between.plots", default=0)
-    # check space, either 'asis' or numeric value
-    if (!inherits(space, c("character", "numeric"))) {
-        stop("'space.between.plots' should be a numeric value or 'asis'.")
-    }
-    if (inherits(space, 'character')) {
-        if (space == "asis") {
-            theme_margin <- theme() # do nothing
-        } else {
-            stop("invalid 'space.between.plots' setting.")
-        }
+    plotlist <- .process_plotlist(plotlist[idx])
+
+    if (spacing_spec$mode == "legacy") {
+        pp <- .compose_plotlist_legacy(plotlist, spacing_spec$spacing)
     } else {
-        theme_margin <- theme_no_margin()
-        if (space != 0) {
-            theme_margin$plot.margin <- do.call(ggplot2::margin, c(rep(list(space), 4), unit='mm'))
-        } 
-    }
-
-    plotlist <- .process_plotlist(plotlist)
-
-    pp <- plotlist[[1]] + theme_margin
-    for (i in 2:length(plotlist)) {
-        pp <- pp + (plotlist[[i]] + theme_no_margin())
+        pp <- .compose_plotlist(plotlist)
     }
 
     guides <- getOption('aplot_guides', default="collect")

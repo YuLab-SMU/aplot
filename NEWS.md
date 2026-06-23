@@ -1,5 +1,6 @@
-# aplot 0.2.9.001
+# aplot 0.3.0
 
++ add `set_panel_spacing()` to control gap between aligned panels and support preserving subplot margins with `"asis"` (2026-06-23, Tue)
 + fixed discrete axis alignment when geoms use positional nudging (2026-06-22, Mon, #1)
 
 # aplot 0.2.9
