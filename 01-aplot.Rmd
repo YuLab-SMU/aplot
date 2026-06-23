@@ -144,7 +144,7 @@ p2 %>% insert_left(p)
 
 ### Using the tree as the main plot
 
-In practice, users often start from the tree and then add associated metadata to the right-hand side. This workflow is also supported. The `width` argument always specifies the relative width of the inserted plot with respect to the main plot. In the following example, the tree is the main plot and the metadata panel is set to half of the tree width.
+In practice, users often start from the tree and then add associated metadata to the right-hand side. Conceptually, the `width` argument always specifies the relative width of the inserted plot with respect to the main plot. In current usage, the reliable way to obtain such a layout is still to start from the metadata plot and insert the tree on the left. The following code produces a layout in which the metadata panel is half of the tree width.
 
 ```{r fig.height=4, fig.width=7}
 tree_main <- ggtree(x) + geom_tiplab(align = TRUE) + xlim(NA, 3)
@@ -156,23 +156,31 @@ metadata_main <- ggplot(d, aes(value, taxa)) +
   xlab(NULL) +
   ylab(NULL)
 
-tree_main %>% insert_right(metadata_main, width = .5)
-```
-
-If you prefer to think from the metadata plot first, the following code produces the same layout with the tree inserted on the left.
-
-```{r fig.height=4, fig.width=7}
 metadata_main %>% insert_left(tree_main, width = 2)
 ```
 
-The space between aligned panels can also be controlled globally with `options(space.between.plots = ...)`. The value is interpreted in millimeters. This is useful when two panels are technically aligned but you still want a small visual gap between them.
+### Controlling panel spacing
+
+The `set_panel_spacing()` function controls the gap between aligned panels in an `aplot` object. Numeric values are interpreted in millimeters and refer to the spacing between neighboring panels.
 
 ```{r fig.height=4, fig.width=7}
-old_space <- getOption("space.between.plots")
-on.exit(options(space.between.plots = old_space), add = TRUE)
-options(space.between.plots = 2)
+metadata_main %>%
+  insert_left(tree_main, width = 2) %>%
+  set_panel_spacing(2)
+```
 
-tree_main %>% insert_right(metadata_main, width = .5)
+If the individual `ggplot` objects already define their own `plot.margin`, you can preserve these margins by setting the spacing mode to `"asis"`.
+
+```{r fig.height=4, fig.width=7}
+tree_main_pad <- tree_main +
+  theme(plot.margin = ggplot2::margin(5.5, 12, 5.5, 5.5))
+
+metadata_main_pad <- metadata_main +
+  theme(plot.margin = ggplot2::margin(5.5, 5.5, 5.5, 12))
+
+metadata_main_pad %>%
+  insert_left(tree_main_pad, width = 2) %>%
+  set_panel_spacing("asis")
 ```
 
 Example from <https://github.com/YuLab-SMU/ggtree/issues/339>.
