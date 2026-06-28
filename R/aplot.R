@@ -13,11 +13,12 @@ as.aplot <- function(plot) {
                    n = 1,
                    main_col = 1,
                    main_row = 1,
-                   spacing = NULL),
+                   spacing = NULL,
+                   guide_area = NULL,
+                   guide_layout = NULL),
               class = c("aplot", "ggplot"))
     
 }
-
 
 ##' @method print aplot
 ##' @importFrom patchwork plot_layout
@@ -82,9 +83,49 @@ as.patchwork <- function(x,
     }
     
     spacing_spec <- .resolve_panel_spacing(x)
-    idx <- as.vector(x$layout)
+    guide_area_spec <- .resolve_guide_area(x)
+    guide_layout_spec <- .resolve_guide_layout(x)
+    layout <- x$layout
+    if (!is.null(guide_area_spec)) {
+        layout <- guide_area_spec$layout
+        if (identical(guide_area_spec$mode, "side")) {
+            if (identical(guide_area_spec$position, "left")) {
+                width <- c(guide_area_spec$width, width)
+            }
+            if (identical(guide_area_spec$position, "right")) {
+                width <- c(width, guide_area_spec$width)
+            }
+            if (identical(guide_area_spec$position, "bottom")) {
+                height <- c(height, guide_area_spec$height)
+            }
+            if (identical(guide_area_spec$position, "top")) {
+                height <- c(guide_area_spec$height, height)
+            }
+        }
+    }
     plotlist <- x$plotlist
+    plotlist <- .apply_guide_layout(plotlist, guide_layout_spec)
+    guides <- getOption('aplot_guides', default="collect")
+    manual_guides <- NULL
+    if (identical(guides, "collect") && !is.null(guide_area_spec)) {
+        collected_guides <- .collect_plot_guides(plotlist)
+        collected_guides <- .collapse_plot_guides(collected_guides)
+        if (length(collected_guides) > 0) {
+            manual_guides <- .apply_guides_layout(
+                collected_guides = collected_guides,
+                guides_layout = if (!is.null(guide_layout_spec)) guide_layout_spec$guides else NULL,
+                guide_position = .guide_layout_box_position(guide_area_spec),
+                theme = ggplot2::theme_get()
+            )
+            plotlist <- .suppress_plot_guides(plotlist)
+            guides <- "keep"
+        }
+    }
+
+
+    idx <- as.vector(layout)
     plotlist[[x$n+1]] <- ggplot() + theme_void() # plot_spacer()
+    blank_idx <- x$n + 1
     if (spacing_spec$mode == "object") {
         plotlist <- .apply_panel_spacing(
             plotlist = plotlist,
@@ -92,7 +133,19 @@ as.patchwork <- function(x,
             spacing = spacing_spec$spacing
         )
     }
-    idx[is.na(idx)] <- x$n + 1 
+    if (!is.null(guide_area_spec)) {
+        guide_idx <- x$n + 2
+        if (is.null(manual_guides)) {
+            plotlist[[guide_idx]] <- patchwork::guide_area()
+        } else {
+            plotlist[[guide_idx]] <- patchwork::wrap_elements(full = manual_guides)
+        }
+        if (!is.null(guide_area_spec$region_indices)) {
+            idx[guide_area_spec$region_indices] <- blank_idx
+        }
+        idx[guide_area_spec$guide_indices] <- guide_idx
+    }
+    idx[is.na(idx)] <- blank_idx
     plotlist <- .process_plotlist(plotlist[idx])
 
     if (spacing_spec$mode == "legacy") {
@@ -101,10 +154,8 @@ as.patchwork <- function(x,
         pp <- .compose_plotlist(plotlist)
     }
 
-    guides <- getOption('aplot_guides', default="collect")
-
     pp + plot_layout(byrow=F,
-                     ncol=ncol(x$layout),
+                     ncol=ncol(layout),
                      widths = width,
                      heights= height,
                      guides = guides)

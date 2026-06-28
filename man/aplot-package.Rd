@@ -6,7 +6,7 @@
 \alias{aplot-package}
 \title{aplot: Decorate a 'ggplot' with Associated Information}
 \description{
-For many times, we are not just aligning plots as what 'cowplot' and 'patchwork' did. Users would like to align associated information that requires axes to be exactly matched in subplots, e.g. hierarchical clustering with a heatmap. Inspired by the 'Method 2' in 'ggtree' (G Yu (2018) \doi{10.1093/molbev/msy194}), 'aplot' provides utilities to aligns associated subplots to a main plot at different sides (left, right, top and bottom) with axes exactly matched.
+'aplot' supports data-driven composition of a main plot with associated subplots that need precise axis alignment. Unlike general layout-focused tools such as 'cowplot' and 'patchwork', it enables related subplots to be integrated on the top, bottom, left, or right sides of a main plot with matched axes, so that the combined panels can be interpreted as a coherent whole. This design was inspired by the 'Method 2' described in 'ggtree' (G Yu (2018) \doi{10.1093/molbev/msy194}).
 }
 \seealso{
 Useful links:

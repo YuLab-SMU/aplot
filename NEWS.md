@@ -1,3 +1,9 @@
+# aplot 0.3.0.001
+
++ update `set_guide_layout()` to split `legend_*` and `guides_*` semantics, and update `set_guide_area()` to use corner and side guide regions with continuous empty space anchoring (2026-06-27, Sat, #13)
++ add `set_guide_layout()` to compact collected guide arrangement without changing guide placement (2026-06-26, Fri, #13)
++ add `set_guide_area()` to place collected guides by position, using empty right-side corners when available and otherwise opening side guide strips on the requested edge, including left/right/top/bottom (2026-06-26, Fri, #13)
+
 # aplot 0.3.0
 
 + add `set_panel_spacing()` to control gap between aligned panels and support preserving subplot margins with `"asis"` (2026-06-23, Tue)

@@ -6,3 +6,4 @@ README.md
 .github
 ^CRAN-SUBMISSION$
 bookdown
+^\.dev$
