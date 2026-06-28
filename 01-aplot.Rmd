@@ -44,7 +44,7 @@ There are two reasons:
 + the plotted data have different limits
 + the different plots have different amounts of expansion spaces 
 
-To address these two issues, `r Biocpkg("ggtree")` provides `xlim2()` and `ylim2()` functions to set x or y limits^[the implementation was inspired by <https://thackl.github.io/ggtree-composite-plots>]. It use input `limits` to set axis limits that is similar to `xlim()` and `ylim()` (Figure \@ref(fig:axisAlign)B). If `limits = NULL` (by default), the `xlim2()` and `ylim2()` functions will calculate axis limits from input `ggplot` object. So that we can easily set limits of a `ggplot` object based on another `ggplot` object to uniformize their limits (Figure \@ref(fig:axisAlign)C). 
+To address these two issues, `r Biocpkg("ggtree")` provides `xlim2()` and `ylim2()` functions to set x or y limits^[the implementation was inspired by <https://thackl.github.io/ggtree-composite-plots>]. In practice, these helpers do one thing very well: they let one plot borrow the axis range of another plot, so that a set of associated subplots can be aligned against the same scale instead of each plot inventing its own little world. When `limits` is supplied, the helpers behave like `xlim()` and `ylim()` (Figure \@ref(fig:axisAlign)B). When `limits = NULL` (the default), the functions calculate limits from the input `ggplot` object itself. That makes it easy to take one plot as the reference and apply its limits to the others, which is often the simplest way to reconcile plots with different scales (Figure \@ref(fig:axisAlign)C).
 
 ```r
 pp2 <- lapply(pp, function(p) p + xlim2(limits=c(3, 11)))
@@ -115,6 +115,57 @@ ap <- p %>%
 print(ap) # or just type ap will print the figure
 ```
 
+## Placing collected guides
+
+When associated plots are inserted around a main plot, the resulting layout is often no longer a simple rectangle of occupied panels. For example, inserting one plot on the top and another plot on the right leaves an empty region in the top-right corner. This empty region is not another data panel, but it is still part of the composite layout. It is a natural place to put the collected guides.
+
+The `set_guide_area()` function marks such a region as the destination for collected guides. It only controls *where* the guides are placed. Corner positions such as `"top-right"`, `"top-left"`, `"bottom-right"`, and `"bottom-left"` refer to the continuous empty region anchored at that corner. Side positions such as `"right"`, `"left"`, `"top"`, and `"bottom"` reserve a guide region along the corresponding edge. In both cases, the guide is treated as one collected object and placed into the selected region.
+
+The following example inserts a plot above the main panel and another plot to the right. The top-right corner is empty, so `set_guide_area("top-right")` uses that corner region for the collected guides.
+
+```{r guideAreaCorner, fig.height=4.5, fig.width=7.5}
+p_main_guide <- ggplot(mtcars, aes(mpg, disp, colour = factor(cyl))) +
+  geom_point(size = 2)
+
+p_top_guide <- ggplot(mtcars, aes(mpg, wt, shape = factor(am))) +
+  geom_point(size = 2.2)
+
+p_right_guide <- ggplot(mtcars, aes(x = factor(gear), y = disp, fill = factor(gear))) +
+  geom_boxplot(width = 0.6, alpha = 0.8)
+
+p_main_guide %>%
+  insert_top(p_top_guide, height = 0.3) %>%
+  insert_right(p_right_guide, width = 0.25) %>%
+  set_guide_area("top-right")
+```
+
+Guide placement and guide layout are intentionally separated. The guide area only determines where the collected guides are placed; it does not decide how large each legend key should be, how many columns a legend should use, or how multiple guide boxes should be wrapped. These layout decisions are handled by `set_guide_layout()`.
+
+There are two levels of guide layout. Arguments starting with `legend_*` act inside each individual guide box. For example, `legend_title_position = "top"` places each guide title above its keys. Arguments starting with `guides_*` act on the group of collected guide boxes. For example, `guides_ncol = 2` arranges multiple collected guide boxes into two columns. This distinction matters: if the plot only produces one guide box, `guides_ncol` will have little visible effect. It is useful when several aesthetics produce separate guide boxes after guide collection.
+
+The next example maps different aesthetics in the main, top, and right panels. After guide collection, these separate guide boxes can be wrapped as a compact group inside the top-right guide area.
+
+```{r guideLayoutBoxes, fig.height=5.2, fig.width=7.5}
+p_main_guides <- ggplot(mtcars, aes(mpg, disp, colour = factor(cyl))) +
+  geom_point(size = 2)
+
+p_top_guides <- ggplot(mtcars, aes(mpg, wt, shape = factor(am))) +
+  geom_point(size = 2.2)
+
+p_right_guides <- ggplot(mtcars, aes(x = factor(gear), y = disp, fill = factor(gear))) +
+  geom_boxplot(width = 0.6, alpha = 0.8)
+
+p_main_guides %>%
+  insert_top(p_top_guides, height = 0.3) %>%
+  insert_right(p_right_guides, width = 0.25) %>%
+  set_guide_area("top-right") %>%
+  set_guide_layout(
+    legend_title_position = "top",
+    guides_ncol = 2,
+    guides_direction = "horizontal"
+  )
+```
+
 ## Aligning plots with a tree
 
 Aligning a plot with a tree is difficult, as it requres expertise to extract the order of taxa on the tree.
@@ -144,7 +195,7 @@ p2 %>% insert_left(p)
 
 ### Using the tree as the main plot
 
-In practice, users often start from the tree and then add associated metadata to the right-hand side. Conceptually, the `width` argument always specifies the relative width of the inserted plot with respect to the main plot. In current usage, the reliable way to obtain such a layout is still to start from the metadata plot and insert the tree on the left. The following code produces a layout in which the metadata panel is half of the tree width.
+In practice, users often start from the tree and then add associated metadata to the right-hand side. That sounds natural, but it is also where people often trip over the width semantics: the `width` argument always describes the inserted plot relative to the main plot, not the other way around. So if the tree is the visual anchor and the metadata panel should be narrower, the most reliable way to express that layout is still to start from the metadata plot and insert the tree on the left. That keeps the relative width easy to reason about and avoids guessing which side is being treated as the reference panel. The following code produces a layout in which the metadata panel is half of the tree width.
 
 ```{r fig.height=4, fig.width=7}
 tree_main <- ggtree(x) + geom_tiplab(align = TRUE) + xlim(NA, 3)
@@ -161,7 +212,7 @@ metadata_main %>% insert_left(tree_main, width = 2)
 
 ### Controlling panel spacing
 
-The `set_panel_spacing()` function controls the gap between aligned panels in an `aplot` object. Numeric values are interpreted in millimeters and refer to the spacing between neighboring panels.
+The `set_panel_spacing()` function controls the gap between aligned panels in an `aplot` object. This is useful when the panels already line up but still look visually crowded or uneven. Numeric values are interpreted in millimeters and refer to the spacing between neighboring panels.
 
 ```{r fig.height=4, fig.width=7}
 metadata_main %>%
@@ -169,7 +220,7 @@ metadata_main %>%
   set_panel_spacing(2)
 ```
 
-If the individual `ggplot` objects already define their own `plot.margin`, you can preserve these margins by setting the spacing mode to `"asis"`.
+If the individual `ggplot` objects already define their own `plot.margin`, you can preserve these margins by setting the spacing mode to `"asis"`. In that mode, `aplot` keeps the plot margins you already set instead of replacing them with a uniform spacing value.
 
 ```{r fig.height=4, fig.width=7}
 tree_main_pad <- tree_main +
