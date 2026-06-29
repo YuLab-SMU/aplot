@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3 Cases | aplot: simplifying the creation of complex graph to visualize associations across diverse data types</title>
+  <meta name="description" content="3 Cases | aplot: simplifying the creation of complex graph to visualize associations across diverse data types" />
+  <meta name="generator" content="bookdown 0.47 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3 Cases | aplot: simplifying the creation of complex graph to visualize associations across diverse data types" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3 Cases | aplot: simplifying the creation of complex graph to visualize associations across diverse data types" />
+  
+  
+  
+
+
+
+<meta name="date" content="2026-06-29" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="align-associated-subplots.html"/>
+
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
+<link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+
+
+<style type="text/css">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<style type="text/css">
+  
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="axis_align.html"><a href="axis_align.html"><i class="fa fa-check"></i><b>1</b> Reconcile axis limits</a></li>
+<li class="chapter" data-level="2" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html"><i class="fa fa-check"></i><b>2</b> Align associated subplots</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html#a-first-glance"><i class="fa fa-check"></i><b>2.1</b> A first glance</a></li>
+<li class="chapter" data-level="2.2" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html#placing-collected-guides"><i class="fa fa-check"></i><b>2.2</b> Placing collected guides</a></li>
+<li class="chapter" data-level="2.3" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html#aligning-plots-with-a-tree"><i class="fa fa-check"></i><b>2.3</b> Aligning plots with a tree</a>
+<ul>
+<li class="chapter" data-level="2.3.1" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html#using-the-tree-as-the-main-plot"><i class="fa fa-check"></i><b>2.3.1</b> Using the tree as the main plot</a></li>
+<li class="chapter" data-level="2.3.2" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html#controlling-panel-spacing"><i class="fa fa-check"></i><b>2.3.2</b> Controlling panel spacing</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html#annoHeatmap"><i class="fa fa-check"></i><b>2.4</b> Creating annotated heatmap</a></li>
+<li class="chapter" data-level="2.5" data-path="align-associated-subplots.html"><a href="align-associated-subplots.html#a-single-cell-example"><i class="fa fa-check"></i><b>2.5</b> A single cell example</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="cases.html"><a href="cases.html"><i class="fa fa-check"></i><b>3</b> Cases</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="cases.html"><a href="cases.html#pbmc-example"><i class="fa fa-check"></i><b>3.1</b> PBMC example</a>
+<ul>
+<li class="chapter" data-level="3.1.1" data-path="cases.html"><a href="cases.html#marker-gene-heatmap"><i class="fa fa-check"></i><b>3.1.1</b> Marker gene heatmap</a></li>
+<li class="chapter" data-level="3.1.2" data-path="cases.html"><a href="cases.html#degree-of-genes-in-the-ppi-network"><i class="fa fa-check"></i><b>3.1.2</b> Degree of genes in the PPI network</a></li>
+<li class="chapter" data-level="3.1.3" data-path="cases.html"><a href="cases.html#genes-in-pathways"><i class="fa fa-check"></i><b>3.1.3</b> Genes in pathways</a></li>
+<li class="chapter" data-level="3.1.4" data-path="cases.html"><a href="cases.html#all-in-one"><i class="fa fa-check"></i><b>3.1.4</b> All in one</a></li>
+</ul></li>
+<li class="chapter" data-level="3.2" data-path="cases.html"><a href="cases.html#oncoplot-example"><i class="fa fa-check"></i><b>3.2</b> Oncoplot example</a></li>
+<li class="chapter" data-level="3.3" data-path="cases.html"><a href="cases.html#funky-heatmap"><i class="fa fa-check"></i><b>3.3</b> funky heatmap</a></li>
+<li class="chapter" data-level="3.4" data-path="cases.html"><a href="cases.html#genomics-track-example"><i class="fa fa-check"></i><b>3.4</b> Genomics track example</a>
+<ul>
+<li class="chapter" data-level="3.4.1" data-path="cases.html"><a href="cases.html#setup-packages-and-parameteres"><i class="fa fa-check"></i><b>3.4.1</b> Setup packages and parameteres</a></li>
+<li class="chapter" data-level="3.4.2" data-path="cases.html"><a href="cases.html#visualization-of-comparative-genomics-data-tracks"><i class="fa fa-check"></i><b>3.4.2</b> Visualization of comparative genomics data tracks</a></li>
+<li class="chapter" data-level="3.4.3" data-path="cases.html"><a href="cases.html#visualization-of-different-genomics-data-tracks"><i class="fa fa-check"></i><b>3.4.3</b> Visualization of different genomics data tracks</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">aplot: simplifying the creation of complex graph to visualize associations across diverse data types</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="cases" class="section level1 hasAnchor" number="3">
+<h1><span class="header-section-number">3</span> Cases<a href="cases.html#cases" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<div id="pbmc-example" class="section level2 hasAnchor" number="3.1">
+<h2><span class="header-section-number">3.1</span> PBMC example<a href="cases.html#pbmc-example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="marker-gene-heatmap" class="section level3 hasAnchor" number="3.1.1">
+<h3><span class="header-section-number">3.1.1</span> Marker gene heatmap<a href="cases.html#marker-gene-heatmap" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="cases.html#cb20-1" tabindex="-1"></a><span class="fu">library</span>(yulab.utils)</span>
+<span id="cb20-2"><a href="cases.html#cb20-2" tabindex="-1"></a><span class="fu">pload</span>(dplyr)</span>
+<span id="cb20-3"><a href="cases.html#cb20-3" tabindex="-1"></a><span class="fu">pload</span>(ggplot2)</span>
+<span id="cb20-4"><a href="cases.html#cb20-4" tabindex="-1"></a><span class="fu">pload</span>(ggfun)</span>
+<span id="cb20-5"><a href="cases.html#cb20-5" tabindex="-1"></a><span class="fu">pload</span>(ggtree)</span>
+<span id="cb20-6"><a href="cases.html#cb20-6" tabindex="-1"></a><span class="fu">pload</span>(aplot)</span>
+<span id="cb20-7"><a href="cases.html#cb20-7" tabindex="-1"></a><span class="fu">pload</span>(Seurat)</span>
+<span id="cb20-8"><a href="cases.html#cb20-8" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="cases.html#cb20-9" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="cases.html#cb20-10" tabindex="-1"></a><span class="co"># celltype &lt;- c(&quot;Naive CD4 T&quot;, &quot;B&quot;, &quot;NK&quot;)</span></span>
+<span id="cb20-11"><a href="cases.html#cb20-11" tabindex="-1"></a><span class="co"># id &lt;- pbmc@active.ident</span></span>
+<span id="cb20-12"><a href="cases.html#cb20-12" tabindex="-1"></a><span class="co"># md = data.frame(cell=names(id), group=id)</span></span>
+<span id="cb20-13"><a href="cases.html#cb20-13" tabindex="-1"></a><span class="co"># md &lt;- md[md$group %in% celltype, ]</span></span>
+<span id="cb20-14"><a href="cases.html#cb20-14" tabindex="-1"></a><span class="co"># md$group &lt;- as.character(md$group)</span></span>
+<span id="cb20-15"><a href="cases.html#cb20-15" tabindex="-1"></a><span class="co"># md &lt;- lapply(split(md, md$group), function(x) x[1:30,]) |&gt; rbindlist()</span></span>
+<span id="cb20-16"><a href="cases.html#cb20-16" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb20-17"><a href="cases.html#cb20-17" tabindex="-1"></a><span class="co"># pbmc &lt;- pbmc[, md$cell]</span></span>
+<span id="cb20-18"><a href="cases.html#cb20-18" tabindex="-1"></a></span>
+<span id="cb20-19"><a href="cases.html#cb20-19" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;data/pbmc-subset.rds&quot;</span>)</span>
+<span id="cb20-20"><a href="cases.html#cb20-20" tabindex="-1"></a></span>
+<span id="cb20-21"><a href="cases.html#cb20-21" tabindex="-1"></a>m <span class="ot">&lt;-</span> <span class="fu">FindAllMarkers</span>(pbmc, <span class="at">only.pos=</span><span class="cn">TRUE</span>)</span>
+<span id="cb20-22"><a href="cases.html#cb20-22" tabindex="-1"></a></span>
+<span id="cb20-23"><a href="cases.html#cb20-23" tabindex="-1"></a>top10 <span class="ot">&lt;-</span> m <span class="sc">%&gt;%</span></span>
+<span id="cb20-24"><a href="cases.html#cb20-24" tabindex="-1"></a>    <span class="fu">group_by</span>(cluster) <span class="sc">%&gt;%</span></span>
+<span id="cb20-25"><a href="cases.html#cb20-25" tabindex="-1"></a>    dplyr<span class="sc">::</span><span class="fu">filter</span>(avg_log2FC <span class="sc">&gt;</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb20-26"><a href="cases.html#cb20-26" tabindex="-1"></a>    <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">10</span>) </span>
+<span id="cb20-27"><a href="cases.html#cb20-27" tabindex="-1"></a></span>
+<span id="cb20-28"><a href="cases.html#cb20-28" tabindex="-1"></a>pbmc <span class="ot">&lt;-</span> <span class="fu">ScaleData</span>(pbmc, <span class="at">features =</span> <span class="fu">rownames</span>(pbmc))</span>
+<span id="cb20-29"><a href="cases.html#cb20-29" tabindex="-1"></a>x  <span class="ot">&lt;-</span> pbmc[[<span class="st">&#39;RNA&#39;</span>]]<span class="sc">$</span>scale.data[top10<span class="sc">$</span>gene,]</span>
+<span id="cb20-30"><a href="cases.html#cb20-30" tabindex="-1"></a></span>
+<span id="cb20-31"><a href="cases.html#cb20-31" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">mat2df</span>(x) <span class="ot">-&gt;</span> y</span>
+<span id="cb20-32"><a href="cases.html#cb20-32" tabindex="-1"></a>y<span class="sc">$</span>gene <span class="ot">&lt;-</span> <span class="fu">rownames</span>(x)[y<span class="sc">$</span>row]</span>
+<span id="cb20-33"><a href="cases.html#cb20-33" tabindex="-1"></a>y<span class="sc">$</span>cell <span class="ot">&lt;-</span> <span class="fu">colnames</span>(x)[y<span class="sc">$</span>col]</span>
+<span id="cb20-34"><a href="cases.html#cb20-34" tabindex="-1"></a></span>
+<span id="cb20-35"><a href="cases.html#cb20-35" tabindex="-1"></a>p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(y, <span class="fu">aes</span>(cell, gene, <span class="at">fill =</span> value)) <span class="sc">+</span> </span>
+<span id="cb20-36"><a href="cases.html#cb20-36" tabindex="-1"></a>    <span class="fu">geom_tile</span>()<span class="sc">+</span> <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">&quot;Gene Expression&quot;</span>) <span class="sc">+</span></span>
+<span id="cb20-37"><a href="cases.html#cb20-37" tabindex="-1"></a>    <span class="fu">theme_noxaxis</span>() <span class="sc">+</span></span>
+<span id="cb20-38"><a href="cases.html#cb20-38" tabindex="-1"></a>    <span class="fu">scale_y_discrete</span>(<span class="at">position =</span> <span class="st">&quot;right&quot;</span>) <span class="sc">+</span></span>
+<span id="cb20-39"><a href="cases.html#cb20-39" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb20-40"><a href="cases.html#cb20-40" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="cn">NULL</span>)</span>
+<span id="cb20-41"><a href="cases.html#cb20-41" tabindex="-1"></a></span>
+<span id="cb20-42"><a href="cases.html#cb20-42" tabindex="-1"></a>gene_cls <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>((x)))</span>
+<span id="cb20-43"><a href="cases.html#cb20-43" tabindex="-1"></a>cell_cls <span class="ot">&lt;-</span> <span class="fu">hclust</span>(<span class="fu">dist</span>(<span class="fu">t</span>((x)))) </span>
+<span id="cb20-44"><a href="cases.html#cb20-44" tabindex="-1"></a>gene_tree <span class="ot">&lt;-</span> <span class="fu">ggtree</span>(gene_cls, <span class="at">branch.length =</span> <span class="st">&#39;none&#39;</span>)</span>
+<span id="cb20-45"><a href="cases.html#cb20-45" tabindex="-1"></a>cell_tree <span class="ot">=</span> <span class="fu">ggtree</span>(cell_cls, <span class="at">branch.length =</span> <span class="st">&#39;none&#39;</span>) <span class="sc">+</span> <span class="fu">layout_dendrogram</span>()</span>
+<span id="cb20-46"><a href="cases.html#cb20-46" tabindex="-1"></a></span>
+<span id="cb20-47"><a href="cases.html#cb20-47" tabindex="-1"></a></span>
+<span id="cb20-48"><a href="cases.html#cb20-48" tabindex="-1"></a>id <span class="ot">&lt;-</span> pbmc<span class="sc">@</span>active.ident</span>
+<span id="cb20-49"><a href="cases.html#cb20-49" tabindex="-1"></a>md <span class="ot">=</span> <span class="fu">data.frame</span>(<span class="at">cell=</span><span class="fu">names</span>(id), <span class="at">group=</span>id)</span>
+<span id="cb20-50"><a href="cases.html#cb20-50" tabindex="-1"></a>p_cell_type <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(md, <span class="fu">aes</span>(cell, <span class="at">y=</span><span class="dv">1</span>, <span class="at">fill =</span> group)) <span class="sc">+</span> </span>
+<span id="cb20-51"><a href="cases.html#cb20-51" tabindex="-1"></a>    <span class="fu">geom_tile</span>() <span class="sc">+</span> </span>
+<span id="cb20-52"><a href="cases.html#cb20-52" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette=</span><span class="st">&quot;Set1&quot;</span>, <span class="at">name =</span> <span class="st">&#39;Cell Type&#39;</span>) <span class="sc">+</span></span>
+<span id="cb20-53"><a href="cases.html#cb20-53" tabindex="-1"></a>    <span class="fu">theme_nothing</span>()</span>
+<span id="cb20-54"><a href="cases.html#cb20-54" tabindex="-1"></a></span>
+<span id="cb20-55"><a href="cases.html#cb20-55" tabindex="-1"></a>g <span class="ot">&lt;-</span> p <span class="sc">|&gt;</span> <span class="fu">insert_left</span>(gene_tree, <span class="at">width =</span> .<span class="dv">2</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-56"><a href="cases.html#cb20-56" tabindex="-1"></a>    <span class="fu">insert_top</span>(p_cell_type, <span class="at">height =</span> .<span class="dv">02</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-57"><a href="cases.html#cb20-57" tabindex="-1"></a>    <span class="fu">insert_top</span>(cell_tree, <span class="at">height =</span> .<span class="dv">1</span>)</span>
+<span id="cb20-58"><a href="cases.html#cb20-58" tabindex="-1"></a></span>
+<span id="cb20-59"><a href="cases.html#cb20-59" tabindex="-1"></a>g</span></code></pre></div>
+<p><img src="aplot_files/figure-html/marker-gene-heatmap-1.png" alt="" width="960" /></p>
+</div>
+<div id="degree-of-genes-in-the-ppi-network" class="section level3 hasAnchor" number="3.1.2">
+<h3><span class="header-section-number">3.1.2</span> Degree of genes in the PPI network<a href="cases.html#degree-of-genes-in-the-ppi-network" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="cases.html#cb21-1" tabindex="-1"></a><span class="fu">pload</span>(igraph)</span>
+<span id="cb21-2"><a href="cases.html#cb21-2" tabindex="-1"></a><span class="fu">pload</span>(clusterProfiler)</span>
+<span id="cb21-3"><a href="cases.html#cb21-3" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="cases.html#cb21-4" tabindex="-1"></a>ppi <span class="ot">&lt;-</span> <span class="fu">getPPI</span>(top10<span class="sc">$</span>gene, <span class="at">output=</span><span class="st">&#39;igraph&#39;</span>, <span class="at">taxID=</span><span class="st">&#39;9606&#39;</span>) </span>
+<span id="cb21-5"><a href="cases.html#cb21-5" tabindex="-1"></a>deg <span class="ot">&lt;-</span> <span class="fu">stack</span>(<span class="fu">degree</span>(ppi, <span class="at">v =</span> <span class="fu">V</span>(ppi))) <span class="sc">|&gt;</span> <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">&quot;degree&quot;</span>, <span class="st">&quot;gene&quot;</span>))</span>
+<span id="cb21-6"><a href="cases.html#cb21-6" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="cases.html#cb21-7" tabindex="-1"></a>p_ppi <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(deg, <span class="fu">aes</span>(<span class="dv">1</span>, gene, <span class="at">fill=</span>degree, <span class="at">size=</span>degree)) <span class="sc">+</span> <span class="fu">geom_point</span>(<span class="at">shape=</span><span class="dv">21</span>) <span class="sc">+</span> </span>
+<span id="cb21-8"><a href="cases.html#cb21-8" tabindex="-1"></a>    <span class="fu">scale_fill_gradientn</span>(<span class="at">colors =</span> <span class="fu">hcl.colors</span>(<span class="dv">20</span>, <span class="st">&quot;RdYlGn&quot;</span>)) <span class="sc">+</span> <span class="fu">theme_nothing</span>()</span></code></pre></div>
+</div>
+<div id="genes-in-pathways" class="section level3 hasAnchor" number="3.1.3">
+<h3><span class="header-section-number">3.1.3</span> Genes in pathways<a href="cases.html#genes-in-pathways" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="cases.html#cb22-1" tabindex="-1"></a><span class="fu">pload</span>(tidytree)</span>
+<span id="cb22-2"><a href="cases.html#cb22-2" tabindex="-1"></a><span class="fu">pload</span>(msigdbr)</span>
+<span id="cb22-3"><a href="cases.html#cb22-3" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="cases.html#cb22-4" tabindex="-1"></a>node <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">35</span>, <span class="dv">34</span>, <span class="dv">32</span>)</span>
+<span id="cb22-5"><a href="cases.html#cb22-5" tabindex="-1"></a>genes <span class="ot">&lt;-</span> <span class="fu">lapply</span>(node, <span class="cf">function</span>(n) <span class="fu">offspring</span>(gene_tree, n, <span class="at">tiponly=</span>T)<span class="sc">$</span>label) <span class="sc">|&gt;</span></span>
+<span id="cb22-6"><a href="cases.html#cb22-6" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">&quot;CD4&quot;</span>, <span class="st">&quot;NK&quot;</span>, <span class="st">&quot;B&quot;</span>))</span>
+<span id="cb22-7"><a href="cases.html#cb22-7" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="cases.html#cb22-8" tabindex="-1"></a><span class="fu">pload</span>(clusterProfiler)</span>
+<span id="cb22-9"><a href="cases.html#cb22-9" tabindex="-1"></a>gene_set <span class="ot">&lt;-</span> <span class="fu">msigdbr</span>(<span class="at">species=</span><span class="st">&quot;human&quot;</span>, <span class="at">category=</span><span class="st">&quot;C2&quot;</span>)</span>
+<span id="cb22-10"><a href="cases.html#cb22-10" tabindex="-1"></a><span class="fu">names</span>(gene_set)</span></code></pre></div>
+<pre><code>##  [1] &quot;gene_symbol&quot;        &quot;ncbi_gene&quot;         
+##  [3] &quot;ensembl_gene&quot;       &quot;db_gene_symbol&quot;    
+##  [5] &quot;db_ncbi_gene&quot;       &quot;db_ensembl_gene&quot;   
+##  [7] &quot;source_gene&quot;        &quot;gs_id&quot;             
+##  [9] &quot;gs_name&quot;            &quot;gs_collection&quot;     
+## [11] &quot;gs_subcollection&quot;   &quot;gs_collection_name&quot;
+## [13] &quot;gs_description&quot;     &quot;gs_source_species&quot; 
+## [15] &quot;gs_pmid&quot;            &quot;gs_geoid&quot;          
+## [17] &quot;gs_exact_source&quot;    &quot;gs_url&quot;            
+## [19] &quot;db_version&quot;         &quot;db_target_species&quot; 
+## [21] &quot;entrez_gene&quot;        &quot;gs_cat&quot;            
+## [23] &quot;gs_subcat&quot;</code></pre>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="cases.html#cb24-1" tabindex="-1"></a>cc <span class="ot">&lt;-</span> <span class="fu">compareCluster</span>(genes, enricher, <span class="at">TERM2GENE=</span>gene_set[, <span class="fu">c</span>(<span class="st">&quot;gs_name&quot;</span>, <span class="st">&quot;gene_symbol&quot;</span>)])</span>
+<span id="cb24-2"><a href="cases.html#cb24-2" tabindex="-1"></a>res <span class="ot">&lt;-</span> cc<span class="sc">@</span>compareClusterResult <span class="sc">|&gt;</span></span>
+<span id="cb24-3"><a href="cases.html#cb24-3" tabindex="-1"></a>    <span class="fu">group_by</span>(Cluster) <span class="sc">|&gt;</span> </span>
+<span id="cb24-4"><a href="cases.html#cb24-4" tabindex="-1"></a>    <span class="fu">slice_head</span>(<span class="at">n =</span> <span class="dv">5</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb24-5"><a href="cases.html#cb24-5" tabindex="-1"></a>    <span class="fu">as.data.frame</span>()</span>
+<span id="cb24-6"><a href="cases.html#cb24-6" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="cases.html#cb24-7" tabindex="-1"></a>gene2path <span class="ot">&lt;-</span> <span class="fu">lapply</span>(res<span class="sc">$</span>geneID, <span class="cf">function</span>(x) <span class="fu">unlist</span>(<span class="fu">strsplit</span>(x, <span class="at">split=</span><span class="st">&quot;/&quot;</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb24-8"><a href="cases.html#cb24-8" tabindex="-1"></a>    <span class="fu">setNames</span>(res<span class="sc">$</span>Description) <span class="sc">|&gt;</span></span>
+<span id="cb24-9"><a href="cases.html#cb24-9" tabindex="-1"></a>    <span class="fu">stack</span>() <span class="sc">|&gt;</span></span>
+<span id="cb24-10"><a href="cases.html#cb24-10" tabindex="-1"></a>    <span class="fu">setNames</span>(<span class="fu">c</span>(<span class="st">&quot;gene&quot;</span>, <span class="st">&quot;pathway&quot;</span>))</span>
+<span id="cb24-11"><a href="cases.html#cb24-11" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="cases.html#cb24-12" tabindex="-1"></a>pcp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gene2path, <span class="fu">aes</span>(pathway, gene))  <span class="sc">+</span></span>
+<span id="cb24-13"><a href="cases.html#cb24-13" tabindex="-1"></a>    <span class="fu">geom_point</span>(<span class="at">size=</span><span class="dv">5</span>, <span class="at">shape=</span><span class="dv">21</span>, <span class="at">fill =</span> <span class="st">&quot;steelblue&quot;</span>) <span class="sc">+</span></span>
+<span id="cb24-14"><a href="cases.html#cb24-14" tabindex="-1"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span> </span>
+<span id="cb24-15"><a href="cases.html#cb24-15" tabindex="-1"></a>    <span class="fu">theme_noyaxis</span>() <span class="sc">+</span></span>
+<span id="cb24-16"><a href="cases.html#cb24-16" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle=</span><span class="dv">30</span>, <span class="at">hjust=</span><span class="dv">1</span>)) <span class="sc">+</span> </span>
+<span id="cb24-17"><a href="cases.html#cb24-17" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb24-18"><a href="cases.html#cb24-18" tabindex="-1"></a>    <span class="fu">ylab</span>(<span class="cn">NULL</span>)</span>
+<span id="cb24-19"><a href="cases.html#cb24-19" tabindex="-1"></a></span>
+<span id="cb24-20"><a href="cases.html#cb24-20" tabindex="-1"></a>gg <span class="ot">&lt;-</span> g <span class="sc">|&gt;</span> <span class="fu">insert_right</span>(p_ppi, <span class="at">width=</span>.<span class="dv">05</span>) <span class="sc">|&gt;</span></span>
+<span id="cb24-21"><a href="cases.html#cb24-21" tabindex="-1"></a>    <span class="fu">insert_right</span>(pcp, <span class="at">width=</span>.<span class="dv">5</span>) </span>
+<span id="cb24-22"><a href="cases.html#cb24-22" tabindex="-1"></a>gg</span></code></pre></div>
+<p><img src="aplot_files/figure-html/pcp-1.png" alt="" width="1536" /></p>
+</div>
+<div id="all-in-one" class="section level3 hasAnchor" number="3.1.4">
+<h3><span class="header-section-number">3.1.4</span> All in one<a href="cases.html#all-in-one" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="cases.html#cb25-1" tabindex="-1"></a>pp <span class="ot">&lt;-</span> <span class="fu">plot_list</span>(cell_tree, p_cell_type, <span class="at">heights=</span><span class="fu">c</span>(<span class="dv">1</span>, .<span class="dv">5</span>))</span>
+<span id="cb25-2"><a href="cases.html#cb25-2" tabindex="-1"></a>pp <span class="ot">&lt;-</span> <span class="fu">plot_list</span>(gene_tree, pp, <span class="at">widths=</span><span class="fu">c</span>(.<span class="dv">3</span>, <span class="dv">1</span>))</span>
+<span id="cb25-3"><a href="cases.html#cb25-3" tabindex="-1"></a>pp <span class="ot">&lt;-</span> <span class="fu">plot_list</span>(p, pp, p_ppi, pcp, <span class="at">widths=</span><span class="fu">c</span>(<span class="dv">1</span>, .<span class="dv">8</span>, .<span class="dv">05</span>, .<span class="dv">6</span>))</span>
+<span id="cb25-4"><a href="cases.html#cb25-4" tabindex="-1"></a>pp <span class="ot">&lt;-</span> pp <span class="sc">+</span> patchwork<span class="sc">::</span><span class="fu">plot_annotation</span>(<span class="at">tag_levels=</span><span class="st">&#39;a&#39;</span>)</span>
+<span id="cb25-5"><a href="cases.html#cb25-5" tabindex="-1"></a></span>
+<span id="cb25-6"><a href="cases.html#cb25-6" tabindex="-1"></a>final_plot <span class="ot">&lt;-</span> <span class="fu">plot_list</span>(pp, gg, <span class="at">ncol=</span><span class="dv">1</span>, <span class="at">tag_levels=</span><span class="st">&#39;A&#39;</span>, <span class="at">heights=</span><span class="fu">c</span>(<span class="dv">1</span>, <span class="fl">1.2</span>))</span>
+<span id="cb25-7"><a href="cases.html#cb25-7" tabindex="-1"></a>final_plot</span></code></pre></div>
+<p><img src="aplot_files/figure-html/all-1.png" alt="" width="1536" /></p>
+</div>
+</div>
+<div id="oncoplot-example" class="section level2 hasAnchor" number="3.2">
+<h2><span class="header-section-number">3.2</span> Oncoplot example<a href="cases.html#oncoplot-example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="cases.html#cb26-1" tabindex="-1"></a><span class="fu">pload</span>(aplotExtra)</span>
+<span id="cb26-2"><a href="cases.html#cb26-2" tabindex="-1"></a><span class="fu">pload</span>(RTCGA.mRNA)</span>
+<span id="cb26-3"><a href="cases.html#cb26-3" tabindex="-1"></a><span class="fu">pload</span>(RTCGA)</span>
+<span id="cb26-4"><a href="cases.html#cb26-4" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="cases.html#cb26-5" tabindex="-1"></a>laml.maf <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;tcga_laml.maf.gz&quot;</span>, <span class="at">package =</span> <span class="st">&quot;maftools&quot;</span>)</span>
+<span id="cb26-6"><a href="cases.html#cb26-6" tabindex="-1"></a>laml.clin <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&#39;extdata&#39;</span>, <span class="st">&#39;tcga_laml_annot.tsv&#39;</span>, <span class="at">package =</span> <span class="st">&#39;maftools&#39;</span>)</span>
+<span id="cb26-7"><a href="cases.html#cb26-7" tabindex="-1"></a>laml <span class="ot">&lt;-</span> maftools<span class="sc">::</span><span class="fu">read.maf</span>(<span class="at">maf =</span> laml.maf, <span class="at">clinicalData =</span> laml.clin)</span></code></pre></div>
+<pre><code>## -Reading
+## -Validating
+## -Silent variants: 475 
+## -Summarizing
+## -Processing clinical data
+## -Finished in 0.227s elapsed (0.285s cpu)</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="cases.html#cb28-1" tabindex="-1"></a>onco <span class="ot">&lt;-</span> <span class="fu">oncoplot</span>(<span class="at">maf =</span> laml, <span class="at">genes =</span> <span class="dv">20</span>)</span>
+<span id="cb28-2"><a href="cases.html#cb28-2" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="cases.html#cb28-3" tabindex="-1"></a>plot_tcga_expr <span class="ot">&lt;-</span> <span class="cf">function</span>(mRNA, genes, <span class="at">name =</span> <span class="st">&quot;Gene Expression&quot;</span>) {</span>
+<span id="cb28-4"><a href="cases.html#cb28-4" tabindex="-1"></a>    d <span class="ot">=</span> <span class="fu">expressionsTCGA</span>(mRNA, <span class="at">extract.cols =</span> genes)</span>
+<span id="cb28-5"><a href="cases.html#cb28-5" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="cases.html#cb28-6" tabindex="-1"></a>    dd <span class="ot">=</span> <span class="fu">gather</span>(d, gene, expression, <span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb28-7"><a href="cases.html#cb28-7" tabindex="-1"></a>    </span>
+<span id="cb28-8"><a href="cases.html#cb28-8" tabindex="-1"></a>    <span class="fu">ggplot</span>(dd, <span class="fu">aes</span>(expression, gene, <span class="at">fill=</span><span class="fu">stat</span>(x))) <span class="sc">+</span> </span>
+<span id="cb28-9"><a href="cases.html#cb28-9" tabindex="-1"></a>        ggridges<span class="sc">::</span><span class="fu">geom_density_ridges_gradient</span>() <span class="sc">+</span></span>
+<span id="cb28-10"><a href="cases.html#cb28-10" tabindex="-1"></a>        <span class="fu">scale_fill_viridis_c</span>(<span class="at">option=</span><span class="st">&quot;C&quot;</span>, <span class="at">name =</span> name) <span class="sc">+</span></span>
+<span id="cb28-11"><a href="cases.html#cb28-11" tabindex="-1"></a>        <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb28-12"><a href="cases.html#cb28-12" tabindex="-1"></a>        <span class="fu">theme_noyaxis</span>() <span class="sc">+</span> </span>
+<span id="cb28-13"><a href="cases.html#cb28-13" tabindex="-1"></a>        <span class="fu">xlab</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb28-14"><a href="cases.html#cb28-14" tabindex="-1"></a>        <span class="fu">ylab</span>(<span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb28-15"><a href="cases.html#cb28-15" tabindex="-1"></a>        <span class="fu">theme</span>(<span class="at">legend.position=</span><span class="st">&#39;bottom&#39;</span>)</span>
+<span id="cb28-16"><a href="cases.html#cb28-16" tabindex="-1"></a>}</span>
+<span id="cb28-17"><a href="cases.html#cb28-17" tabindex="-1"></a></span>
+<span id="cb28-18"><a href="cases.html#cb28-18" tabindex="-1"></a>onco_genes <span class="ot">&lt;-</span> aplotExtra<span class="sc">:::</span><span class="fu">get_oncoplot_genes</span>(laml)</span>
+<span id="cb28-19"><a href="cases.html#cb28-19" tabindex="-1"></a>brca <span class="ot">&lt;-</span> <span class="fu">plot_tcga_expr</span>(BRCA.mRNA, onco_genes, <span class="st">&quot;Gene Expression in TCGA</span><span class="sc">\n</span><span class="st">breast cancer patients&quot;</span>)</span>
+<span id="cb28-20"><a href="cases.html#cb28-20" tabindex="-1"></a>ov <span class="ot">&lt;-</span> <span class="fu">plot_tcga_expr</span>(OV.mRNA, onco_genes, <span class="st">&quot;Gene Expression in TCGA</span><span class="sc">\n</span><span class="st">ovarian cancer patients&quot;</span>)</span>
+<span id="cb28-21"><a href="cases.html#cb28-21" tabindex="-1"></a></span>
+<span id="cb28-22"><a href="cases.html#cb28-22" tabindex="-1"></a>op <span class="ot">&lt;-</span> <span class="fu">insert_right</span>(onco, brca, <span class="at">width =</span> .<span class="dv">6</span>) <span class="sc">|&gt;</span></span>
+<span id="cb28-23"><a href="cases.html#cb28-23" tabindex="-1"></a>    <span class="fu">insert_right</span>(ov, <span class="at">width=</span>.<span class="dv">6</span>)</span>
+<span id="cb28-24"><a href="cases.html#cb28-24" tabindex="-1"></a>op</span></code></pre></div>
+<p><img src="aplot_files/figure-html/onco-1.png" alt="" width="1536" /></p>
+</div>
+<div id="funky-heatmap" class="section level2 hasAnchor" number="3.3">
+<h2><span class="header-section-number">3.3</span> funky heatmap<a href="cases.html#funky-heatmap" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="cases.html#cb29-1" tabindex="-1"></a><span class="fu">library</span>(aplotExtra)</span>
+<span id="cb29-2"><a href="cases.html#cb29-2" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb29-3"><a href="cases.html#cb29-3" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;mtcars&quot;</span>)</span>
+<span id="cb29-4"><a href="cases.html#cb29-4" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="cases.html#cb29-5" tabindex="-1"></a></span>
+<span id="cb29-6"><a href="cases.html#cb29-6" tabindex="-1"></a>d <span class="ot">&lt;-</span> yulab.utils<span class="sc">::</span><span class="fu">scale_range</span>(mtcars) <span class="sc">|&gt;</span></span>
+<span id="cb29-7"><a href="cases.html#cb29-7" tabindex="-1"></a>    <span class="fu">rownames_to_column</span>(<span class="st">&quot;id&quot;</span>) <span class="sc">|&gt;</span></span>
+<span id="cb29-8"><a href="cases.html#cb29-8" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(mpg))</span>
+<span id="cb29-9"><a href="cases.html#cb29-9" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="cases.html#cb29-10" tabindex="-1"></a></span>
+<span id="cb29-11"><a href="cases.html#cb29-11" tabindex="-1"></a>g1 <span class="ot">&lt;-</span> <span class="fu">funky_text</span>(d)</span>
+<span id="cb29-12"><a href="cases.html#cb29-12" tabindex="-1"></a>g2 <span class="ot">&lt;-</span> <span class="fu">funky_bar</span>(d, <span class="dv">2</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#CC4C02&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#FFFFE5&quot;</span>)</span>
+<span id="cb29-13"><a href="cases.html#cb29-13" tabindex="-1"></a>g3 <span class="ot">&lt;-</span> <span class="fu">funky_bar</span>(d, <span class="dv">3</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;steelblue&quot;</span>, <span class="at">high =</span> <span class="st">&quot;firebrick&quot;</span>) </span>
+<span id="cb29-14"><a href="cases.html#cb29-14" tabindex="-1"></a>g4 <span class="ot">&lt;-</span> <span class="fu">funky_point</span>(d, <span class="dv">4</span><span class="sc">:</span><span class="dv">7</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#CC4C02&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#FFFFE5&quot;</span>)</span>
+<span id="cb29-15"><a href="cases.html#cb29-15" tabindex="-1"></a>g5 <span class="ot">&lt;-</span> <span class="fu">funky_point</span>(d, <span class="dv">8</span><span class="sc">:</span><span class="dv">12</span>) <span class="sc">+</span> <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">&quot;#08519C&quot;</span>, <span class="at">high =</span> <span class="st">&quot;#F7FBFF&quot;</span>) </span>
+<span id="cb29-16"><a href="cases.html#cb29-16" tabindex="-1"></a></span>
+<span id="cb29-17"><a href="cases.html#cb29-17" tabindex="-1"></a></span>
+<span id="cb29-18"><a href="cases.html#cb29-18" tabindex="-1"></a><span class="co">#funky_heatmap(data=mtcars)</span></span>
+<span id="cb29-19"><a href="cases.html#cb29-19" tabindex="-1"></a>fp <span class="ot">&lt;-</span> <span class="fu">funky_heatmap</span>(g1, g2, g4, g5, <span class="at">options=</span><span class="fu">theme_stamp</span>())</span>
+<span id="cb29-20"><a href="cases.html#cb29-20" tabindex="-1"></a>fp</span></code></pre></div>
+<p><img src="aplot_files/figure-html/funky-1.png" alt="" width="768" /></p>
+</div>
+<div id="genomics-track-example" class="section level2 hasAnchor" number="3.4">
+<h2><span class="header-section-number">3.4</span> Genomics track example<a href="cases.html#genomics-track-example" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="setup-packages-and-parameteres" class="section level3 hasAnchor" number="3.4.1">
+<h3><span class="header-section-number">3.4.1</span> Setup packages and parameteres<a href="cases.html#setup-packages-and-parameteres" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="cases.html#cb30-1" tabindex="-1"></a><span class="fu">pload</span>(ChIPseeker)</span>
+<span id="cb30-2"><a href="cases.html#cb30-2" tabindex="-1"></a><span class="fu">pload</span>(TxDb.Hsapiens.UCSC.hg19.knownGene)</span>
+<span id="cb30-3"><a href="cases.html#cb30-3" tabindex="-1"></a><span class="fu">pload</span>(org.Hs.eg.db)</span>
+<span id="cb30-4"><a href="cases.html#cb30-4" tabindex="-1"></a><span class="fu">pload</span>(IRanges)</span>
+<span id="cb30-5"><a href="cases.html#cb30-5" tabindex="-1"></a><span class="fu">pload</span>(GenomicFeatures)</span>
+<span id="cb30-6"><a href="cases.html#cb30-6" tabindex="-1"></a><span class="fu">pload</span>(gggenes)</span>
+<span id="cb30-7"><a href="cases.html#cb30-7" tabindex="-1"></a><span class="fu">pload</span>(HiContacts)</span>
+<span id="cb30-8"><a href="cases.html#cb30-8" tabindex="-1"></a><span class="fu">pload</span>(cowplot)</span>
+<span id="cb30-9"><a href="cases.html#cb30-9" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="cases.html#cb30-10" tabindex="-1"></a><span class="co"># This analysis uses processed genomic data from:</span></span>
+<span id="cb30-11"><a href="cases.html#cb30-11" tabindex="-1"></a><span class="co"># 1. Hi-C data: GM12878 (GSM1551550) and K562 (GSM1551618)</span></span>
+<span id="cb30-12"><a href="cases.html#cb30-12" tabindex="-1"></a><span class="co"># 2. ChIP-seq data for histone modifications:</span></span>
+<span id="cb30-13"><a href="cases.html#cb30-13" tabindex="-1"></a><span class="co">#    - H3K27ac (GM12878: GSM733771, K562: GSM733656)</span></span>
+<span id="cb30-14"><a href="cases.html#cb30-14" tabindex="-1"></a><span class="co">#    - H3K4me1 (GM12878: GSM733772, K562: GSM733692)</span></span>
+<span id="cb30-15"><a href="cases.html#cb30-15" tabindex="-1"></a><span class="co">#    - H3K4me3 (GM12878: GSM733708, K562: GSM733680)</span></span>
+<span id="cb30-16"><a href="cases.html#cb30-16" tabindex="-1"></a><span class="co">#    - H3K36me3 (GM12878: GSM733679, K562: GSM733714)</span></span>
+<span id="cb30-17"><a href="cases.html#cb30-17" tabindex="-1"></a><span class="co">#    Controls: GM12878 (GSM733742), K562 (GSM733780)</span></span>
+<span id="cb30-18"><a href="cases.html#cb30-18" tabindex="-1"></a></span>
+<span id="cb30-19"><a href="cases.html#cb30-19" tabindex="-1"></a><span class="co"># Analysis parameters:</span></span>
+<span id="cb30-20"><a href="cases.html#cb30-20" tabindex="-1"></a><span class="co"># - MACS2 peak calling: default parameters except:</span></span>
+<span id="cb30-21"><a href="cases.html#cb30-21" tabindex="-1"></a><span class="co">#   * genome size: -g 2.7e9 (human)</span></span>
+<span id="cb30-22"><a href="cases.html#cb30-22" tabindex="-1"></a><span class="co"># - MACS2 bdgdiff: default parameters except:</span></span>
+<span id="cb30-23"><a href="cases.html#cb30-23" tabindex="-1"></a><span class="co">#   * d1: 6284864 (GM12878 sequencing depth) and d2: 18559220 (K562 sequencing depth)</span></span>
+<span id="cb30-24"><a href="cases.html#cb30-24" tabindex="-1"></a></span>
+<span id="cb30-25"><a href="cases.html#cb30-25" tabindex="-1"></a><span class="co"># Load processed genomic data</span></span>
+<span id="cb30-26"><a href="cases.html#cb30-26" tabindex="-1"></a>epigenetics_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">&quot;./data/epigenetics_data.rds&quot;</span>)</span>
+<span id="cb30-27"><a href="cases.html#cb30-27" tabindex="-1"></a></span>
+<span id="cb30-28"><a href="cases.html#cb30-28" tabindex="-1"></a><span class="co"># Global parameters and themes</span></span>
+<span id="cb30-29"><a href="cases.html#cb30-29" tabindex="-1"></a>plot_params <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb30-30"><a href="cases.html#cb30-30" tabindex="-1"></a>    <span class="at">scale =</span> <span class="st">&quot;log10&quot;</span>,</span>
+<span id="cb30-31"><a href="cases.html#cb30-31" tabindex="-1"></a>    <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">1.7</span>),</span>
+<span id="cb30-32"><a href="cases.html#cb30-32" tabindex="-1"></a>    <span class="at">chr =</span> <span class="st">&quot;chr6&quot;</span>,</span>
+<span id="cb30-33"><a href="cases.html#cb30-33" tabindex="-1"></a>    <span class="at">x_min =</span> <span class="dv">43600000</span>,</span>
+<span id="cb30-34"><a href="cases.html#cb30-34" tabindex="-1"></a>    <span class="at">x_max =</span> <span class="dv">44100000</span>,</span>
+<span id="cb30-35"><a href="cases.html#cb30-35" tabindex="-1"></a>    <span class="at">highlight_regions =</span> <span class="fu">list</span>(</span>
+<span id="cb30-36"><a href="cases.html#cb30-36" tabindex="-1"></a>        <span class="at">region1 =</span> <span class="fu">c</span>(<span class="dv">43738000</span>, <span class="dv">43754500</span>),</span>
+<span id="cb30-37"><a href="cases.html#cb30-37" tabindex="-1"></a>        <span class="at">region2 =</span> <span class="fu">c</span>(<span class="dv">43900000</span>, <span class="dv">44000000</span>),</span>
+<span id="cb30-38"><a href="cases.html#cb30-38" tabindex="-1"></a>        <span class="at">region3 =</span> <span class="fu">c</span>(<span class="dv">44060000</span>, <span class="dv">44100000</span>)</span>
+<span id="cb30-39"><a href="cases.html#cb30-39" tabindex="-1"></a>    ),</span>
+<span id="cb30-40"><a href="cases.html#cb30-40" tabindex="-1"></a>    <span class="at">peak_color =</span> <span class="fu">c</span>(<span class="st">&quot;peak_in_K562&quot;</span> <span class="ot">=</span> <span class="st">&quot;#E05B5B&quot;</span>, <span class="st">&quot;peak_in_GM12878&quot;</span> <span class="ot">=</span> <span class="st">&quot;#519CBA&quot;</span>)</span>
+<span id="cb30-41"><a href="cases.html#cb30-41" tabindex="-1"></a>)</span>
+<span id="cb30-42"><a href="cases.html#cb30-42" tabindex="-1"></a></span>
+<span id="cb30-43"><a href="cases.html#cb30-43" tabindex="-1"></a>common_theme <span class="ot">&lt;-</span> <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb30-44"><a href="cases.html#cb30-44" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb30-45"><a href="cases.html#cb30-45" tabindex="-1"></a>        <span class="at">axis.title.x =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb30-46"><a href="cases.html#cb30-46" tabindex="-1"></a>        <span class="at">panel.grid.minor =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb30-47"><a href="cases.html#cb30-47" tabindex="-1"></a>        <span class="at">axis.line =</span> <span class="fu">element_line</span>(<span class="at">colour =</span> <span class="st">&quot;black&quot;</span>),</span>
+<span id="cb30-48"><a href="cases.html#cb30-48" tabindex="-1"></a>        <span class="at">panel.border =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb30-49"><a href="cases.html#cb30-49" tabindex="-1"></a>        <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">hjust =</span> <span class="fl">0.5</span>)</span>
+<span id="cb30-50"><a href="cases.html#cb30-50" tabindex="-1"></a>    )</span>
+<span id="cb30-51"><a href="cases.html#cb30-51" tabindex="-1"></a></span>
+<span id="cb30-52"><a href="cases.html#cb30-52" tabindex="-1"></a>txdb <span class="ot">&lt;-</span> TxDb.Hsapiens.UCSC.hg19.knownGene</span>
+<span id="cb30-53"><a href="cases.html#cb30-53" tabindex="-1"></a></span>
+<span id="cb30-54"><a href="cases.html#cb30-54" tabindex="-1"></a><span class="co"># Function to add highlight rectangles</span></span>
+<span id="cb30-55"><a href="cases.html#cb30-55" tabindex="-1"></a>addHighlights <span class="ot">&lt;-</span> <span class="cf">function</span>(p, ymax, <span class="at">alpha=</span><span class="fl">0.2</span>) {</span>
+<span id="cb30-56"><a href="cases.html#cb30-56" tabindex="-1"></a>    p <span class="sc">+</span> </span>
+<span id="cb30-57"><a href="cases.html#cb30-57" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, </span>
+<span id="cb30-58"><a href="cases.html#cb30-58" tabindex="-1"></a>             <span class="at">xmin=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region1[<span class="dv">1</span>], </span>
+<span id="cb30-59"><a href="cases.html#cb30-59" tabindex="-1"></a>             <span class="at">xmax=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region1[<span class="dv">2</span>],</span>
+<span id="cb30-60"><a href="cases.html#cb30-60" tabindex="-1"></a>             <span class="at">ymin=</span><span class="dv">0</span>, <span class="at">ymax=</span>ymax, <span class="at">fill=</span><span class="st">&quot;#c6c3c3&quot;</span>, <span class="at">alpha=</span>alpha) <span class="sc">+</span></span>
+<span id="cb30-61"><a href="cases.html#cb30-61" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, </span>
+<span id="cb30-62"><a href="cases.html#cb30-62" tabindex="-1"></a>             <span class="at">xmin=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region2[<span class="dv">1</span>], </span>
+<span id="cb30-63"><a href="cases.html#cb30-63" tabindex="-1"></a>             <span class="at">xmax=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region2[<span class="dv">2</span>],</span>
+<span id="cb30-64"><a href="cases.html#cb30-64" tabindex="-1"></a>             <span class="at">ymin=</span><span class="dv">0</span>, <span class="at">ymax=</span>ymax, <span class="at">fill=</span><span class="st">&quot;#c6c3c3&quot;</span>, <span class="at">alpha=</span>alpha) <span class="sc">+</span></span>
+<span id="cb30-65"><a href="cases.html#cb30-65" tabindex="-1"></a>    <span class="fu">annotate</span>(<span class="st">&quot;rect&quot;</span>, </span>
+<span id="cb30-66"><a href="cases.html#cb30-66" tabindex="-1"></a>             <span class="at">xmin=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region3[<span class="dv">1</span>], </span>
+<span id="cb30-67"><a href="cases.html#cb30-67" tabindex="-1"></a>             <span class="at">xmax=</span>plot_params<span class="sc">$</span>highlight_regions<span class="sc">$</span>region3[<span class="dv">2</span>],</span>
+<span id="cb30-68"><a href="cases.html#cb30-68" tabindex="-1"></a>             <span class="at">ymin=</span><span class="dv">0</span>, <span class="at">ymax=</span>ymax, <span class="at">fill=</span><span class="st">&quot;#c6c3c3&quot;</span>, <span class="at">alpha=</span>alpha) </span>
+<span id="cb30-69"><a href="cases.html#cb30-69" tabindex="-1"></a>}</span>
+<span id="cb30-70"><a href="cases.html#cb30-70" tabindex="-1"></a></span>
+<span id="cb30-71"><a href="cases.html#cb30-71" tabindex="-1"></a><span class="co"># Generate gene plot</span></span>
+<span id="cb30-72"><a href="cases.html#cb30-72" tabindex="-1"></a>generateGenePlot <span class="ot">&lt;-</span> <span class="cf">function</span>(txdb, chr, x_min, x_max, OrgDb, <span class="at">show_legend =</span> <span class="cn">FALSE</span>) {</span>
+<span id="cb30-73"><a href="cases.html#cb30-73" tabindex="-1"></a>    <span class="co"># Get genes in the region</span></span>
+<span id="cb30-74"><a href="cases.html#cb30-74" tabindex="-1"></a>    win <span class="ot">&lt;-</span> <span class="fu">GRanges</span>(<span class="at">seqnames =</span> chr,</span>
+<span id="cb30-75"><a href="cases.html#cb30-75" tabindex="-1"></a>                   <span class="at">ranges =</span> IRanges<span class="sc">::</span><span class="fu">IRanges</span>(<span class="at">start =</span> x_min, <span class="at">end =</span> x_max))</span>
+<span id="cb30-76"><a href="cases.html#cb30-76" tabindex="-1"></a>    all_genes <span class="ot">&lt;-</span> GenomicFeatures<span class="sc">::</span><span class="fu">genes</span>(txdb)</span>
+<span id="cb30-77"><a href="cases.html#cb30-77" tabindex="-1"></a>    gene_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">subsetByOverlaps</span>(<span class="at">x =</span> all_genes, <span class="at">ranges =</span> win, <span class="at">type =</span> <span class="st">&quot;any&quot;</span>))</span>
+<span id="cb30-78"><a href="cases.html#cb30-78" tabindex="-1"></a>    gene_df<span class="sc">$</span>gene_id <span class="ot">&lt;-</span> <span class="fu">factor</span>(gene_df<span class="sc">$</span>gene_id, <span class="at">levels =</span> <span class="fu">unique</span>(gene_df<span class="sc">$</span>gene_id))</span>
+<span id="cb30-79"><a href="cases.html#cb30-79" tabindex="-1"></a>    </span>
+<span id="cb30-80"><a href="cases.html#cb30-80" tabindex="-1"></a>    <span class="co"># Process gene data</span></span>
+<span id="cb30-81"><a href="cases.html#cb30-81" tabindex="-1"></a>    gene_df <span class="ot">&lt;-</span> gene_df[,<span class="fu">c</span>(<span class="st">&quot;seqnames&quot;</span>, <span class="st">&quot;gene_id&quot;</span>, <span class="st">&quot;start&quot;</span>, <span class="st">&quot;end&quot;</span>, <span class="st">&quot;strand&quot;</span>)]</span>
+<span id="cb30-82"><a href="cases.html#cb30-82" tabindex="-1"></a>    <span class="fu">colnames</span>(gene_df)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">&quot;chromosome&quot;</span></span>
+<span id="cb30-83"><a href="cases.html#cb30-83" tabindex="-1"></a>    gene_df<span class="sc">$</span>forward <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(gene_df<span class="sc">$</span>strand<span class="sc">==</span><span class="st">&quot;+&quot;</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>)</span>
+<span id="cb30-84"><a href="cases.html#cb30-84" tabindex="-1"></a></span>
+<span id="cb30-85"><a href="cases.html#cb30-85" tabindex="-1"></a>    <span class="co"># Convert gene IDs</span></span>
+<span id="cb30-86"><a href="cases.html#cb30-86" tabindex="-1"></a>    changeid <span class="ot">&lt;-</span> <span class="fu">bitr</span>(<span class="at">geneID =</span> gene_df<span class="sc">$</span>gene_id, </span>
+<span id="cb30-87"><a href="cases.html#cb30-87" tabindex="-1"></a>                     <span class="at">fromType =</span> <span class="st">&quot;ENTREZID&quot;</span>, <span class="at">toType =</span> <span class="st">&quot;SYMBOL&quot;</span>,</span>
+<span id="cb30-88"><a href="cases.html#cb30-88" tabindex="-1"></a>                     <span class="at">OrgDb =</span> OrgDb)</span>
+<span id="cb30-89"><a href="cases.html#cb30-89" tabindex="-1"></a>    <span class="fu">colnames</span>(changeid)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;gene_id&quot;</span>) </span>
+<span id="cb30-90"><a href="cases.html#cb30-90" tabindex="-1"></a>    gene_df <span class="ot">&lt;-</span> <span class="fu">merge</span>(gene_df, changeid, <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb30-91"><a href="cases.html#cb30-91" tabindex="-1"></a>    gene_df <span class="ot">&lt;-</span> gene_df[, <span class="fu">c</span>(<span class="dv">2</span><span class="sc">:</span><span class="fu">ncol</span>(gene_df))]</span>
+<span id="cb30-92"><a href="cases.html#cb30-92" tabindex="-1"></a>    <span class="fu">colnames</span>(gene_df)[<span class="fu">ncol</span>(gene_df)] <span class="ot">&lt;-</span> <span class="st">&quot;gene_symbol&quot;</span></span>
+<span id="cb30-93"><a href="cases.html#cb30-93" tabindex="-1"></a></span>
+<span id="cb30-94"><a href="cases.html#cb30-94" tabindex="-1"></a>    gene_df<span class="sc">$</span>start <span class="ot">&lt;-</span> <span class="fu">pmax</span>(gene_df<span class="sc">$</span>start, x_min)</span>
+<span id="cb30-95"><a href="cases.html#cb30-95" tabindex="-1"></a>    gene_df<span class="sc">$</span>end <span class="ot">&lt;-</span> <span class="fu">pmin</span>(gene_df<span class="sc">$</span>end, x_max)      </span>
+<span id="cb30-96"><a href="cases.html#cb30-96" tabindex="-1"></a>        </span>
+<span id="cb30-97"><a href="cases.html#cb30-97" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(gene_df, <span class="fu">aes</span>(<span class="at">xmin =</span> start, <span class="at">xmax =</span> end, </span>
+<span id="cb30-98"><a href="cases.html#cb30-98" tabindex="-1"></a>                  <span class="at">y =</span> gene_symbol, <span class="at">forward=</span>forward, <span class="at">fill =</span> gene_symbol)) <span class="sc">+</span></span>
+<span id="cb30-99"><a href="cases.html#cb30-99" tabindex="-1"></a>    <span class="fu">geom_gene_arrow</span>() <span class="sc">+</span></span>
+<span id="cb30-100"><a href="cases.html#cb30-100" tabindex="-1"></a>    <span class="fu">xlim</span>(<span class="fu">c</span>(x_min, x_max)) <span class="sc">+</span></span>
+<span id="cb30-101"><a href="cases.html#cb30-101" tabindex="-1"></a>    <span class="fu">theme_genes</span>() <span class="sc">+</span></span>
+<span id="cb30-102"><a href="cases.html#cb30-102" tabindex="-1"></a>    <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set3&quot;</span>) <span class="sc">+</span> </span>
+<span id="cb30-103"><a href="cases.html#cb30-103" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&quot;gene symbol&quot;</span>) <span class="sc">+</span></span>
+<span id="cb30-104"><a href="cases.html#cb30-104" tabindex="-1"></a>    common_theme</span>
+<span id="cb30-105"><a href="cases.html#cb30-105" tabindex="-1"></a>    </span>
+<span id="cb30-106"><a href="cases.html#cb30-106" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>show_legend) {</span>
+<span id="cb30-107"><a href="cases.html#cb30-107" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb30-108"><a href="cases.html#cb30-108" tabindex="-1"></a>    }</span>
+<span id="cb30-109"><a href="cases.html#cb30-109" tabindex="-1"></a>    </span>
+<span id="cb30-110"><a href="cases.html#cb30-110" tabindex="-1"></a>    <span class="fu">return</span>(p)</span>
+<span id="cb30-111"><a href="cases.html#cb30-111" tabindex="-1"></a>}</span>
+<span id="cb30-112"><a href="cases.html#cb30-112" tabindex="-1"></a></span>
+<span id="cb30-113"><a href="cases.html#cb30-113" tabindex="-1"></a><span class="co"># Generate HiC plot</span></span>
+<span id="cb30-114"><a href="cases.html#cb30-114" tabindex="-1"></a>generateHicPlot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, label, <span class="at">use_scores =</span> <span class="cn">NULL</span>, <span class="at">show_legend =</span> <span class="cn">TRUE</span>) {   </span>
+<span id="cb30-115"><a href="cases.html#cb30-115" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">is.null</span>(use_scores)) {</span>
+<span id="cb30-116"><a href="cases.html#cb30-116" tabindex="-1"></a>        p <span class="ot">&lt;-</span> HiContacts<span class="sc">::</span><span class="fu">plotMatrix</span>(data, </span>
+<span id="cb30-117"><a href="cases.html#cb30-117" tabindex="-1"></a>            <span class="at">maxDistance =</span> plot_params<span class="sc">$</span>x_max <span class="sc">-</span> plot_params<span class="sc">$</span>x_min, </span>
+<span id="cb30-118"><a href="cases.html#cb30-118" tabindex="-1"></a>            <span class="at">caption =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb30-119"><a href="cases.html#cb30-119" tabindex="-1"></a>            <span class="at">scale =</span> plot_params<span class="sc">$</span>scale, </span>
+<span id="cb30-120"><a href="cases.html#cb30-120" tabindex="-1"></a>            <span class="at">limits =</span> plot_params<span class="sc">$</span>limits) <span class="sc">+</span> </span>
+<span id="cb30-121"><a href="cases.html#cb30-121" tabindex="-1"></a>            <span class="fu">xlim</span>(plot_params<span class="sc">$</span>x_min, plot_params<span class="sc">$</span>x_max) <span class="sc">+</span> </span>
+<span id="cb30-122"><a href="cases.html#cb30-122" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&#39;hic score&#39;</span>) <span class="sc">+</span></span>
+<span id="cb30-123"><a href="cases.html#cb30-123" tabindex="-1"></a>            <span class="fu">ylab</span>(<span class="fu">paste0</span>(label, <span class="st">&quot; hic&quot;</span>)) <span class="sc">+</span></span>
+<span id="cb30-124"><a href="cases.html#cb30-124" tabindex="-1"></a>            common_theme</span>
+<span id="cb30-125"><a href="cases.html#cb30-125" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb30-126"><a href="cases.html#cb30-126" tabindex="-1"></a>        p <span class="ot">&lt;-</span> HiContacts<span class="sc">::</span><span class="fu">plotMatrix</span>(data,</span>
+<span id="cb30-127"><a href="cases.html#cb30-127" tabindex="-1"></a>            <span class="at">maxDistance =</span> plot_params<span class="sc">$</span>x_max <span class="sc">-</span> plot_params<span class="sc">$</span>x_min, </span>
+<span id="cb30-128"><a href="cases.html#cb30-128" tabindex="-1"></a>            <span class="at">use.scores =</span> use_scores,</span>
+<span id="cb30-129"><a href="cases.html#cb30-129" tabindex="-1"></a>            <span class="at">caption =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb30-130"><a href="cases.html#cb30-130" tabindex="-1"></a>            <span class="at">cmap =</span> HiContacts<span class="sc">::</span><span class="fu">bbrColors</span>()) <span class="sc">+</span></span>
+<span id="cb30-131"><a href="cases.html#cb30-131" tabindex="-1"></a>            <span class="fu">xlim</span>(plot_params<span class="sc">$</span>x_min, plot_params<span class="sc">$</span>x_max) <span class="sc">+</span> </span>
+<span id="cb30-132"><a href="cases.html#cb30-132" tabindex="-1"></a>            <span class="fu">labs</span>(<span class="at">fill =</span> <span class="st">&#39;log2fc&#39;</span>) <span class="sc">+</span></span>
+<span id="cb30-133"><a href="cases.html#cb30-133" tabindex="-1"></a>            <span class="fu">ylab</span>(<span class="fu">paste0</span>(label, <span class="st">&quot; &quot;</span>)) <span class="sc">+</span></span>
+<span id="cb30-134"><a href="cases.html#cb30-134" tabindex="-1"></a>            common_theme</span>
+<span id="cb30-135"><a href="cases.html#cb30-135" tabindex="-1"></a>    }</span>
+<span id="cb30-136"><a href="cases.html#cb30-136" tabindex="-1"></a>    </span>
+<span id="cb30-137"><a href="cases.html#cb30-137" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>show_legend) {</span>
+<span id="cb30-138"><a href="cases.html#cb30-138" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb30-139"><a href="cases.html#cb30-139" tabindex="-1"></a>    }</span>
+<span id="cb30-140"><a href="cases.html#cb30-140" tabindex="-1"></a>    </span>
+<span id="cb30-141"><a href="cases.html#cb30-141" tabindex="-1"></a>    <span class="fu">return</span>(p)</span>
+<span id="cb30-142"><a href="cases.html#cb30-142" tabindex="-1"></a>}</span>
+<span id="cb30-143"><a href="cases.html#cb30-143" tabindex="-1"></a></span>
+<span id="cb30-144"><a href="cases.html#cb30-144" tabindex="-1"></a><span class="co"># Generate coverage plot</span></span>
+<span id="cb30-145"><a href="cases.html#cb30-145" tabindex="-1"></a>generateCoveragePlot <span class="ot">&lt;-</span> <span class="cf">function</span>(data, label, ymax, <span class="at">colors =</span> <span class="cn">NULL</span>, </span>
+<span id="cb30-146"><a href="cases.html#cb30-146" tabindex="-1"></a>                                <span class="at">add_facet =</span> <span class="cn">FALSE</span>, <span class="at">show_legend =</span> <span class="cn">TRUE</span>) {</span>
+<span id="cb30-147"><a href="cases.html#cb30-147" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">covplot</span>(data, </span>
+<span id="cb30-148"><a href="cases.html#cb30-148" tabindex="-1"></a>        <span class="at">weightCol =</span> <span class="st">&quot;V5&quot;</span>,</span>
+<span id="cb30-149"><a href="cases.html#cb30-149" tabindex="-1"></a>        <span class="at">chrs =</span> plot_params<span class="sc">$</span>chr,</span>
+<span id="cb30-150"><a href="cases.html#cb30-150" tabindex="-1"></a>        <span class="at">xlim =</span> <span class="fu">c</span>(plot_params<span class="sc">$</span>x_min, plot_params<span class="sc">$</span>x_max),</span>
+<span id="cb30-151"><a href="cases.html#cb30-151" tabindex="-1"></a>        <span class="at">ylab =</span> label,</span>
+<span id="cb30-152"><a href="cases.html#cb30-152" tabindex="-1"></a>        <span class="at">title =</span> <span class="st">&quot;&quot;</span>) <span class="sc">+</span></span>
+<span id="cb30-153"><a href="cases.html#cb30-153" tabindex="-1"></a>        <span class="fu">ylim</span>(<span class="fu">c</span>(<span class="dv">0</span>, ymax)) <span class="sc">+</span></span>
+<span id="cb30-154"><a href="cases.html#cb30-154" tabindex="-1"></a>        common_theme</span>
+<span id="cb30-155"><a href="cases.html#cb30-155" tabindex="-1"></a>    </span>
+<span id="cb30-156"><a href="cases.html#cb30-156" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(colors)) {</span>
+<span id="cb30-157"><a href="cases.html#cb30-157" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">scale_color_manual</span>(<span class="at">values =</span> colors) <span class="sc">+</span></span>
+<span id="cb30-158"><a href="cases.html#cb30-158" tabindex="-1"></a>                 <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> colors)</span>
+<span id="cb30-159"><a href="cases.html#cb30-159" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb30-160"><a href="cases.html#cb30-160" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>) <span class="sc">+</span></span>
+<span id="cb30-161"><a href="cases.html#cb30-161" tabindex="-1"></a>                 <span class="fu">scale_color_brewer</span>(<span class="at">palette =</span> <span class="st">&quot;Set2&quot;</span>)</span>
+<span id="cb30-162"><a href="cases.html#cb30-162" tabindex="-1"></a>    }</span>
+<span id="cb30-163"><a href="cases.html#cb30-163" tabindex="-1"></a>    </span>
+<span id="cb30-164"><a href="cases.html#cb30-164" tabindex="-1"></a>    <span class="cf">if</span> (add_facet) {</span>
+<span id="cb30-165"><a href="cases.html#cb30-165" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">facet_grid</span>(.id <span class="sc">~</span> .) <span class="sc">+</span></span>
+<span id="cb30-166"><a href="cases.html#cb30-166" tabindex="-1"></a>            <span class="fu">theme</span>(<span class="at">strip.text.y =</span> <span class="fu">element_blank</span>())</span>
+<span id="cb30-167"><a href="cases.html#cb30-167" tabindex="-1"></a>    }</span>
+<span id="cb30-168"><a href="cases.html#cb30-168" tabindex="-1"></a>    </span>
+<span id="cb30-169"><a href="cases.html#cb30-169" tabindex="-1"></a>    <span class="cf">if</span> (<span class="sc">!</span>show_legend) {</span>
+<span id="cb30-170"><a href="cases.html#cb30-170" tabindex="-1"></a>        p <span class="ot">&lt;-</span> p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>)</span>
+<span id="cb30-171"><a href="cases.html#cb30-171" tabindex="-1"></a>    }</span>
+<span id="cb30-172"><a href="cases.html#cb30-172" tabindex="-1"></a>    </span>
+<span id="cb30-173"><a href="cases.html#cb30-173" tabindex="-1"></a>    <span class="fu">return</span>(p)</span>
+<span id="cb30-174"><a href="cases.html#cb30-174" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="visualization-of-comparative-genomics-data-tracks" class="section level3 hasAnchor" number="3.4.2">
+<h3><span class="header-section-number">3.4.2</span> Visualization of comparative genomics data tracks<a href="cases.html#visualization-of-comparative-genomics-data-tracks" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="cases.html#cb31-1" tabindex="-1"></a><span class="co"># Generate HiC comparision plot</span></span>
+<span id="cb31-2"><a href="cases.html#cb31-2" tabindex="-1"></a>combine_hic_p <span class="ot">&lt;-</span> <span class="fu">generateHicPlot</span>(epigenetics_data[[<span class="st">&quot;div_hic&quot;</span>]], </span>
+<span id="cb31-3"><a href="cases.html#cb31-3" tabindex="-1"></a>                                <span class="st">&quot;K562/GM12878 hic compare&quot;</span>,</span>
+<span id="cb31-4"><a href="cases.html#cb31-4" tabindex="-1"></a>                                <span class="at">use_scores =</span> <span class="st">&quot;balanced.fc&quot;</span>)</span>
+<span id="cb31-5"><a href="cases.html#cb31-5" tabindex="-1"></a></span>
+<span id="cb31-6"><a href="cases.html#cb31-6" tabindex="-1"></a><span class="co"># Generate histone modification comparision plots</span></span>
+<span id="cb31-7"><a href="cases.html#cb31-7" tabindex="-1"></a>histone_plots <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb31-8"><a href="cases.html#cb31-8" tabindex="-1"></a>    <span class="at">H3K27ac =</span> <span class="fu">list</span>(<span class="at">data =</span> epigenetics_data[[<span class="st">&quot;H3K27ac_peak&quot;</span>]], <span class="at">ymax =</span> <span class="dv">100</span>),</span>
+<span id="cb31-9"><a href="cases.html#cb31-9" tabindex="-1"></a>    <span class="at">H3K36me3 =</span> <span class="fu">list</span>(<span class="at">data =</span> epigenetics_data[[<span class="st">&quot;H3K36me3_peak&quot;</span>]], <span class="at">ymax =</span> <span class="dv">10</span>),</span>
+<span id="cb31-10"><a href="cases.html#cb31-10" tabindex="-1"></a>    <span class="at">H3K4me1 =</span> <span class="fu">list</span>(<span class="at">data =</span> epigenetics_data[[<span class="st">&quot;H3K4me1_peak&quot;</span>]], <span class="at">ymax =</span> <span class="dv">30</span>),</span>
+<span id="cb31-11"><a href="cases.html#cb31-11" tabindex="-1"></a>    <span class="at">H3K4me3 =</span> <span class="fu">list</span>(<span class="at">data =</span> epigenetics_data[[<span class="st">&quot;H3K4me3_peak&quot;</span>]], <span class="at">ymax =</span> <span class="dv">25</span>)</span>
+<span id="cb31-12"><a href="cases.html#cb31-12" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-13"><a href="cases.html#cb31-13" tabindex="-1"></a><span class="fu">map2</span>(<span class="fu">names</span>(.), <span class="cf">function</span>(x, name) {</span>
+<span id="cb31-14"><a href="cases.html#cb31-14" tabindex="-1"></a>    p <span class="ot">&lt;-</span> <span class="fu">generateCoveragePlot</span>(x<span class="sc">$</span>data, name, x<span class="sc">$</span>ymax, </span>
+<span id="cb31-15"><a href="cases.html#cb31-15" tabindex="-1"></a>                             plot_params<span class="sc">$</span>peak_color, <span class="at">add_facet =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb31-16"><a href="cases.html#cb31-16" tabindex="-1"></a>    <span class="fu">addHighlights</span>(p, x<span class="sc">$</span>ymax)</span>
+<span id="cb31-17"><a href="cases.html#cb31-17" tabindex="-1"></a>})</span>
+<span id="cb31-18"><a href="cases.html#cb31-18" tabindex="-1"></a></span>
+<span id="cb31-19"><a href="cases.html#cb31-19" tabindex="-1"></a><span class="co"># Generate gene track</span></span>
+<span id="cb31-20"><a href="cases.html#cb31-20" tabindex="-1"></a>gene_p <span class="ot">&lt;-</span> <span class="fu">generateGenePlot</span>(<span class="at">txdb =</span> txdb,</span>
+<span id="cb31-21"><a href="cases.html#cb31-21" tabindex="-1"></a>                   <span class="at">chr =</span> plot_params<span class="sc">$</span>chr,</span>
+<span id="cb31-22"><a href="cases.html#cb31-22" tabindex="-1"></a>                   <span class="at">x_min =</span> plot_params<span class="sc">$</span>x_min,</span>
+<span id="cb31-23"><a href="cases.html#cb31-23" tabindex="-1"></a>                   <span class="at">x_max =</span> plot_params<span class="sc">$</span>x_max,</span>
+<span id="cb31-24"><a href="cases.html#cb31-24" tabindex="-1"></a>                   <span class="at">OrgDb =</span> <span class="st">&quot;org.Hs.eg.db&quot;</span>)</span>
+<span id="cb31-25"><a href="cases.html#cb31-25" tabindex="-1"></a>gene_p_highlighted <span class="ot">&lt;-</span> <span class="fu">addHighlights</span>(gene_p, <span class="at">ymax=</span><span class="dv">9</span>)</span>
+<span id="cb31-26"><a href="cases.html#cb31-26" tabindex="-1"></a></span>
+<span id="cb31-27"><a href="cases.html#cb31-27" tabindex="-1"></a><span class="co"># Combine all plots using aplot</span></span>
+<span id="cb31-28"><a href="cases.html#cb31-28" tabindex="-1"></a>combined_p <span class="ot">&lt;-</span> combine_hic_p <span class="sc">%&gt;%</span> </span>
+<span id="cb31-29"><a href="cases.html#cb31-29" tabindex="-1"></a>    <span class="fu">insert_bottom</span>(histone_plots<span class="sc">$</span>H3K27ac, <span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-30"><a href="cases.html#cb31-30" tabindex="-1"></a>    <span class="fu">insert_bottom</span>(histone_plots<span class="sc">$</span>H3K36me3, <span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb31-31"><a href="cases.html#cb31-31" tabindex="-1"></a>    <span class="fu">insert_bottom</span>(histone_plots<span class="sc">$</span>H3K4me1, <span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-32"><a href="cases.html#cb31-32" tabindex="-1"></a>    <span class="fu">insert_bottom</span>(histone_plots<span class="sc">$</span>H3K4me3, <span class="at">height =</span> .<span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb31-33"><a href="cases.html#cb31-33" tabindex="-1"></a>    <span class="fu">insert_bottom</span>(gene_p_highlighted, <span class="at">height =</span> .<span class="dv">5</span>)</span>
+<span id="cb31-34"><a href="cases.html#cb31-34" tabindex="-1"></a></span>
+<span id="cb31-35"><a href="cases.html#cb31-35" tabindex="-1"></a>combined_p</span></code></pre></div>
+<p><img src="aplot_files/figure-html/combine_data-1.png" alt="" width="960" /></p>
+</div>
+<div id="visualization-of-different-genomics-data-tracks" class="section level3 hasAnchor" number="3.4.3">
+<h3><span class="header-section-number">3.4.3</span> Visualization of different genomics data tracks<a href="cases.html#visualization-of-different-genomics-data-tracks" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="cases.html#cb32-1" tabindex="-1"></a><span class="co"># Generate HiC plots</span></span>
+<span id="cb32-2"><a href="cases.html#cb32-2" tabindex="-1"></a>GM12878_hic_p <span class="ot">&lt;-</span> <span class="fu">generateHicPlot</span>(epigenetics_data[[<span class="st">&quot;GM12878_hic&quot;</span>]], </span>
+<span id="cb32-3"><a href="cases.html#cb32-3" tabindex="-1"></a>                                <span class="st">&quot;GM12878&quot;</span>, <span class="at">show_legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb32-4"><a href="cases.html#cb32-4" tabindex="-1"></a>K562_hic_p <span class="ot">&lt;-</span> <span class="fu">generateHicPlot</span>(epigenetics_data[[<span class="st">&quot;K562_hic&quot;</span>]], </span>
+<span id="cb32-5"><a href="cases.html#cb32-5" tabindex="-1"></a>                             <span class="st">&quot;K562&quot;</span>, <span class="at">show_legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb32-6"><a href="cases.html#cb32-6" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="cases.html#cb32-7" tabindex="-1"></a><span class="co"># Generate ChIP-seq coverage plots</span></span>
+<span id="cb32-8"><a href="cases.html#cb32-8" tabindex="-1"></a>GM12878_cov_p <span class="ot">&lt;-</span> <span class="fu">generateCoveragePlot</span>(epigenetics_data[[<span class="st">&quot;GM12878_peak&quot;</span>]], </span>
+<span id="cb32-9"><a href="cases.html#cb32-9" tabindex="-1"></a>                                     <span class="st">&quot;GM12878 ChIP-seq&quot;</span>, </span>
+<span id="cb32-10"><a href="cases.html#cb32-10" tabindex="-1"></a>                                     <span class="dv">2000</span>,</span>
+<span id="cb32-11"><a href="cases.html#cb32-11" tabindex="-1"></a>                                     <span class="at">add_facet =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb32-12"><a href="cases.html#cb32-12" tabindex="-1"></a>                                     <span class="at">show_legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb32-13"><a href="cases.html#cb32-13" tabindex="-1"></a>GM12878_cov_p <span class="ot">&lt;-</span> <span class="fu">addHighlights</span>(GM12878_cov_p, <span class="at">ymax =</span> <span class="dv">2000</span>)</span>
+<span id="cb32-14"><a href="cases.html#cb32-14" tabindex="-1"></a></span>
+<span id="cb32-15"><a href="cases.html#cb32-15" tabindex="-1"></a>K562_cov_p <span class="ot">&lt;-</span> <span class="fu">generateCoveragePlot</span>(epigenetics_data[[<span class="st">&quot;K562_peak&quot;</span>]], </span>
+<span id="cb32-16"><a href="cases.html#cb32-16" tabindex="-1"></a>                                  <span class="st">&quot;K562 ChIP-seq&quot;</span>, </span>
+<span id="cb32-17"><a href="cases.html#cb32-17" tabindex="-1"></a>                                  <span class="dv">2000</span>,</span>
+<span id="cb32-18"><a href="cases.html#cb32-18" tabindex="-1"></a>                                  <span class="at">add_facet =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb32-19"><a href="cases.html#cb32-19" tabindex="-1"></a>                                  <span class="at">show_legend =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb32-20"><a href="cases.html#cb32-20" tabindex="-1"></a>K562_cov_p <span class="ot">&lt;-</span> <span class="fu">addHighlights</span>(K562_cov_p, <span class="at">ymax =</span> <span class="dv">2000</span>)</span>
+<span id="cb32-21"><a href="cases.html#cb32-21" tabindex="-1"></a></span>
+<span id="cb32-22"><a href="cases.html#cb32-22" tabindex="-1"></a><span class="co"># Combine plots using aplot</span></span>
+<span id="cb32-23"><a href="cases.html#cb32-23" tabindex="-1"></a>GM12878_p <span class="ot">&lt;-</span> (GM12878_hic_p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>))  <span class="sc">%&gt;%</span> </span>
+<span id="cb32-24"><a href="cases.html#cb32-24" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(GM12878_cov_p) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-25"><a href="cases.html#cb32-25" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(gene_p_highlighted, <span class="at">height =</span> .<span class="dv">6</span>)</span>
+<span id="cb32-26"><a href="cases.html#cb32-26" tabindex="-1"></a></span>
+<span id="cb32-27"><a href="cases.html#cb32-27" tabindex="-1"></a>K562_p <span class="ot">&lt;-</span> (K562_hic_p <span class="sc">+</span> <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&#39;none&#39;</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-28"><a href="cases.html#cb32-28" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(K562_cov_p) <span class="sc">%&gt;%</span> </span>
+<span id="cb32-29"><a href="cases.html#cb32-29" tabindex="-1"></a>             <span class="fu">insert_bottom</span>(gene_p_highlighted, <span class="at">height =</span> .<span class="dv">6</span>)</span>
+<span id="cb32-30"><a href="cases.html#cb32-30" tabindex="-1"></a></span>
+<span id="cb32-31"><a href="cases.html#cb32-31" tabindex="-1"></a><span class="co"># Add legends and create final view</span></span>
+<span id="cb32-32"><a href="cases.html#cb32-32" tabindex="-1"></a>split_p <span class="ot">&lt;-</span> <span class="fu">plot_list</span>(</span>
+<span id="cb32-33"><a href="cases.html#cb32-33" tabindex="-1"></a>    <span class="at">gglist =</span> <span class="fu">list</span>(GM12878_p, K562_p, </span>
+<span id="cb32-34"><a href="cases.html#cb32-34" tabindex="-1"></a>                 <span class="fu">plot_grid</span>(<span class="fu">get_legend</span>(<span class="fu">generateHicPlot</span>(epigenetics_data[[<span class="st">&quot;K562_hic&quot;</span>]], <span class="st">&quot;K562&quot;</span>)),</span>
+<span id="cb32-35"><a href="cases.html#cb32-35" tabindex="-1"></a>                          <span class="fu">get_legend</span>(<span class="fu">generateCoveragePlot</span>(epigenetics_data[[<span class="st">&quot;K562_peak&quot;</span>]], </span>
+<span id="cb32-36"><a href="cases.html#cb32-36" tabindex="-1"></a>                                                       <span class="st">&quot;K562 ChIP-seq&quot;</span>, </span>
+<span id="cb32-37"><a href="cases.html#cb32-37" tabindex="-1"></a>                                                       <span class="dv">2000</span>,</span>
+<span id="cb32-38"><a href="cases.html#cb32-38" tabindex="-1"></a>                                                       <span class="at">add_facet =</span> <span class="cn">TRUE</span>)), </span>
+<span id="cb32-39"><a href="cases.html#cb32-39" tabindex="-1"></a>                          <span class="at">nrow =</span> <span class="dv">1</span>)),</span>
+<span id="cb32-40"><a href="cases.html#cb32-40" tabindex="-1"></a>    <span class="at">design =</span> <span class="fu">c</span>(<span class="st">&quot;AAAAAABBBBBBCC&quot;</span>)</span>
+<span id="cb32-41"><a href="cases.html#cb32-41" tabindex="-1"></a>)</span>
+<span id="cb32-42"><a href="cases.html#cb32-42" tabindex="-1"></a></span>
+<span id="cb32-43"><a href="cases.html#cb32-43" tabindex="-1"></a>split_p</span></code></pre></div>
+<p><img src="aplot_files/figure-html/split_data-1.png" alt="" width="1536" /></p>
+
+</div>
+</div>
+</div>
+
+
+
+
+
+
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="align-associated-subplots.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+  "sharing": {
+    "github": false,
+    "facebook": true,
+    "twitter": true,
+    "linkedin": false,
+    "weibo": false,
+    "instapaper": false,
+    "vk": false,
+    "whatsapp": false,
+    "all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+  },
+  "fontsettings": {
+    "theme": "white",
+    "family": "sans",
+    "size": 2
+  },
+  "edit": {
+    "link": null,
+    "text": null
+  },
+  "history": {
+    "link": null,
+    "text": null
+  },
+  "view": {
+    "link": null,
+    "text": null
+  },
+  "download": null,
+  "search": {
+    "engine": "fuse",
+    "options": null
+  },
+  "toc": {
+    "collapse": "subsection"
+  }
+});
+});
+</script>
+
+</body>
+
+</html>
