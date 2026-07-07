@@ -1,4 +1,4 @@
-# aplot 0.3.0.001
+# aplot 0.3.1
 
 + update `set_guide_layout()` to split `legend_*` and `guides_*` semantics, and update `set_guide_area()` to use corner and side guide regions with continuous empty space anchoring (2026-06-27, Sat, #13)
 + add `set_guide_layout()` to compact collected guide arrangement without changing guide placement (2026-06-26, Fri, #13)
