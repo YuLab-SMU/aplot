@@ -6,7 +6,7 @@
 \alias{aplot-package}
 \title{aplot: Decorate a 'ggplot' with Associated Information}
 \description{
-'aplot' supports data-driven composition of a main plot with associated subplots that need precise axis alignment. Unlike general layout-focused tools such as 'cowplot' and 'patchwork', it enables related subplots to be integrated on the top, bottom, left, or right sides of a main plot with matched axes, so that the combined panels can be interpreted as a coherent whole. This design was inspired by the 'Method 2' described in 'ggtree' (G Yu (2018) \doi{10.1093/molbev/msy194}).
+Supports data-driven composition of a main plot with associated subplots that need precise axis alignment. Unlike general layout-focused tools such as 'cowplot' and 'patchwork', it enables related subplots to be integrated on the top, bottom, left, or right sides of a main plot with matched axes, so that the combined panels can be interpreted as a coherent whole. This design was inspired by the 'Method 2' described in 'ggtree' (G Yu (2018) \doi{10.1093/molbev/msy194}).
 }
 \seealso{
 Useful links:
