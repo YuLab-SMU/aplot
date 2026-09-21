@@ -5,6 +5,7 @@ S3method("[",aplot)
 S3method("[<-",aplot)
 S3method("[[",aplot)
 S3method("[[<-",aplot)
+S3method(cowplot::as_grob,gglist)
 S3method(ggplot_add,alab)
 S3method(ggplot_add,axisAlign)
 S3method(grid.draw,aplot)
@@ -33,43 +34,53 @@ export(ylab2)
 export(ylim2)
 export(yrange)
 import(yulab.utils)
-importFrom(ggfun,ggbreak2ggplot)
-importFrom(ggfun,ggrange)
-importFrom(ggfun,is.ggbreak)
-importFrom(ggfun,is.ggtree)
-importFrom(ggfun,xrange)
-importFrom(ggfun,yrange)
-importFrom(ggplot2,aes)
-importFrom(ggplot2,annotation_custom)
-importFrom(ggplot2,coord_cartesian)
-importFrom(ggplot2,coord_fixed)
-importFrom(ggplot2,element_blank)
-importFrom(ggplot2,element_text)
-importFrom(ggplot2,ggplot)
-importFrom(ggplot2,ggplotGrob)
-importFrom(ggplot2,ggplot_add)
-importFrom(ggplot2,ggplot_build)
-importFrom(ggplot2,ggsave)
-importFrom(ggplot2,is.ggplot)
-importFrom(ggplot2,labs)
-importFrom(ggplot2,margin)
-importFrom(ggplot2,scale_x_continuous)
-importFrom(ggplot2,scale_x_discrete)
-importFrom(ggplot2,scale_y_continuous)
-importFrom(ggplot2,scale_y_discrete)
-importFrom(ggplot2,theme)
-importFrom(ggplot2,theme_void)
-importFrom(ggplot2,xlab)
-importFrom(ggplot2,ylab)
+importFrom(ggfun,
+  ggbreak2ggplot,
+  ggrange,
+  is.ggbreak,
+  is.ggtree,
+  xrange,
+  yrange
+)
+importFrom(ggplot2,
+  aes,
+  annotation_custom,
+  coord_cartesian,
+  coord_fixed,
+  element_blank,
+  element_text,
+  ggplot,
+  ggplotGrob,
+  ggplot_add,
+  ggplot_build,
+  ggsave,
+  is.ggplot,
+  labs,
+  margin,
+  scale_x_continuous,
+  scale_x_discrete,
+  scale_y_continuous,
+  scale_y_discrete,
+  theme,
+  theme_void,
+  xlab,
+  ylab
+)
 importFrom(ggplotify,as.ggplot)
-importFrom(grid,grid.draw)
-importFrom(grid,textGrob)
+importFrom(grid,
+  grid.draw,
+  textGrob
+)
 importFrom(magrittr,"%>%")
 importFrom(methods,is)
-importFrom(patchwork,patchworkGrob)
-importFrom(patchwork,plot_annotation)
-importFrom(patchwork,plot_layout)
-importFrom(patchwork,plot_spacer)
+importFrom(patchwork,
+  patchworkGrob,
+  plot_annotation,
+  plot_layout,
+  plot_spacer
+)
 importFrom(pillar,style_subtle)
-importFrom(utils,getFromNamespace)
-importFrom(utils,packageDescription)
+importFrom(utils,
+  getFromNamespace,
+  packageDescription
+)
