@@ -1,3 +1,7 @@
+# aplot 0.3.2
+
++ add `as_grob.gglist()` method to keep `gglist` objects compatible with `cowplot::plot_grid()` and downstream helpers that dispatch through `cowplot::as_grob()` (2026-09-24, Thu)
+
 # aplot 0.3.1
 
 + update `set_guide_layout()` to split `legend_*` and `guides_*` semantics, and update `set_guide_area()` to use corner and side guide regions with continuous empty space anchoring (2026-06-27, Sat, #13)
